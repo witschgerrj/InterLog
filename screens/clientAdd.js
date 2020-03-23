@@ -1,0 +1,180 @@
+import React, { useState, useEffect } from 'react';
+import { Keyboard, KeyboardAvoidingView } from 'react-native';
+import styled from 'styled-components';
+import BgNoScroll from '../components/bgNoScroll';
+import FlexBox from '../components/flexbox';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { addNewClient } from '../backend/firebase';
+import { Header } from 'react-navigation-stack';
+
+const Name = styled.TextInput`
+  font-size: 18px;
+  color: white;
+  margin-bottom: 45px; 
+` 
+const Email = styled.TextInput`
+  font-size: 18px;
+  color: white;
+  height: 22px;
+  margin-bottom: 45px; 
+`
+const Phone = styled.TextInput`
+  position: absolute;
+  left: 20px;
+  top: 150px;
+  font-size: 18px;
+  color: white;
+  height: 22px;
+`
+const Done = styled.Text`
+  font-size: 22px;
+  color: #248AC9;
+  margin-right: 20px;
+`
+const Box = styled.View`
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
+  border-radius: 3px;
+  background-color: ${props => props.groupColor};
+  margin-bottom: 10px;
+  border-width: 2px;
+  border-color: ${props => props.borderColor};
+`
+const BoxContainer = styled.View`
+  width: 90px;
+`
+
+const ClientAdd = (props) => {
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [selectedGroupColor, setSelectedGroupColor] = useState('#2B2B2B');
+  const [selectingBoxes, setSelectingBoxes] = useState(false);
+
+  const _closeKeyboardAndBoxes = () => {
+    Keyboard.dismiss();
+    setSelectingBoxes(false);
+  }
+
+  const _updateName = (text) => {
+    props.navigation.setParams({ name: text});
+    setName(text);
+  }
+
+  const _updateEmail = (text) => {
+    props.navigation.setParams({ email: text});
+    setEmail(text);
+  }
+
+  const _updatePhone = (text) => {
+    props.navigation.setParams({ phone: text});
+    setPhone(text);
+  }
+
+  const _updateColor = (text) => {
+    props.navigation.setParams({ color: text});
+    setSelectedGroupColor(text);
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={() => _closeKeyboardAndBoxes()}>
+      <KeyboardAvoidingView>
+        <BgNoScroll pad={20}>
+          <FlexBox justify='space-between'>
+            <Name onChangeText={text => _updateName(text)}
+                  value={name}
+                  placeholder='Name'
+                  placeholderTextColor='#FFF'
+                  autoCorrect={false} 
+                  spellCheck={false}
+                  autoCapitalize='none'/>
+            <TouchableWithoutFeedback onPress={()=> setSelectingBoxes(!selectingBoxes)}>
+              <Box  groupColor={selectedGroupColor}
+                    size={55}
+                    borderColor={selectedGroupColor}/>
+            </TouchableWithoutFeedback>
+          </FlexBox>
+          <FlexBox justify='space-between'>
+            <Email  onChangeText={text => _updateEmail(text)}
+                    value={email}
+                    placeholder='Email'
+                    placeholderTextColor='#FFF'
+                    autoCorrect={false} 
+                    spellCheck={false}
+                    autoCapitalize='none'
+                    keyboardType='email-address'
+                    textContentType='emailAddress'/>
+            <BoxContainer>
+              {
+                selectingBoxes ? 
+                  <FlexBox justify='space-between'>
+                    <TouchableWithoutFeedback onPress={() => _updateColor('#D1D1D1')}>
+                      <Box  groupColor='#D1D1D1'
+                            size={40}
+                            borderColor={selectedGroupColor === '#D1D1D1' ? '#FFF' : '#D1D1D1'}/>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => _updateColor('#3297B5')}>
+                      <Box  groupColor='#3297B5'
+                            size={40}
+                            borderColor={selectedGroupColor === '#3297B5' ? '#FFF' : '#3297B5'}/>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => _updateColor('#BABA27')}>
+                      <Box  groupColor='#BABA27'
+                            size={40}
+                            borderColor={selectedGroupColor === '#BABA27' ? '#FFF' : '#BABA27'}/>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => _updateColor('#078D1C')}>
+                      <Box  groupColor='#078D1C'
+                            size={40}
+                            borderColor={selectedGroupColor === '#078D1C' ? '#FFF' : '#078D1C'}/> 
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => _updateColor('#9B2F2F')}>
+                      <Box  groupColor='#9B2F2F'
+                            size={40}
+                            borderColor={selectedGroupColor === '#9B2F2F' ? '#FFF' : '#9B2F2F'}/> 
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => _updateColor('#8D0778')}>
+                      <Box  groupColor='#8D0778'
+                            size={40}
+                            borderColor={selectedGroupColor === '#8D0778' ? '#FFF' : '#8D0778'}/> 
+                    </TouchableWithoutFeedback>
+                    
+                  </FlexBox>
+                : null
+            }
+            </BoxContainer>
+          </FlexBox>
+        <Phone  onChangeText={text => _updatePhone(text)}
+                value={phone}
+                placeholder='Phone'
+                placeholderTextColor='#FFF'
+                autoCorrect={false} 
+                spellCheck={false}
+                autoCapitalize='none'
+                keyboardType='phone-pad'
+                textContentType='telephoneNumber'/> 
+        </BgNoScroll>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+
+  );
+}
+
+ClientAdd.navigationOptions = (props) => ({
+  headerRight: () => (
+    <TouchableWithoutFeedback onPress={() => {
+        const name = props.navigation.getParam('name');
+        const email = props.navigation.getParam('email');
+        const phone = props.navigation.getParam('phone');
+        const color = props.navigation.getParam('color');
+        addNewClient(name, email, phone, color);
+        props.navigation.goBack();
+        props.navigation.getParam('updateClients')();
+      }}>
+      <Done>Done</Done>
+    </TouchableWithoutFeedback>
+  ),
+});
+
+export default ClientAdd;
