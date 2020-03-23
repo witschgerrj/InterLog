@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, View, Dimensions, ActionSheetIOS, KeyboardAvoidingView } from 'react-native';
+import { Keyboard, View, Dimensions, ActionSheetIOS } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import Trashcan from '../assets/trashcan.png';
@@ -46,7 +46,6 @@ const ImageText = styled.Text`
   color: white;
   text-align: center;
 `
-const Touched = styled.TouchableWithoutFeedback``
 
 const StyledFlexBox = styled.View`
   position: absolute;
@@ -62,6 +61,7 @@ const TrashcanIcon = styled.Image`
 `
 const NotesIcon = styled.Image`
 `
+const Touched = styled.TouchableWithoutFeedback``
 
 const CatalogItemView = (props) => {
 
@@ -187,55 +187,56 @@ const CatalogItemView = (props) => {
   }
 
   return (
+    <>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <BgNoScroll pad={20}>
 
-    <Touched onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView>
-        <BgNoScroll pad={20}>
+            <Name value={name}
+                  placeholder='Name'
+                  placeholderTextColor='#FFF'
+                  onChangeText={text => _updateName(text)}/>
+            <TouchableWithoutFeedback onPress={() => _navigateToCategory()}>
+              <View>
+                <Category>{category === '' ? 'Category' : category}</Category>
+              </View>
+            </TouchableWithoutFeedback>
+            <Link placeholder='Link'
+                  placeholderTextColor='#FFF'
+                  autoCorrect={false} 
+                  spellCheck={false}
+                  autoCapitalize='none'
+                  multiline={true}
+                  value={link}
+                  onChangeText={text => _updateLink(text)}/>
 
-          <Name value={name}
-                placeholder='Name'
-                placeholderTextColor='#FFF'
-                onChangeText={text => _updateName(text)}/>
-          <Touched onPress={() => _navigateToCategory()}>
-            <View>
-              <Category>{category === '' ? 'Category' : category}</Category>
-            </View>
-          </Touched>
-          <Link placeholder='Link'
-                placeholderTextColor='#FFF'
-                autoCorrect={false} 
-                spellCheck={false}
-                autoCapitalize='none'
-                multiline={true}
-                value={link}
-                onChangeText={text => _updateLink(text)}/>
+            
+            <StyledFlexBox>
+              <TouchableWithoutFeedback onPress={() => _showDeleteActionSheet()}>
+                <TrashcanIcon source={Trashcan}/>
+              </TouchableWithoutFeedback> 
+              <TouchableWithoutFeedback onPress={() => _openNotes()}>
+                <NotesIcon source={Notes}/>
+              </TouchableWithoutFeedback> 
+            </StyledFlexBox>
+
+          </BgNoScroll>
+      </TouchableWithoutFeedback>
+      <Touched onPress={() => _navigateToChooseImage()}>
+      {
+        imageLink === '' ? 
+        <ImageBox>
           <Touched onPress={() => _navigateToChooseImage()}>
-            {
-              imageLink === '' ? 
-              <ImageBox>
-                <Touched onPress={() => _navigateToChooseImage()}>
-                  <ImageText>No{'\n'}Image</ImageText>
-                </Touched>
-              </ImageBox>
-              :
-              <ImageBox source={imageLink}
-                        imageStyle={{ borderRadius: 3}}>
-              </ImageBox>
-            }
+            <ImageText>No{'\n'}Image</ImageText>
           </Touched>
-          
-          <StyledFlexBox>
-            <TouchableWithoutFeedback onPress={() => _showDeleteActionSheet()}>
-              <TrashcanIcon source={Trashcan}/>
-            </TouchableWithoutFeedback> 
-            <TouchableWithoutFeedback onPress={() => _openNotes()}>
-              <NotesIcon source={Notes}/>
-            </TouchableWithoutFeedback> 
-          </StyledFlexBox>
-
-        </BgNoScroll>
-      </KeyboardAvoidingView>
+        </ImageBox>
+        :
+        <ImageBox source={imageLink}
+                  imageStyle={{ borderRadius: 3}}>
+        </ImageBox>
+        
+      }
     </Touched>
+  </>
   );
 }
 

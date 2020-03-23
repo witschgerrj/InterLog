@@ -51,8 +51,8 @@ export default TabBar = createBottomTabNavigator({
     showLabel: false,
     showIcon: true,
     activeTintColor: '#FFF',
+    keyboardHidesTabBar: false,
     style: {
       backgroundColor: '#2B2B2B',//color you want to change
     }
-    
 }});

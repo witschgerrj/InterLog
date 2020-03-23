@@ -20,9 +20,6 @@ const Email = styled.TextInput`
   margin-bottom: 45px; 
 `
 const Phone = styled.TextInput`
-  position: absolute;
-  left: 20px;
-  top: 150px;
   font-size: 18px;
   color: white;
   height: 22px;
@@ -130,7 +127,6 @@ const ClientView = (props) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => _closeKeyboardAndBoxes()}>
-      <KeyboardAvoidingView>
         <BgNoScroll pad={20}>
           <FlexBox justify='space-between'>
             <Name onChangeText={text => _updateName(text)}
@@ -214,7 +210,6 @@ const ClientView = (props) => {
             </TouchableWithoutFeedback> 
           </StyledFlexBox>
         </BgNoScroll>
-      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

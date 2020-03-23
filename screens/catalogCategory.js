@@ -17,7 +17,7 @@ const Tab = styled.View`
   height: 60px;
   padding: 10px;
   borderBottomColor: #2B2B2B;
-  borderBottomWidth: 1;
+  borderBottomWidth: 1px;
 `
 const AddCategory = styled.TextInput`
   margin-top: 8px;

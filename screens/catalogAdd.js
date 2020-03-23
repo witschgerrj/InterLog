@@ -150,19 +150,19 @@ const CatalogAdd = (props) => {
   }, []);
 
   return (
-    <Touched onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView>
+    <>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <BgNoScroll pad={20}>
 
           <Name value={name}
                 placeholder='Name'
                 placeholderTextColor='#FFF'
                 onChangeText={text => _updateName(text)}/>
-          <Touched onPress={() => _navigateToCategory()}>
+          <TouchableWithoutFeedback onPress={() => _navigateToCategory()}>
             <View>
               <Category>{category === '' ? 'Category' : category}</Category>
             </View>
-          </Touched>
+          </TouchableWithoutFeedback>
           <Link placeholder='Link'
                 placeholderTextColor='#FFF'
                 autoCorrect={false} 
@@ -172,23 +172,25 @@ const CatalogAdd = (props) => {
                 numberOfLines={10}
                 value={link}
                 onChangeText={text => _updateLink(text)}/>
-          <Touched onPress={() => _navigateToChooseImage()}>
-            {
-              imageLink === '' ? 
-              <ImageBox>
-                <Touched onPress={() => _navigateToChooseImage()}>
-                  <ImageText>No{'\n'}Image</ImageText>
-                </Touched>
-              </ImageBox>
-              :
-              <ImageBox source={imageLink}
-                        imageStyle={{ borderRadius: 3}}>
-              </ImageBox>
-            }
-          </Touched>
+
         </BgNoScroll>
-      </KeyboardAvoidingView>
-    </Touched>
+      </TouchableWithoutFeedback>
+      <Touched onPress={() => _navigateToChooseImage()}>
+        {
+          imageLink === '' ? 
+          <ImageBox>
+            <Touched onPress={() => _navigateToChooseImage()}>
+              <ImageText>No{'\n'}Image</ImageText>
+            </Touched>
+          </ImageBox>
+          :
+          <ImageBox source={imageLink}
+                    imageStyle={{ borderRadius: 3}}>
+          </ImageBox>
+        }
+      </Touched>
+    </>
+    
   );
 }
 
