@@ -127,4 +127,5 @@ CatalogCategory.navigationOptions = (props) => ({
   ),
 });
 
+
 export default CatalogCategory;

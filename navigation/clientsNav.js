@@ -7,23 +7,26 @@ import ClientView from '../screens/clientView'
 const ClientStack = createStackNavigator({
   Clients: {
     screen: Clients,
+    navigationOptions: {
+      title: 'Contacts'
+    }
   },
   ClientAdd: {
     screen: ClientAdd,
     navigationOptions: {
-      title: 'Add Client'
+      title: 'Add Contact'
     }
   },
   ClientNotes: {
     screen: ClientNotes,
     navigationOptions: {
-      title: 'Client Notes'
+      title: 'Contact Notes'
     }
   },
   ClientView: {
     screen: ClientView,
     navigationOptions: {
-      title: 'Client View'
+      title: 'Contact View'
     }
   },
 },

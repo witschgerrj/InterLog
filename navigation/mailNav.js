@@ -1,25 +1,41 @@
-import { createStackNavigator } from 'react-navigation-stack'
-import MailFormatEmail from '../screens/mailFormatEmail'
-import MailSelectClients from '../screens/mailSelectClients'
-import MailSelectItems from '../screens/mailSelectItems'
+import { createStackNavigator } from 'react-navigation-stack';
+import MailMessage from '../screens/mailMessage';
+import MailSelectClients from '../screens/mailSelectClients';
+import MailSelectItems from '../screens/mailSelectItems';
+import MailItemDetails from '../screens/mailItemDetails';
 
 const MailStack = createStackNavigator({
-  MailSelectClients: {
-    screen: MailSelectClients,
-    navigationOptions: {
-      title: 'Select Clients'
-    }
-  },
   MailSelectItems: {
     screen: MailSelectItems,
+    params: {
+      selectedItems: {},
+    },
     navigationOptions: {
-      title: 'Select Items'
+      title: 'Select Items',
     }
   },
-  MailFormatEmail: {
-    screen: MailFormatEmail,
+  MailItemDetails: {
+    screen: MailItemDetails,
+    params: {
+      selectedDetails: ['Name'],
+    },
     navigationOptions: {
-      title: 'Formal Email'
+      title: 'Included Details',
+    }
+  },
+  MailSelectClients: {
+    screen: MailSelectClients,
+    params: {
+      selectedClients: {},
+    },
+    navigationOptions: {
+      title: 'Select Contacts',
+    }
+  },
+  MailMessage: {
+    screen: MailMessage,
+    navigationOptions: {
+      title: 'Message',
     }
   },
 },

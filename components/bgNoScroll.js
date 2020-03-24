@@ -1,6 +1,5 @@
 import React, { Image } from 'react';
 import styled from 'styled-components';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const Background = styled.View`
   height: 100%;

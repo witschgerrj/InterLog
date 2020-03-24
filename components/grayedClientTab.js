@@ -4,12 +4,13 @@ import GroupColor from './groupColor';
 import FlexBox from './flexbox'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-const Tab = styled.View`
+const ClientTab = styled.View`
   width: 100%;
   height: 60px;
   padding: 10px;
   borderBottomColor: #2B2B2B;
   borderBottomWidth: 1px;
+  opacity: ${props => props.opacity};
 `
 
 const ClientName = styled.Text`
@@ -23,33 +24,27 @@ const LastUpdated = styled.Text`
   color: #2B2B2B;
 `
 
-const ClientTab = (props) => {
+const GrayedClientTab = (props) => {
 
-  const _navigateToViewClient = () => {
-    props.navigation.navigate('ClientView', {
-      name: props.name,
-      email: props.email,
-      phone: props.phone,
-      color: props.color,
-      notes: props.notes,
-      clientUID: props.clientUID,
-      updateClients: props.updateClients,
-    })
+  const _toggleSelected = () => {
+    if (!props.selected) {
+      props.addSelected(props.clientUID, props.name);
+    } else {
+      props.removeUnselected(props.clientUID);
+    }
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      _navigateToViewClient();
-    }}>
-      <Tab>
+    <TouchableWithoutFeedback onPress={() => _toggleSelected()}>
+      <ClientTab opacity={props.selected ? 1 : 0.4}>
         <FlexBox justify='space-between'>
           <ClientName>{props.name}</ClientName>
           <GroupColor color={props.color}/>
         </FlexBox>
         <LastUpdated>TBD</LastUpdated>
-      </Tab>
+      </ClientTab>
     </TouchableWithoutFeedback>
   );
 }
 
-export default ClientTab;
+export default GrayedClientTab;

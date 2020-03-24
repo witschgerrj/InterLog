@@ -1,11 +1,13 @@
 import React, { Component, useState } from 'react';
+import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import BgNoScroll from '../components/bgNoScroll';
+import BgScrollView from '../components/bgScrollView';
 import { updateCatalogItemNotes } from '../backend/firebase';
 
 const NoteArea = styled.TextInput`
-  height: 100%;
+  height: ${Math.floor(Dimensions.get('window').height)}px;
+  margin-bottom: ${Math.floor(Dimensions.get('window').height) * 0.4}px;
   width: 100%;
   padding: 20px;
   color: white;
@@ -27,11 +29,11 @@ const CatalogItemNotes = (props) => {
   }
 
   return (
-    <BgNoScroll>
+    <BgScrollView>
       <NoteArea multiline={true}
                 value={notes}
                 onChangeText={text => _updateNotes(text)}/>
-    </BgNoScroll>
+    </BgScrollView>
   );
 }
 

@@ -10,7 +10,6 @@ import Mail from '../assets/mail.png';
 import ClientUnselected from '../assets/clientUnselected.png';
 import ClientSelected from '../assets/clientSelected.png';
 
-
 export default TabBar = createBottomTabNavigator({
   Clients: {
     screen: ClientsStack,
@@ -29,7 +28,8 @@ export default TabBar = createBottomTabNavigator({
     navigationOptions: {
       tabBarIcon: () => {
         return <TabBarIcon icon={Mail}/>;
-      }
+      },
+      tabBarVisible: false,
     }
   },
   Catalog: {

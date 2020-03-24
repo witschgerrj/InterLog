@@ -97,6 +97,7 @@ const CatalogItemView = (props) => {
         //delete item, go back, reload catalog
         deleteCatalogItem(props.navigation.getParam('catalogItemUID'));
         props.navigation.getParam('updateCatalog')();
+        props.navigation.getParam('getAllCategories')();
         props.navigation.goBack();
       } else {
         //do nothing

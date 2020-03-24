@@ -20,6 +20,9 @@ const Email = styled.TextInput`
   margin-bottom: 45px; 
 `
 const Phone = styled.TextInput`
+  position: absolute;
+  left: 20px;
+  top: 150px;
   font-size: 18px;
   color: white;
   height: 22px;

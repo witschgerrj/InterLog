@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Keyboard, View, Dimensions, ActionSheetIOS, KeyboardAvoidingView} from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
+import * as ImagePicker from 'expo-image-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { addNewItem, getCategories } from '../backend/firebase';
 
@@ -204,6 +205,7 @@ CatalogAdd.navigationOptions = (props) => ({
         addNewItem(name, category, link, imageLink);
         props.navigation.goBack();
         props.navigation.getParam('updateCatalog')();
+        props.navigation.getParam('getAllCategories')();
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
