@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Linking, ActionSheetIOS } from 'react-native';
+import { Dimensions, Linking, ActionSheetIOS, Alert } from 'react-native';
 import styled from 'styled-components';
 import backArrow from '../assets/backArrow.png';
 import BackgroundScroll from '../components/bgScrollView';
@@ -80,7 +80,7 @@ const MailMessage = (props) => {
     }
 
     let defaultMail = `mailto:?subject=Hello&body=Hello`;
-    let gmail = `googlegmail://co?subject=Hello&body=Hello`;
+    let gmail = `googlegmail://co?&body=${body}&bcc=${bcc}`;
     let outlook = `ms-outlook://compose?subject=Hello&body=Hello`;
 
     let options = ['Cancel', 'Outlook', 'Gmail', 'Mail'];
@@ -93,17 +93,26 @@ const MailMessage = (props) => {
       switch(index){
         case 1:
           Linking.openURL(outlook).catch(error => {
-            alert('Cannot access Outlook.');
+            Alert.alert(
+              'An Issue Occurred',
+              'Cannot access Outlook.',
+            )
           });
           break;
         case 2:
           Linking.openURL(gmail).catch(error => {
-            alert('Cannot access Gmail.');
+            Alert.alert(
+              'An Issue Occurred',
+              'Cannot access Gmail.',
+            )
           });
           break;
         case 3:
           Linking.openURL(defaultMail).catch(error => {
-            alert('Cannot access Mail.');
+            Alert.alert(
+              'An Issue Occurred',
+              'Cannot access Mail.',
+            )
           });
           break;
       }
