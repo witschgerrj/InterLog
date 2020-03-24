@@ -79,12 +79,23 @@ const MailMessage = (props) => {
       body = `<text style='white-space: pre;'>${message}</text>` + `<br><br><br>`+ body;
     }
 
-    let defaultMail = `mailto:?subject=Hello&body=Hello`;
-    let gmail = `googlegmail://co?&body=${body}&bcc=${bcc}`;
-    let outlook = `ms-outlook://compose?subject=Hello&body=Hello`;
+    let mail = `mailto:?body=${body}&bcc=${bcc}`;
+    let gmail = `googlegmail://co?body=${body}&bcc=${bcc}`;
+    let outlook = `ms-outlook://compose?body=${body}&bcc=${bcc}`;
+    
+    let gmailRequest = await Linking.canOpenURL(gmail);
+    let outlookRequest = await Linking.canOpenURL(outlook);
 
-    let options = ['Cancel', 'Outlook', 'Gmail', 'Mail'];
-   
+    let options = ['Cancel', 'Mail'];
+
+    if (gmailRequest) {
+      options.push('Gmail');
+    }
+    if (outlookRequest) {
+      options.push('Outlook');
+    }
+    
+    //Gmail and Outlook will never show when testing through expo.
     ActionSheetIOS.showActionSheetWithOptions({
       options: options,
       cancelButtonIndex: 0,
@@ -92,26 +103,35 @@ const MailMessage = (props) => {
     (index => {
       switch(index){
         case 1:
-          Linking.openURL(outlook).catch(error => {
+          Linking.openURL(mail).catch(error => {
             Alert.alert(
               'An Issue Occurred',
-              'Cannot access Outlook.',
+              'Cannot access Mail.',
             )
           });
           break;
         case 2:
-          Linking.openURL(gmail).catch(error => {
-            Alert.alert(
-              'An Issue Occurred',
-              'Cannot access Gmail.',
-            )
-          });
+          if (options[2] === 'Gmail') {
+            Linking.openURL(gmail).catch(error => {
+              Alert.alert(
+                'An Issue Occurred',
+                'Cannot access Gmail.',
+              )
+            });
+          } else {
+            Linking.openURL(outlook).catch(error => {
+              Alert.alert(
+                'An Issue Occurred',
+                'Cannot access Outlook.',
+              )
+            });
+          }
           break;
         case 3:
-          Linking.openURL(defaultMail).catch(error => {
+          Linking.openURL(outlook).catch(error => {
             Alert.alert(
               'An Issue Occurred',
-              'Cannot access Mail.',
+              'Cannot access Outlook.',
             )
           });
           break;
