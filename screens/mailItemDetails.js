@@ -37,8 +37,9 @@ const MailItemDetails = (props) => {
   return (
     <BgNoScroll>
       { 
-        details.map(detail => (
-          <GrayedCategory detail={detail}
+        details.map((detail, index) => (
+          <GrayedCategory key={detail+index}
+                          detail={detail}
                           selected={selectedDetails.includes(detail) ? true : false}
                           toggleSelected={_toggleSelected}/> 
         ))

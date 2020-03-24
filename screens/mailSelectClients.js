@@ -75,10 +75,11 @@ const MailSelectItems = (props) => {
     _updateClientsGroupYellow();
   }
 
-  const _addSelected = (clientUID, name) => {
+  const _addSelected = (clientUID, name, email) => {
     let items = JSON.parse(JSON.stringify(selectedClients));
     items[clientUID] = {
       name: name,
+      email: email,
     } 
     setSelectedClients(items);
     props.navigation.setParams({selectedClients: items});
@@ -102,6 +103,7 @@ const MailSelectItems = (props) => {
         clientsGroupWhite.map((doc, index) => (
           <GrayedClientTab  key={'clientW' + index}
                             name={doc.data().name}
+                            email={doc.data().email}
                             color={doc.data().color}
                             selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
                             addSelected={_addSelected}
@@ -113,6 +115,7 @@ const MailSelectItems = (props) => {
         clientsGroupBlue.map((doc, index) => (
           <GrayedClientTab  key={'clientB' + index}
                             name={doc.data().name}
+                            email={doc.data().email}
                             color={doc.data().color}
                             selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
                             addSelected={_addSelected}
@@ -123,18 +126,20 @@ const MailSelectItems = (props) => {
       { 
         clientsGroupYellow.map((doc, index) => (
           <GrayedClientTab  key={'clientY' + index}
-                      name={doc.data().name}
-                      color={doc.data().color}
-                      selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
-                      addSelected={_addSelected}
-                      removeUnselected={_removeUnselected}
-                      clientUID={doc.id}/>
+                            name={doc.data().name}
+                            email={doc.data().email}
+                            color={doc.data().color}
+                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            addSelected={_addSelected}
+                            removeUnselected={_removeUnselected}
+                            clientUID={doc.id}/>
         ))
       }
       { 
         clientsGroupGreen.map((doc, index) => (
           <GrayedClientTab  key={'clientG' + index}
                             name={doc.data().name}
+                            email={doc.data().email}
                             color={doc.data().color}
                             selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
                             addSelected={_addSelected}
@@ -146,6 +151,7 @@ const MailSelectItems = (props) => {
         clientsGroupViolet.map((doc, index) => (
           <GrayedClientTab  key={'clientV' + index}
                             name={doc.data().name}
+                            email={doc.data().email}
                             color={doc.data().color}
                             selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
                             addSelected={_addSelected}
@@ -157,6 +163,7 @@ const MailSelectItems = (props) => {
         clientsGroupRed.map((doc, index) => (
           <GrayedClientTab  key={'clientR' + index}
                             name={doc.data().name}
+                            email={doc.data().email}
                             color={doc.data().color}
                             selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
                             addSelected={_addSelected}
@@ -168,6 +175,7 @@ const MailSelectItems = (props) => {
         clientsGroupNone.map((doc, index) => (
           <GrayedClientTab  key={'clientN' + index}
                             name={doc.data().name}
+                            email={doc.data().email}
                             color={doc.data().color}
                             selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
                             addSelected={_addSelected}

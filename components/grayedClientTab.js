@@ -28,7 +28,7 @@ const GrayedClientTab = (props) => {
 
   const _toggleSelected = () => {
     if (!props.selected) {
-      props.addSelected(props.clientUID, props.name);
+      props.addSelected(props.clientUID, props.name, props.email);
     } else {
       props.removeUnselected(props.clientUID);
     }
