@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import ClientsStack from './clientsNav';
 import CatalogStack from './catalogNav';
+import DataStack from './dataNav';
 import MailStack from './mailNav';
 import TabBarIcon from '../components/tabbarIcon';
 import CatalogUnselected from '../assets/catalogUnselected.png';
@@ -29,6 +30,12 @@ export default TabBar = createBottomTabNavigator({
       tabBarIcon: () => {
         return <TabBarIcon icon={Mail}/>;
       },
+      tabBarVisible: false,
+    }
+  },
+  Data: {
+    screen: DataStack,
+    navigationOptions: {
       tabBarVisible: false,
     }
   },

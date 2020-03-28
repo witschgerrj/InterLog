@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import * as ImagePicker from 'expo-image-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { addNewItem, getCategories } from '../backend/firebase';
+import { addNewItem, getCategories, saveCatalogImage } from '../backend/firebase';
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -102,8 +102,10 @@ const CatalogAdd = (props) => {
     if (permission.granted) {
       let result = await ImagePicker.launchCameraAsync();
       if (!result.cancelled) {
-        let uri = { uri: result.uri }
+        let uri = result.uri;
+        //setting to uri for quicker load time
         setImageLink(uri);
+
         props.navigation.setParams({ imageLink: uri })
       }
     } else {
@@ -117,8 +119,10 @@ const CatalogAdd = (props) => {
     if (permission.granted) {
       let result = await ImagePicker.launchImageLibraryAsync();
       if (!result.cancelled) {
-        let uri = { uri: result.uri }
+        let uri = result.uri;
+        //setting to uri for quicker load time
         setImageLink(uri);
+
         props.navigation.setParams({ imageLink: uri })
       }
     } else {
@@ -138,7 +142,7 @@ const CatalogAdd = (props) => {
       } else if (index == 2){
         _executeImageSelection();
       } else {
-
+        //future use
       }
     }))
   }
@@ -185,7 +189,7 @@ const CatalogAdd = (props) => {
             </Touched>
           </ImageBox>
           :
-          <ImageBox source={imageLink}
+          <ImageBox source={{ uri: imageLink}}
                     imageStyle={{ borderRadius: 3}}>
           </ImageBox>
         }
@@ -198,14 +202,15 @@ const CatalogAdd = (props) => {
 CatalogAdd.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
+        const imageLink = props.navigation.getParam('imageLink');
         const name = props.navigation.getParam('name');
         const category = props.navigation.getParam('category');
         const link = props.navigation.getParam('link');
-        const imageLink = props.navigation.getParam('imageLink');
-        addNewItem(name, category, link, imageLink);
-        props.navigation.goBack();
-        props.navigation.getParam('updateCatalog')();
-        props.navigation.getParam('getAllCategories')();
+        addNewItem(name, category, link, imageLink).then(() => {
+          props.navigation.goBack();
+          props.navigation.getParam('updateCatalog')();
+          props.navigation.getParam('getAllCategories')();
+        });
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

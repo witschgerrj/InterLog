@@ -1,8 +1,8 @@
-import { createStackNavigator } from 'react-navigation-stack'
-import Clients from '../screens/clients'
-import ClientAdd from '../screens/clientAdd'
-import ClientNotes from '../screens/clientNotes'
-import ClientView from '../screens/clientView'
+import { createStackNavigator } from 'react-navigation-stack';
+import Clients from '../screens/clients';
+import ClientAdd from '../screens/clientAdd';
+import ClientNotes from '../screens/clientNotes';
+import ClientView from '../screens/clientView';
 
 const ClientStack = createStackNavigator({
   Clients: {

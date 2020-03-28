@@ -1,5 +1,6 @@
 import * as Firebase from 'firebase';
 import 'firebase/firestore';
+import nanoid from 'nanoid/async';
 
 var firebaseConfig = {
   apiKey: "AIzaSyBpNguIOoJUIES_y6yZDjZ6_sK2R408iTE",
@@ -28,6 +29,15 @@ export async function getCatalog() {
   return snapshot.docs;
 }
 
+export async function getCategories() {
+  let data = await  db.collection('Users')
+                          .doc(FB.auth().currentUser.uid)
+                          .collection('Catalog')
+                          .orderBy('category')
+                          .get();
+  return data.docs;
+}
+
 export function addNewClient(name, email, phone, color) {
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
@@ -42,18 +52,25 @@ export function addNewClient(name, email, phone, color) {
   })
 }
 
-export function addNewItem(name, category, link, imageLink) {
-  db.collection('Users')
-  .doc(FB.auth().currentUser.uid)
-  .collection('Catalog')
-  .add({
-    name: name,
-    category: category,
-    link: link,
-    imageLink: imageLink,
-    notes: '',
-    timestamp: getServerTimestamp(),
-  })
+export async function addNewItem(name, category, link, imageLink) {
+  let uuid = '';
+  let url = '';
+  if (imageLink !== '') {
+    uuid = await nanoid();
+    url = await saveCatalogImage(imageLink, uuid);
+  }
+  await db.collection('Users')
+        .doc(FB.auth().currentUser.uid)
+        .collection('Catalog')
+        .add({
+          name: name,
+          category: category,
+          link: link,
+          imageLink: url,
+          imageUUID: uuid,
+          notes: '',
+          timestamp: getServerTimestamp(),
+        })
 }
 
 export function updateClient(name, email, phone, color, notes, clientUID) {
@@ -101,13 +118,7 @@ export function updateCatalogNameLink(name, link, catalogItemUID) {
   })
 }
 
-export async function getCategories() {
-  let data = await  db.collection('Users')
-                          .doc(FB.auth().currentUser.uid)
-                          .collection('Catalog')
-                          .get();
-  return data.docs;
-}
+
 
 export function addCategory(categories) {
   db.collection('Users')
@@ -144,14 +155,14 @@ export function updateItemCategory(catalogItemUID, category) {
 }
 
 
-export function updateItemImageURL(catalogItemUID, imageLink) {
-  db.collection('Users')
-  .doc(FB.auth().currentUser.uid)
-  .collection('Catalog')
-  .doc(catalogItemUID)
-  .update({
-    imageLink: imageLink,
-  })
+export async function updateItemImageURL(catalogItemUID, imageLink) {
+  await db.collection('Users')
+        .doc(FB.auth().currentUser.uid)
+        .collection('Catalog')
+        .doc(catalogItemUID)
+        .update({
+          imageLink: imageLink,
+        })
 }
 
 export async function getClientsGroupNone() {
@@ -215,4 +226,31 @@ export async function getClientsGroupViolet() {
                           .where('color', '==', '#8D0778')
                           .get();
   return snapshot.docs;
+}
+
+//---------------------------------------------------------
+//--------------------Firebase Storage---------------------
+//---------------------------------------------------------
+
+let fbStorage = Firebase.storage().ref();
+
+export async function saveCatalogImage(imageURI, imageUUID) {
+  let uuid = imageUUID;
+  //if no uuid is passed in, generate one.
+  if (!uuid) {
+    uuid = await nanoid();
+  }
+  const response = await fetch(imageURI);
+  const blob = await response.blob();
+
+  let saveItem = await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + uuid).put(blob);
+  return await saveItem.ref.getDownloadURL();
+}
+
+export async function getCatalogImageURL(uuid) {
+  return await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + uuid).getDownloadURL();
+}
+
+export async function deleteCatalogImage(uuid) {
+  return await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + uuid).delete();
 }

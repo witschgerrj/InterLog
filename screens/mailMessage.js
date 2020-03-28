@@ -50,33 +50,30 @@ const MailMessage = (props) => {
     selectedItemsKeys.map(key => {
       if (selectedDetails.includes('Name')) {
         let name = selectedItems[key].name;
-        let text = `<text style='font-size: 20px;'>
-                      <u><b>${name}</b></u>
-                    </text><br>`;
-        body += text;
+        body += name;
       }
       if (selectedDetails.includes('Category')) {
         let category = selectedItems[key].category;
-        let text = `${category}<br><br>`
+        let text = category
         body += text;
       } else {
-        body += `<br><br>`
+        body += '';
       }
       if (selectedDetails.includes('Notes')) {
         let notes = selectedItems[key].notes;
-        body += `${notes}<br><br>`
+        body += notes
       }
       if (selectedDetails.includes('Link')) {
         let link = selectedItems[key].link;
-        body += `${link}<br><br>`
+        body += link
       } 
     })
     props.navigation.setParams({ body: body})
   }
 
-  const _formatEmail = async (bcc, body, message) => {
+  const _formatEmail = async (bcc, body, message, callback) => {
     if (message) { 
-      body = `<text style='white-space: pre;'>${message}</text>` + `<br><br><br>`+ body;
+      body = message + body;
     }
 
     let mail = `mailto:?body=${body}&bcc=${bcc}`;
@@ -103,7 +100,11 @@ const MailMessage = (props) => {
     (index => {
       switch(index){
         case 1:
-          Linking.openURL(mail).catch(error => {
+          Linking.openURL(mail)
+          .then(() => {
+            callback();
+          })
+          .catch(error => {
             Alert.alert(
               'An Issue Occurred',
               'Cannot access Mail.',
@@ -112,14 +113,22 @@ const MailMessage = (props) => {
           break;
         case 2:
           if (options[2] === 'Gmail') {
-            Linking.openURL(gmail).catch(error => {
+            Linking.openURL(gmail)
+            .then(() => {
+              callback();
+            })
+            .catch(error => {
               Alert.alert(
                 'An Issue Occurred',
                 'Cannot access Gmail.',
               )
             });
           } else {
-            Linking.openURL(outlook).catch(error => {
+            Linking.openURL(outlook)
+            .then(() => {
+              callback();
+            })
+            .catch(error => {
               Alert.alert(
                 'An Issue Occurred',
                 'Cannot access Outlook.',
@@ -128,15 +137,21 @@ const MailMessage = (props) => {
           }
           break;
         case 3:
-          Linking.openURL(outlook).catch(error => {
+          Linking.openURL(outlook)
+          .then(() => {
+            callback();
+          })
+          .catch(error => {
             Alert.alert(
               'An Issue Occurred',
               'Cannot access Outlook.',
             )
           });
           break;
-      }
-    }))
+        }
+    })
+    )
+
   }
 
   const _updateMessage = (text) => {
@@ -162,15 +177,19 @@ const MailMessage = (props) => {
 MailMessage.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
+      const callback = () => {
+        props.navigation.dispatch(StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({routeName: 'MailSelectItems'})],
+        }))
+        props.navigation.navigate('Clients');
+      }
       
       props.navigation.getParam('formatEmail')(props.navigation.getParam('bcc'), 
                                                 props.navigation.getParam('body'),
-                                                props.navigation.getParam('message'))
-      /*props.navigation.dispatch(StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: 'MailSelectItems'})],
-      }))
-      props.navigation.navigate('Clients');*/
+                                                props.navigation.getParam('message'),
+                                                callback);
+
     }}>
     {
       <Finish>Finish</Finish>

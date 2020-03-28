@@ -6,7 +6,7 @@ import Trashcan from '../assets/trashcan.png';
 import Notes from '../assets/notes.png';
 import * as ImagePicker from 'expo-image-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { deleteCatalogItem, updateItemCategory, getCategories, updateItemImageURL } from '../backend/firebase';
+import { deleteCatalogItem, updateItemCategory, getCategories, updateItemImageURL, deleteCatalogImage, saveCatalogImage } from '../backend/firebase';
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -95,6 +95,7 @@ const CatalogItemView = (props) => {
     (index => {
       if (index === 1) {
         //delete item, go back, reload catalog
+        //add a .then and make 
         deleteCatalogItem(props.navigation.getParam('catalogItemUID'));
         props.navigation.getParam('updateCatalog')();
         props.navigation.getParam('getAllCategories')();
@@ -138,9 +139,11 @@ const CatalogItemView = (props) => {
     if (permission.granted) {
       let result = await ImagePicker.launchCameraAsync();
       if (!result.cancelled) {
-        let uri = { uri: result.uri }
+        //if there's an image stored, delete the image that's being replaced.
+        let uri = result.uri;
         setImageLink(uri);
-        props.navigation.setParams({ imageLink: uri })
+        props.navigation.setParams({ imageLink: uri });
+        props.navigation.setParams({ newImage: true });
       }
     } else {
       alert("Permission to access camera is required!");
@@ -153,9 +156,15 @@ const CatalogItemView = (props) => {
     if (permission.granted) {
       let result = await ImagePicker.launchImageLibraryAsync();
       if (!result.cancelled) {
-        let uri = { uri: result.uri }
+        //if there's an image stored, delete the image that's being replaced.
+        if (imageLink !== '') {
+          //NEED TO SWITCH OUT TO imageUID
+          deleteCatalogImage(imageLink);
+        }
+        let uri = result.uri
         setImageLink(uri);
-        props.navigation.setParams({ imageLink: uri })
+        props.navigation.setParams({ imageLink: uri });
+        props.navigation.setParams({ newImage: true });
       }
     } else {
       alert("Permission to access camera roll is required!");
@@ -180,6 +189,7 @@ const CatalogItemView = (props) => {
   }
 
   const _openNotes = () => {
+    
     props.navigation.navigate('CatalogItemNotes', {
       notes: props.navigation.getParam('notes'),
       catalogItemUID: props.navigation.getParam('catalogItemUID'),
@@ -231,7 +241,7 @@ const CatalogItemView = (props) => {
           </Touched>
         </ImageBox>
         :
-        <ImageBox source={imageLink}
+        <ImageBox source={{ uri: imageLink }}
                   imageStyle={{ borderRadius: 3}}>
         </ImageBox>
         
@@ -244,11 +254,22 @@ const CatalogItemView = (props) => {
 CatalogItemView.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const imageLink = props.navigation.getParam('imageLink');
-        const catalogItemUID = props.navigation.getParam('catalogItemUID');
-        updateItemImageURL(catalogItemUID, imageLink);
-        props.navigation.goBack();
-        props.navigation.getParam('updateCatalog')();
+        const newImage = props.navigation.getParam('newImage');
+        if (newImage) {
+          deleteCatalogImage(props.navigation.getParam('imageUUID'));
+          const imageLink = props.navigation.getParam('imageLink');
+          const catalogItemUID = props.navigation.getParam('catalogItemUID');
+          saveCatalogImage(imageLink).then((url) => {
+            updateItemImageURL(catalogItemUID, url).then(() => {
+              props.navigation.goBack();
+              props.navigation.getParam('updateCatalog')();
+            });
+          })
+
+        } else {
+          props.navigation.goBack();
+          props.navigation.getParam('updateCatalog')();
+        }
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

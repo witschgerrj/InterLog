@@ -4,6 +4,7 @@ import { FB,  getClientsGroupNone, getClientsGroupBlue,
               getClientsGroupGreen, getClientsGroupRed, 
               getClientsGroupViolet, getClientsGroupWhite, 
               getClientsGroupYellow } from '../backend/firebase';
+import { getData } from '../backend/asyncStorage';
 import BackgroundScroll from '../components/bgScrollView';
 import ClientTab from '../components/clientTab';
 import Add from '../assets/add.png';
@@ -67,6 +68,7 @@ const Clients = (props) => {
     _updateClientsGroupWhite();
     _updateClientsGroupYellow();
   }
+
   useEffect(() => {
     _updateAllGroups();
     props.navigation.setParams({ updateClients: _updateAllGroups});

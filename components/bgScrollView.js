@@ -10,7 +10,8 @@ const Background = styled.ScrollView`
 
 const BgScrollView = (props) => {
   return (
-    <Background pt={props.pt}>
+    <Background pt={props.pt}
+                keyboardShouldPersistTaps='always'>
       {props.children}
     </Background>
   );

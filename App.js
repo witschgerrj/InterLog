@@ -1,9 +1,10 @@
-import { createAppContainer, createSwitchNavigator } from 'react-navigation'
-import { enableScreens } from 'react-native-screens'
-import Loading from './screens/loading'
-import Login from './screens/login'
-import Register from './screens/register'
-import TabBar from './navigation/tabbar'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { enableScreens } from 'react-native-screens';
+import Loading from './screens/loading';
+import Login from './screens/login';
+import Register from './screens/register';
+import ResetPassword from './screens/resetPassword';
+import TabBar from './navigation/tabbar';
 
 console.disableYellowBox = true;
 
@@ -19,6 +20,9 @@ const LoginStack = createSwitchNavigator(
     },
     Register: {
       screen: Register,
+    },
+    ResetPassword: {
+      screen: ResetPassword,
     },
     TabBar: {
       screen: TabBar,

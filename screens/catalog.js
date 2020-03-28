@@ -28,9 +28,6 @@ const Absolute = styled.View`
   top: 0;
   left: 0;
 `
-const Highlight = styled.View`
-  background-color: white;
-`
 
 const Catalog = (props) => {
 
@@ -82,6 +79,7 @@ const Catalog = (props) => {
                           name={doc.data().name}
                           category={doc.data().category}
                           imageLink={doc.data().imageLink}
+                          imageUUID={doc.data().imageUUID}
                           link={doc.data().link}
                           notes={doc.data().notes}
                           catalogItemUID={doc.id}

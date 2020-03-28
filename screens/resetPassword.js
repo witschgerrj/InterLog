@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Keyboard } from 'react-native'; 
-import { FB } from '../backend/firebase';
-import { LinearGradient } from 'expo-linear-gradient';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Keyboard, Alert, View } from 'react-native'; 
 import styled from 'styled-components';
+import { TouchableWithoutFeedback}  from 'react-native-gesture-handler';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
-import BgNoScroll from '../components/bgNoScroll';
-
+import { LinearGradient } from 'expo-linear-gradient';
+import { FB } from '../backend/firebase'
 
 const SignInText = styled.TextInput`
   width: 100%;
@@ -35,6 +33,11 @@ const ButtonText = styled.Text`
   font-size: 22px;
   top: 10px;
 `
+const StyledGradient = styled(LinearGradient)`
+  height: 100%;
+  width: 100%;
+  padding-top: 150px;
+`
 const OtherText = styled.Text`
   position: absolute;
   width: 100%;
@@ -44,33 +47,24 @@ const OtherText = styled.Text`
   font-size: 18px;
   opacity: 0.3;
 `
+const Touched = styled.TouchableWithoutFeedback``
 
-const StyledGradient = styled(LinearGradient)`
-  height: 100%;
-  width: 100%;
-  padding-top: 150px;
-`
-const Touched = styled.TouchableWithoutFeedback``;
+const Login = (props) => {
 
-const Register = (props) => {
+  const [email, setEmail] = useState("");
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const _executeRegistration = () => {
+  const _executeReset = () => {
     //Firebase Auth
     //need to pass userCreds.user.uid
-    FB.auth().createUserWithEmailAndPassword(email, password)
+    FB.auth().sendPasswordResetEmail(email)
       .then(() => { 
-        //success
-        //listener in loading will make switch to Clients screen
-        console.log('Account Created')
+        Alert.alert('Reset email has been sent if account exists.');
       })
-      .catch(error => {
-        console.log(error)
-      })
+      .catch(() => {
+        Alert.alert('Reset email has been sent if account exists.');
+      });
   }
-
+  
   const _navigateToLogin = () => {
     props.navigation.navigate('Login');
   }
@@ -86,25 +80,18 @@ const Register = (props) => {
                       autoCorrect={false} 
                       spellCheck={false}
                       autoCapitalize='none'/>
-          <SignInText onChangeText={text => setPassword(text)}
-                      placeholder='Password'
-                      placeholderTextColor='#FFF'
-                      autoCorrect={false} 
-                      spellCheck={false}
-                      autoCapitalize='none'
-                      secureTextEntry={true}/>
-          <TouchableWithoutFeedback onPress={() => _executeRegistration()}>
+            <TouchableWithoutFeedback onPress={() => _executeReset()}>
             <Button>
-              <ButtonText>Register</ButtonText>
+              <ButtonText>Reset</ButtonText>
             </Button>
           </TouchableWithoutFeedback>
-        </StyledGradient>
+        </StyledGradient>        
       </TouchableWithoutFeedback>
-    <Touched onPress={() =>_navigateToLogin()}>
-      <OtherText bottom={45}>Login</OtherText>
-    </Touched>
+      <Touched onPress={() =>_navigateToLogin()}>
+        <OtherText bottom={45}>Login</OtherText>
+      </Touched>
     </>
   );
 }
 
-export default Register;
+export default Login;

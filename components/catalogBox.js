@@ -25,6 +25,7 @@ const CatalogBox = (props) => {
       name: props.name,
       category: props.category,
       imageLink: props.imageLink,
+      imageUUID: props.imageUUID,
       link: props.link,
       notes: props.notes,
       catalogItemUID: props.catalogItemUID,
@@ -38,7 +39,7 @@ const CatalogBox = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => _navigateToCatalogItemView()}>
       <Box  rows={props.rows}
-            source={props.imageLink}>
+            source={{ uri: props.imageLink }}>
         {
           props.imageLink === '' ?
           <ItemName rows={props.rows}>{props.name}</ItemName>

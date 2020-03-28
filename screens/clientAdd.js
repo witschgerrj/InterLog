@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Keyboard, Dimensions } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import FlexBox from '../components/flexbox';
@@ -11,12 +11,14 @@ const Name = styled.TextInput`
   font-size: 18px;
   color: white;
   margin-bottom: 45px; 
+  width: ${(Dimensions.get('window').width) - 160}px;
 ` 
 const Email = styled.TextInput`
   font-size: 18px;
   color: white;
   height: 22px;
   margin-bottom: 45px; 
+  width: ${(Dimensions.get('window').width) - 160}px;
 `
 const Phone = styled.TextInput`
   position: absolute;
@@ -25,6 +27,7 @@ const Phone = styled.TextInput`
   font-size: 18px;
   color: white;
   height: 22px;
+  width: ${(Dimensions.get('window').width) - 160}px;
 `
 const Done = styled.Text`
   font-size: 22px;
@@ -79,16 +82,13 @@ const ClientAdd = (props) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => _closeKeyboardAndBoxes()}>
-      <KeyboardAvoidingView>
         <BgNoScroll pad={20}>
           <FlexBox justify='space-between'>
             <Name onChangeText={text => _updateName(text)}
-                  value={name}
                   placeholder='Name'
                   placeholderTextColor='#FFF'
                   autoCorrect={false} 
-                  spellCheck={false}
-                  autoCapitalize='none'/>
+                  spellCheck={false}/>
             <TouchableWithoutFeedback onPress={()=> setSelectingBoxes(!selectingBoxes)}>
               <Box  groupColor={selectedGroupColor}
                     size={55}
@@ -97,7 +97,6 @@ const ClientAdd = (props) => {
           </FlexBox>
           <FlexBox justify='space-between'>
             <Email  onChangeText={text => _updateEmail(text)}
-                    value={email}
                     placeholder='Email'
                     placeholderTextColor='#FFF'
                     autoCorrect={false} 
@@ -146,7 +145,6 @@ const ClientAdd = (props) => {
             </BoxContainer>
           </FlexBox>
         <Phone  onChangeText={text => _updatePhone(text)}
-                value={phone}
                 placeholder='Phone'
                 placeholderTextColor='#FFF'
                 autoCorrect={false} 
@@ -155,7 +153,6 @@ const ClientAdd = (props) => {
                 keyboardType='phone-pad'
                 textContentType='telephoneNumber'/> 
         </BgNoScroll>
-      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
 
   );
