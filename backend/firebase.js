@@ -13,6 +13,10 @@ var firebaseConfig = {
   measurementId: "G-MS1N4V97TS",
 };
 
+export const getnanoid = async () => {
+  return await nanoid();
+}
+
 export const FB = Firebase.initializeApp(firebaseConfig);
 const db = Firebase.firestore();
 
@@ -38,11 +42,12 @@ export async function getCategories() {
   return data.docs;
 }
 
-export function addNewClient(name, email, phone, color) {
+export function addNewClient(name, email, phone, color, uid) {
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Clients')
-  .add({
+  .doc(uid)
+  .set({
     name: name,
     email: email,
     phone: phone,

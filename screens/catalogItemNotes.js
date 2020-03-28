@@ -46,7 +46,7 @@ CatalogItemNotes.navigationOptions = (props) => ({
         props.navigation.navigate('CatalogItemView', {
           notes: props.navigation.getParam('notes'),
         })
-        props.navigation.getParam('updateCatalog')();
+        //props.navigation.getParam('updateCatalog')();
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

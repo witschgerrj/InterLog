@@ -28,48 +28,67 @@ const LoadingIndicator = styled(ActivityIndicator)`
 `
 
 const DataLayer = (props) => {
+  //get the promise data with uids
+  //map through, get the UIDS
+  //add UIDs to each doc and save object
 
-  const serialize = () => {
-    const objects = new WeakSet();
-    return (key, value) => {
-      if (value !== null && typeof value === "object") {
-        if (!objects.has(value)) {
-          objects.add(value);
-        } else {
-          return;
-        }
-      }
-      return value;
-    };
-  };
+  const _formatClients = (firebaseData) => {
+    let docs = [];
+    firebaseData.map(doc => {
+      let client = {}
+      client.id = doc.id;
+      client.color = doc.data().color;
+      client.email = doc.data().email;
+      client.name = doc.data().name;
+      client.notes = doc.data().notes;
+      client.phone = doc.data().phone;
+      docs.push(client);
+    })
+    return docs;
+  } 
+  const _formatCatalog = (firebaseData) => {
+    let docs = [];
+    firebaseData.map(doc => {
+      let item = {};
+      item.id = doc.id;
+      item.category = doc.data().category;
+      item.imageLink = doc.data().imageLink;
+      item.imageUUID = doc.data().imageUUID;
+      item.link = doc.data().link;
+      item.name = doc.data().name;
+      item.notes = doc.data().notes;
+      docs.push(item);
+    })
+    return docs;
+  }
 
   const _retreiveData = async () => {
-    let catalogData   = await getCatalog();
-    let clientsNone   = await getClientsGroupNone();
-    let clientsBlue   = await getClientsGroupBlue();
-    let clientsGreen  = await getClientsGroupGreen();
-    let clientsRed    = await getClientsGroupRed();
-    let clientsViolet = await getClientsGroupViolet();
-    let clientsWhite  = await getClientsGroupWhite();
-    let clientsYellow = await getClientsGroupYellow();
+    let catalogData   = _formatCatalog(await getCatalog());
+    let clientsNone   = _formatClients(await getClientsGroupNone());
+    let clientsBlue   = _formatClients(await getClientsGroupBlue());
+    let clientsGreen  = _formatClients(await getClientsGroupGreen());
+    let clientsRed    = _formatClients(await getClientsGroupRed());
+    let clientsViolet = _formatClients(await getClientsGroupViolet());
+    let clientsWhite  = _formatClients(await getClientsGroupWhite());
+    let clientsYellow = _formatClients(await getClientsGroupYellow());
 
-    await storeData('catalogData'   , JSON.stringify(catalogData, serialize()));
-    await storeData('clientsNone'   , JSON.stringify(clientsNone, serialize()));
-    await storeData('clientsBlue'   , JSON.stringify(clientsBlue, serialize()));
-    await storeData('clientsGreen'  , JSON.stringify(clientsGreen, serialize()));
-    await storeData('clientsRed'    , JSON.stringify(clientsRed, serialize()));
-    await storeData('clientsViolet' , JSON.stringify(clientsViolet, serialize()));
-    await storeData('clientsWhite'  , JSON.stringify(clientsWhite, serialize()));
-    await storeData('clientsYellow' , JSON.stringify(clientsYellow, serialize()))
-    .then(() => {
-      props.navigation.navigate('Clients', {
-
-      })
-    })
+    await storeData('catalogData' , catalogData);
+    await storeData('clientsWhite'  , clientsWhite);
+    await storeData('clientsBlue'  , clientsBlue);
+    await storeData('clientsYellow'  , clientsYellow);
+    await storeData('clientsGreen'  , clientsGreen);
+    await storeData('clientsViolet'  , clientsViolet);
+    await storeData('clientsRed'  , clientsRed);
+    await storeData('clientsNone'  , clientsNone);
+    
   }
 
   useEffect(() => {
-    _retreiveData();
+    _retreiveData().then(() => {
+      props.navigation.navigate('Clients', {
+
+      })
+    });
   }, []);
 
 

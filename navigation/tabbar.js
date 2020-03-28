@@ -2,7 +2,6 @@ import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import ClientsStack from './clientsNav';
 import CatalogStack from './catalogNav';
-import DataStack from './dataNav';
 import MailStack from './mailNav';
 import TabBarIcon from '../components/tabbarIcon';
 import CatalogUnselected from '../assets/catalogUnselected.png';
@@ -19,7 +18,7 @@ export default TabBar = createBottomTabNavigator({
         if (focused) {
           return <TabBarIcon icon={ClientSelected}/>;
         } else {
-          return <TabBarIcon icon={ClientUnselected}/>;
+          return <TabBarIcon  icon={ClientUnselected}/>;
         }
       }
     }
@@ -28,14 +27,8 @@ export default TabBar = createBottomTabNavigator({
     screen: MailStack,
     navigationOptions: {
       tabBarIcon: () => {
-        return <TabBarIcon icon={Mail}/>;
+        return <TabBarIcon  icon={Mail}/>;
       },
-      tabBarVisible: false,
-    }
-  },
-  Data: {
-    screen: DataStack,
-    navigationOptions: {
       tabBarVisible: false,
     }
   },

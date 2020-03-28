@@ -3,8 +3,8 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://bk-exm.anonymous.mycatalog.exp.direct",
+  "packagerNgrokUrl": "https://packager.bk-exm.anonymous.mycatalog.exp.direct",
+  "ngrokPid": 25695,
   "webpackServerPort": null
 }

@@ -68,8 +68,7 @@ const ClientView = (props) => {
   const [name, setName] = useState(props.navigation.getParam('name'));
   const [email, setEmail] = useState(props.navigation.getParam('email'));
   const [phone, setPhone] = useState(props.navigation.getParam('phone'));
-  const [notes, setNotes] = useState(props.navigation.getParam('notes'));
-  const [selectedGroupColor, setSelectedGroupColor] = useState(props.navigation.getParam('color'));
+  const [color, setColor] = useState(props.navigation.getParam('color'));
   const [selectingBoxes, setSelectingBoxes] = useState(false);
 
   const _closeKeyboardAndBoxes = () => {
@@ -94,13 +93,9 @@ const ClientView = (props) => {
 
   const _updateColor = (text) => {
     props.navigation.setParams({ color: text});
-    setSelectedGroupColor(text);
+    setColor(text);
   }
 
-  const _updateNotes = (text) => {
-    props.navigation.setParams({ notes: text});
-    setNotes(text);
-  }
 
   const _showDeleteActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions({
@@ -112,10 +107,9 @@ const ClientView = (props) => {
       if (index === 1) {
         //delete item, go back, reload catalog
         deleteClient(props.navigation.getParam('clientUID'));
-        props.navigation.getParam('updateClients')();
+        //delete local delete
+        props.navigation.getParam('delete')(props.navigation.getParam('arrayIndex'));
         props.navigation.goBack();
-      } else {
-        //do nothing
       }
     }))
   }
@@ -124,7 +118,6 @@ const ClientView = (props) => {
     props.navigation.navigate('ClientNotes', {
       notes: props.navigation.getParam('notes'),
       clientUID: props.navigation.getParam('clientUID'),
-      updateClients: props.navigation.getParam('updateClients'),
     })
   }
 
@@ -140,9 +133,9 @@ const ClientView = (props) => {
                   autoCapitalize='none'
                   value={name}/>
             <TouchableWithoutFeedback onPress={()=> setSelectingBoxes(!selectingBoxes)}>
-              <Box  groupColor={selectedGroupColor}
+              <Box  groupColor={color}
                     size={55}
-                    borderColor={selectedGroupColor}/>
+                    borderColor={color}/>
             </TouchableWithoutFeedback>
           </FlexBox>
           <FlexBox justify='space-between'>
@@ -162,32 +155,32 @@ const ClientView = (props) => {
                     <TouchableWithoutFeedback onPress={() => _updateColor('#D1D1D1')}>
                       <Box  groupColor='#D1D1D1'
                             size={40}
-                            borderColor={selectedGroupColor === '#D1D1D1' ? '#FFF' : '#D1D1D1'}/>
+                            borderColor={color === '#D1D1D1' ? '#FFF' : '#D1D1D1'}/>
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback onPress={() => _updateColor('#3297B5')}>
                       <Box  groupColor='#3297B5'
                             size={40}
-                            borderColor={selectedGroupColor === '#3297B5' ? '#FFF' : '#3297B5'}/>
+                            borderColor={color === '#3297B5' ? '#FFF' : '#3297B5'}/>
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback onPress={() => _updateColor('#BABA27')}>
                       <Box  groupColor='#BABA27'
                             size={40}
-                            borderColor={selectedGroupColor === '#BABA27' ? '#FFF' : '#BABA27'}/>
+                            borderColor={color === '#BABA27' ? '#FFF' : '#BABA27'}/>
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback onPress={() => _updateColor('#078D1C')}>
                       <Box  groupColor='#078D1C'
                             size={40}
-                            borderColor={selectedGroupColor === '#078D1C' ? '#FFF' : '#078D1C'}/> 
+                            borderColor={color === '#078D1C' ? '#FFF' : '#078D1C'}/> 
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback onPress={() => _updateColor('#9B2F2F')}>
                       <Box  groupColor='#9B2F2F'
                             size={40}
-                            borderColor={selectedGroupColor === '#9B2F2F' ? '#FFF' : '#9B2F2F'}/> 
+                            borderColor={color === '#9B2F2F' ? '#FFF' : '#9B2F2F'}/> 
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback onPress={() => _updateColor('#8D0778')}>
                       <Box  groupColor='#8D0778'
                             size={40}
-                            borderColor={selectedGroupColor === '#8D0778' ? '#FFF' : '#8D0778'}/> 
+                            borderColor={color === '#8D0778' ? '#FFF' : '#8D0778'}/> 
                     </TouchableWithoutFeedback>
                     
                   </FlexBox>
@@ -223,12 +216,15 @@ ClientView.navigationOptions = (props) => ({
         const name = props.navigation.getParam('name');
         const email = props.navigation.getParam('email');
         const phone = props.navigation.getParam('phone');
+        const untouchedColor = props.navigation.getParam('untouchedColor');
         const color = props.navigation.getParam('color');
         const notes = props.navigation.getParam('notes');
         const clientUID = props.navigation.getParam('clientUID');
+        const index = props.navigation.getParam('arrayIndex');
         updateClient(name, email, phone, color, notes, clientUID);
+        //locally update name, email, phone, color, notes
+        props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
         props.navigation.goBack();
-        props.navigation.getParam('updateClients')();
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

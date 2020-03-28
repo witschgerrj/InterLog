@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import BgScrollView from '../components/bgScrollView';
 import { updateClientNotes } from '../backend/firebase';
+import { storeData } from '../backend/asyncStorage';
 
 const NoteArea = styled.TextInput`
   height: ${Math.floor(Dimensions.get('window').height)}px;
@@ -42,11 +43,12 @@ ClientNotes.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
         const notes = props.navigation.getParam('notes');
         const clientUID = props.navigation.getParam('clientUID');
+        //update notes in firebase
         updateClientNotes(notes, clientUID);
         props.navigation.navigate('ClientView', {
           notes: props.navigation.getParam('notes'),
         })
-        props.navigation.getParam('updateClients')();
+        //props.navigation.getParam('updateCatalog')();
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

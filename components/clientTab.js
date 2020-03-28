@@ -30,10 +30,14 @@ const ClientTab = (props) => {
       name: props.name,
       email: props.email,
       phone: props.phone,
+      untouchedColor: props.untouchedColor,
       color: props.color,
       notes: props.notes,
       clientUID: props.clientUID,
-      updateClients: props.updateClients,
+      arrayIndex: props.arrayIndex,
+      array: props.array,
+      updateLocal: props.updateLocal,
+      delete: props.delete,
     })
   }
 

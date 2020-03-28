@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, Dimensions } from 'react-native';
+import { Keyboard, Dimensions, Alert } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import FlexBox from '../components/flexbox';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { addNewClient } from '../backend/firebase';
-import { Header } from 'react-navigation-stack';
+import { addNewClient, getnanoid } from '../backend/firebase';
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -165,9 +164,14 @@ ClientAdd.navigationOptions = (props) => ({
         const email = props.navigation.getParam('email');
         const phone = props.navigation.getParam('phone');
         const color = props.navigation.getParam('color');
-        addNewClient(name, email, phone, color);
-        props.navigation.goBack();
-        props.navigation.getParam('updateClients')();
+        getnanoid().then(uid => {
+          addNewClient(name, email, phone, color, uid);
+          props.navigation.getParam('addNewClient')(name, email, phone, color, uid);
+          props.navigation.goBack();
+        }).catch(() => {
+          props.navigation.goBack();
+          Alert.alert('Error on add client. Try again.');
+        })
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

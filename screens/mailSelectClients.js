@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { FB,  getClientsGroupNone, getClientsGroupBlue, 
-              getClientsGroupGreen, getClientsGroupRed, 
-              getClientsGroupViolet, getClientsGroupWhite, 
-              getClientsGroupYellow } from '../backend/firebase';
+import { getData } from '../backend/asyncStorage';
 import BackgroundScroll from '../components/bgScrollView';
 import GrayedClientTab from '../components/grayedClientTab';
 import backArrow from '../assets/backArrow.png';
@@ -21,58 +18,38 @@ const Next = styled.Text`
 
 const MailSelectItems = (props) => {
 
-  const [clientsGroupNone, setClientsGroupNone] = useState([]);
-  const [clientsGroupBlue, setClientsGroupBlue] = useState([]);
-  const [clientsGroupGreen, setClientsGroupGreen] = useState([]);
-  const [clientsGroupYellow, setClientsGroupYellow] = useState([]);
-  const [clientsGroupRed, setClientsGroupRed] = useState([]);
-  const [clientsGroupViolet, setClientsGroupViolet] = useState([]);
-  const [clientsGroupWhite, setClientsGroupWhite] = useState([]);
+  const [clientsWhite, setWhiteGroup] = useState([]);
+  const [clientsBlue, setBlueGroup] = useState([]);  
+  const [clientsYellow, setYellowGroup] = useState([]);
+  const [clientsGreen, setGreenGroup] = useState([]);
+  const [clientsViolet, setVioletGroup] = useState([]);
+  const [clientsRed, setRedGroup] = useState([]);
+  const [clientsNone, setNoneGroup] = useState([]);
   const [selectedClients, setSelectedClients] = useState({});
 
-  const _updateClientsGroupNone = () => {
-    getClientsGroupNone().then(docs => {
-      setClientsGroupNone(docs);
-    });
-  }
-  const _updateClientsGroupBlue = () => {
-    getClientsGroupBlue().then(docs => {
-      setClientsGroupBlue(docs);
-    });
-  }
-  const _updateClientsGroupGreen = () => {
-    getClientsGroupGreen().then(docs => {
-      setClientsGroupGreen(docs);
-    });
-  }
-  const _updateClientsGroupRed = () => {
-    getClientsGroupRed().then(docs => {
-      setClientsGroupRed(docs);
-    });
-  }
-  const _updateClientsGroupViolet = () => {
-    getClientsGroupViolet().then(docs => {
-      setClientsGroupViolet(docs);
-    });
-  }
-  const _updateClientsGroupWhite = () => {
-    getClientsGroupWhite().then(docs => {
-      setClientsGroupWhite(docs);
-    });
-  }
-  const _updateClientsGroupYellow = () => {
-    getClientsGroupYellow().then(docs => {
-      setClientsGroupYellow(docs);
-    });
-  }
   const _updateAllGroups = () => {
-    _updateClientsGroupNone();
-    _updateClientsGroupBlue();
-    _updateClientsGroupGreen();
-    _updateClientsGroupRed();
-    _updateClientsGroupViolet();
-    _updateClientsGroupWhite();
-    _updateClientsGroupYellow();
+    let none, blue, green, red, violet, white, yellow;
+
+    const gather = async () => {
+      none    = await getData('clientsNone');
+      blue    = await getData('clientsBlue');
+      green   = await getData('clientsGreen');
+      red     = await getData('clientsRed');
+      violet  = await getData('clientsViolet');
+      white   = await getData('clientsWhite');
+      yellow  = await getData('clientsYellow');
+    }
+    //execute gather and then update states
+    gather()
+    .then(() => {
+      setWhiteGroup(white);
+      setBlueGroup(blue);
+      setYellowGroup(yellow);
+      setGreenGroup(green);
+      setVioletGroup(violet);
+      setRedGroup(red);
+      setNoneGroup(none);
+    })
   }
 
   const _addSelected = (clientUID, name, email) => {
@@ -94,93 +71,93 @@ const MailSelectItems = (props) => {
 
   useEffect(() => {
     _updateAllGroups();
-    props.navigation.setParams({ updateClients: _updateAllGroups});
+    //props.navigation.setParams({ updateClients: _updateAllGroups});
   }, []);
 
   return (
     <BackgroundScroll>
       { 
-        clientsGroupWhite.map((doc, index) => (
+        clientsWhite.map((client, index) => (
           <GrayedClientTab  key={'clientW' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
       { 
-        clientsGroupBlue.map((doc, index) => (
+        clientsBlue.map((client, index) => (
           <GrayedClientTab  key={'clientB' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
       { 
-        clientsGroupYellow.map((doc, index) => (
+        clientsYellow.map((client, index) => (
           <GrayedClientTab  key={'clientY' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
       { 
-        clientsGroupGreen.map((doc, index) => (
+        clientsGreen.map((client, index) => (
           <GrayedClientTab  key={'clientG' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
       { 
-        clientsGroupViolet.map((doc, index) => (
+        clientsViolet.map((client, index) => (
           <GrayedClientTab  key={'clientV' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
       { 
-        clientsGroupRed.map((doc, index) => (
+        clientsRed.map((client, index) => (
           <GrayedClientTab  key={'clientR' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
       { 
-        clientsGroupNone.map((doc, index) => (
+        clientsNone.map((client, index) => (
           <GrayedClientTab  key={'clientN' + index}
-                            name={doc.data().name}
-                            email={doc.data().email}
-                            color={doc.data().color}
-                            selected={selectedClients.hasOwnProperty(doc.id) ? true : false}
+                            name={client.name}
+                            email={client.email}
+                            color={client.color}
+                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
                             removeUnselected={_removeUnselected}
-                            clientUID={doc.id}/>
+                            clientUID={client.id}/>
         ))
       }
     </BackgroundScroll>
