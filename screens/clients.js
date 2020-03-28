@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
-import { FB, getClientsGroupBlue } from '../backend/firebase';
-import { getData } from '../backend/asyncStorage';
+import { getData, storeData } from '../backend/asyncStorage';
 import BackgroundScroll from '../components/bgScrollView';
 import ClientTab from '../components/clientTab';
 import Add from '../assets/add.png';
@@ -13,13 +12,13 @@ const AddButton = styled.Image`
 
 const Clients = (props) => {
   
-  const [clientsWhite,  setWhiteGroup]  = useState([]);
-  const [clientsBlue,   setBlueGroup]   = useState([]);
-  const [clientsGreen,  setGreenGroup]  = useState([]);
-  const [clientsYellow, setYellowGroup] = useState([]);
-  const [clientsRed,    setRedGroup]    = useState([]);
-  const [clientsViolet, setVioletGroup] = useState([]);
-  const [clientsNone,   setNoneGroup]   = useState([]);
+  const [clientsWhite,  setWhiteGroup]  = useState(props.navigation.getParam('clientsWhite'));
+  const [clientsBlue,   setBlueGroup]   = useState(props.navigation.getParam('clientsBlue'));
+  const [clientsGreen,  setGreenGroup]  = useState(props.navigation.getParam('clientsGreen'));
+  const [clientsYellow, setYellowGroup] = useState(props.navigation.getParam('clientsYellow'));
+  const [clientsRed,    setRedGroup]    = useState(props.navigation.getParam('clientsRed'));
+  const [clientsViolet, setVioletGroup] = useState(props.navigation.getParam('clientsViolet'));
+  const [clientsNone,   setNoneGroup]   = useState(props.navigation.getParam('clientsNone'));
 
   const _updateAllGroups = () => {
 
@@ -45,7 +44,7 @@ const Clients = (props) => {
       setVioletGroup(violet);
       setWhiteGroup(white);
     }).then(() => {
-      props.navigation.setParams({  _addNewClient: _addNewClient,
+      props.navigation.setParams({  addNewClient: _addNewClient,
                                     clientsWhite: white,
                                     clientsBlue: blue,
                                     clientsGreen: green,
@@ -62,7 +61,10 @@ const Clients = (props) => {
       client.color = '#D1D1D1';
       _clientsWhite.push(client);
       setWhiteGroup(_clientsWhite);
+      //save param in navigation for use during add client
       props.navigation.setParams({ clientsWhite: _clientWhite});
+      //save data locally
+      storeData('clientsWhite', _clientsWhite);
       return;
     }
     if (color === '#BABA27') { //yellow
@@ -71,6 +73,8 @@ const Clients = (props) => {
       _clientsYellow.push(client);
       setYellowGroup(_clientsYellow);
       props.navigation.setParams({ clientsYellow: _clientYellow});
+      //save data locally
+      storeData('clientsYellow', _clientsYellow);
       return;
     }
     if (color === '#3297B5') { //blue
@@ -79,6 +83,8 @@ const Clients = (props) => {
       _clientsBlue.push(client);
       setBlueGroup(_clientsBlue);
       props.navigation.setParams({ clientsBlue: _clientBlue});
+      //save data locally
+      storeData('clientsBlue', _clientsBlue);
       return;
     }
     if (color === '#078D1C') { //green
@@ -87,6 +93,8 @@ const Clients = (props) => {
       _clientsGreen.push(client);
       setGreenGroup(_clientsGreen);
       props.navigation.setParams({ clientsGreen: _clientGreen});
+      //save data locally
+      storeData('clientsGreen', _clientsGreen);
       return;
     }
     if (color === '#9B2F2F') { //red
@@ -95,6 +103,8 @@ const Clients = (props) => {
       _clientsRed.push(client);
       setRedGroup(_clientsRed);
       props.navigation.setParams({ clientsRed: _clientRed});
+      //save data locally
+      storeData('clientsRed', _clientsRed);
       return;
     }
     if (color === '#8D0778') { //violet
@@ -103,6 +113,8 @@ const Clients = (props) => {
       _clientsViolet.push(client);
       setVioletGroup(_clientsViolet);
       props.navigation.setParams({ clientsViolet: _clientViolet});
+      //save data locally
+      storeData('clientsViolet', _clientsViolet);
       return;
     } 
     if (color === '#2B2B2B') { //none
@@ -111,6 +123,8 @@ const Clients = (props) => {
       _clientsNone.push(client);
       setWhiteGroup(_clientsNone);
       props.navigation.setParams({ clientsNone: _clientNone});
+      //save data locally
+      storeData('clientsNone', _clientsNone);
       return;
     }
   }
@@ -138,6 +152,8 @@ const Clients = (props) => {
       _clientsWhite[index] = client;
       setWhiteGroup(_clientsWhite);
       props.navigation.setParams({ clientsWhite: _clientsWhite });
+      //save data locally
+      storeData('clientsWhite', _clientsWhite);
     } 
     // color has been changed...
     else {
@@ -145,6 +161,8 @@ const Clients = (props) => {
       _clientsWhite.splice(index, 1);
       setWhiteGroup(_clientsWhite);
       props.navigation.setParams({ clientsWhite: _clientsWhite });
+      //save data locally
+      storeData('clientsWhite', _clientsWhite);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -173,6 +191,8 @@ const Clients = (props) => {
       _clientsYellow[index] = client;
       setYellowGroup(_clientsYellow);
       props.navigation.setParams({ clientsYellow: _clientsYellow });
+      //save data locally
+      storeData('clientsYellow', _clientsYellow);
     } 
     // color has been changed...
     else {
@@ -180,6 +200,8 @@ const Clients = (props) => {
       _clientsYellow.splice(index, 1);
       setYellowGroup(_clientsYellow);
       props.navigation.setParams({ clientsYellow: _clientsYellow });
+      //save data locally
+      storeData('clientsYellow', _clientsYellow);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -208,6 +230,8 @@ const Clients = (props) => {
       _clientsBlue[index] = client;
       setBlueGroup(_clientsBlue);
       props.navigation.setParams({ clientsBlue: _clientsBlue });
+      //save data locally
+      storeData('clientsBlue', _clientsBlue);
     } 
     // color has been changed...
     else {
@@ -215,6 +239,8 @@ const Clients = (props) => {
       _clientsBlue.splice(index, 1);
       setBlueGroup(_clientsBlue);
       props.navigation.setParams({ clientsBlue: _clientsBlue });
+      //save data locally
+      storeData('clientsBlue', _clientsBlue);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -242,6 +268,8 @@ const Clients = (props) => {
       //setting index in array to be the updated data.
       _clientsGreen[index] = client;
       setGreenGroup(_clientsGreen);
+      //save data locally
+      storeData('clientsGreen', _clientsGreen);
       props.navigation.setParams({ clientsGreen: _clientsGreen });
     } 
     // color has been changed...
@@ -250,6 +278,8 @@ const Clients = (props) => {
       _clientsGreen.splice(index, 1);
       setGreenGroup(_clientsGreen);
       props.navigation.setParams({ clientsGreen: _clientsGreen });
+      //save data locally
+      storeData('clientsGreen', _clientsGreen);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -278,6 +308,8 @@ const Clients = (props) => {
       _clientsRed[index] = client;
       setRedGroup(_clientsRed);
       props.navigation.setParams({ clientsRed: _clientsRed });
+      //save data locally
+      storeData('clientsRed', _clientsRed);
     } 
     // color has been changed...
     else {
@@ -285,6 +317,8 @@ const Clients = (props) => {
       _clientsRed.splice(index, 1);
       setRedGroup(_clientsRed);
       props.navigation.setParams({ clientsRed: _clientsRed });
+      //save data locally
+      storeData('clientsRed', _clientsRed);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -313,6 +347,8 @@ const Clients = (props) => {
       _clientsViolet[index] = client;
       setVioletGroup(_clientsViolet);
       props.navigation.setParams({ clientsViolet: _clientsViolet });
+      //save data locally
+      storeData('clientsViolet', _clientsViolet);
     } 
     // color has been changed...
     else {
@@ -320,6 +356,8 @@ const Clients = (props) => {
       _clientsViolet.splice(index, 1);
       setVioletGroup(_clientsViolet);
       props.navigation.setParams({ clientsViolet: _clientsViolet });
+      //save data locally
+      storeData('clientsViolet', _clientsViolet);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -348,6 +386,8 @@ const Clients = (props) => {
       _clientsNone[index] = client;
       setNoneGroup(_clientsNone);
       props.navigation.setParams({ clientsNone: _clientsNone });
+      //save data locally
+      storeData('clientsNone', _clientsNone);
     } 
     // color has been changed...
     else {
@@ -355,6 +395,8 @@ const Clients = (props) => {
       _clientsNone.splice(index, 1);
       setNoneGroup(_clientsNone);
       props.navigation.setParams({ clientsNone: _clientsNone });
+      //save data locally
+      storeData('clientsNone', _clientsNone);
       //figure out what array it needs to be added to
       _identifyNewGroup(client, color);
     }
@@ -365,44 +407,58 @@ const Clients = (props) => {
     _clientsWhite.splice(index, 1);
     setWhiteGroup(_clientsWhite);
     props.navigation.setParams({ clientsWhite: _clientsWhite });
+    //save data locally
+    storeData('clientsWhite', _clientsWhite);
   }
   const _deleteBlue = (index) => {
     let _clientsBlue = JSON.parse(JSON.stringify(clientsBlue));
     _clientsBlue.splice(index, 1);
-    setWhiteGroup(_clientsBlue);
+    setBlueGroup(_clientsBlue);
     props.navigation.setParams({ clientsBlue: _clientsBlue });
+    //save data locally
+    storeData('clientsBlue', _clientsBlue);
   }
   const _deleteYellow = (index) => {
     let _clientsYellow = JSON.parse(JSON.stringify(clientsYellow));
     _clientsYellow.splice(index, 1);
     setYellowGroup(_clientsYellow);
     props.navigation.setParams({ clientsYellow: _clientsYellow });
+    //save data locally
+    storeData('clientsYellow', _clientsYellow);
   }
   const _deleteGreen = (index) => {
     let _clientsGreen = JSON.parse(JSON.stringify(clientsGreen));
     _clientsGreen.splice(index, 1);
     setGreenGroup(_clientsGreen);
     props.navigation.setParams({ clientsGreen: _clientsGreen });
+    //save data locally
+    storeData('clientsGreen', _clientsGreen);
   }
   const _deleteViolet = (index) => {
     let _clientsViolet = JSON.parse(JSON.stringify(clientsViolet));
     _clientsViolet.splice(index, 1);
     setVioletGroup(_clientsViolet);
     props.navigation.setParams({ clientsViolet: _clientsViolet });
+    //save data locally
+    storeData('clientsViolet', _clientsViolet);
   }
   const _deleteRed = (index) => {
     let _clientsRed = JSON.parse(JSON.stringify(clientsRed));
     _clientsRed.splice(index, 1);
     setRedGroup(_clientsRed);
     props.navigation.setParams({ clientsRed: _clientsRed });
+    //save data locally
+    storeData('clientsRed', _clientsRed);
   }
   const _deleteNone = (index) => {
     let _clientsNone = JSON.parse(JSON.stringify(clientsNone));
     _clientsNone.splice(index, 1);
     setNoneGroup(_clientsNone);
     props.navigation.setParams({ clientsNone: _clientsNone });
+    //save data locally
+    storeData('clientsNone', _clientsNone);
   }
-  const _addNewClient = (name, email, phone, color, uid) => {
+  const _addNewClient = (name, email, phone, color, uid, white, yellow, blue, green, red, violet, none) => {
     let client = {
       name: name,
       email: email,
@@ -413,52 +469,66 @@ const Clients = (props) => {
     }
 
     if (color === '#D1D1D1') { //white
-      let _clientsWhite = props.navigation.getParam('clientsWhite');
+      let _clientsWhite = white;
       _clientsWhite.push(client);
       setWhiteGroup(_clientsWhite);
       props.navigation.setParams({ clientsWhite: _clientsWhite });
+      //save data locally
+      storeData('clientsWhite', _clientsWhite);
       return;
     }
     if (color === '#BABA27') { //yellow
-      let _clientsYellow = props.navigation.getParam('clientsYellow');   
+      let _clientsYellow = yellow;   
       _clientsYellow.push(client);
       setYellowGroup(_clientsYellow);
       props.navigation.setParams({ clientsYellow: _clientsYellow });
+      //save data locally
+      storeData('clientsYellow', _clientsYellow);
       return;
     }
     if (color === '#3297B5') { //blue
-      let _clientsBlue = props.navigation.getParam('clientsBlue'); 
+      let _clientsBlue = blue; 
       _clientsBlue.push(client);
       setBlueGroup(_clientsBlue);
       props.navigation.setParams({ clientsBlue: _clientsBlue });
+      //save data locally
+      storeData('clientsBlue', _clientsBlue);
       return;
     }
     if (color === '#078D1C') { //green
-      let _clientsGreen = props.navigation.getParam('clientsGreen'); 
+      let _clientsGreen = green; 
       _clientsGreen.push(client);
       setGreenGroup(_clientsGreen);
       props.navigation.setParams({ clientsGreen: _clientsGreen });
+      //save data locally
+      storeData('clientsGreen', _clientsGreen);
       return;
     }
     if (color === '#9B2F2F') { //red
-      let _clientsRed = props.navigation.getParam('clientsRed'); 
+      let _clientsRed = red; 
       _clientsRed.push(client);
       setRedGroup(_clientsRed);
       props.navigation.setParams({ clientsRed: _clientsRed });
+      //save data locally
+      storeData('clientsRed', _clientsRed);
       return;
     }
     if (color === '#8D0778') { //violet
-      let _clientsViolet = props.navigation.getParam('clientsViolet'); 
+      let _clientsViolet = violet; 
       _clientsViolet.push(client);
       setVioletGroup(_clientsViolet);
       props.navigation.setParams({ clientsViolet: _clientsViolet });
+      //save data locally
+      storeData('clientsViolet', _clientsViolet);
       return;
     } 
     if (color === '#2B2B2B') { //none
-      let _clientsNone = props.navigation.getParam('clientsNone'); 
+      let _clientsNone = none; 
       _clientsNone.push(client);
       setWhiteGroup(_clientsNone);
       props.navigation.setParams({ clientsNone: _clientsNone });
+      //save data locally
+      storeData('clientsNone', _clientsNone);
       return;
     }
   }
@@ -482,7 +552,7 @@ const Clients = (props) => {
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateWhite}
-                      detete={_deleteWhite}/>
+                      delete={_deleteWhite}/>
         ))
       }
       { 
@@ -498,7 +568,7 @@ const Clients = (props) => {
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateBlue}
-                      detete={_deleteBlue}/>
+                      delete={_deleteBlue}/>
         ))
       }
       { 
@@ -514,7 +584,7 @@ const Clients = (props) => {
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateYellow}
-                      detete={_deleteYellow}/>
+                      delete={_deleteYellow}/>
         ))
       }
       { 
@@ -529,9 +599,8 @@ const Clients = (props) => {
                       clientUID={client.id}
                       arrayIndex={index}
                       navigation={props.navigation}
-
                       updateLocal={_updateGreen}
-                      detete={_deleteGreen}/>
+                      delete={_deleteGreen}/>
         ))
       }
       { 
@@ -547,7 +616,7 @@ const Clients = (props) => {
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateViolet}
-                      detete={_deleteViolet}/>
+                      delete={_deleteViolet}/>
         ))
       }
       { 
@@ -563,7 +632,7 @@ const Clients = (props) => {
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateRed}
-                      detete={_deleteRed}/>
+                      delete={_deleteRed}/>
         ))
       }
       { 
@@ -579,7 +648,7 @@ const Clients = (props) => {
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateNone}
-                      detete={_deleteNone}/>
+                      delete={_deleteNone}/>
         ))
       }
     </BackgroundScroll>
@@ -591,7 +660,14 @@ Clients.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
       props.navigation.navigate('ClientAdd', {
         addNewClient: props.navigation.getParam('addNewClient'),
-      })
+        clientsWhite: props.navigation.getParam('clientsWhite'),
+        clientsBlue: props.navigation.getParam('clientsBlue'),
+        clientsGreen: props.navigation.getParam('clientsGreen'),
+        clientsYellow: props.navigation.getParam('clientsYellow'),
+        clientsRed: props.navigation.getParam('clientsRed'),
+        clientsViolet: props.navigation.getParam('clientsViolet'),
+        clientsNone: props.navigation.getParam('clientsNone'),
+      })  
     }}>
       <AddButton source={Add}>
       </AddButton>

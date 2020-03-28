@@ -7,6 +7,15 @@ import ClientView from '../screens/clientView';
 const ClientStack = createStackNavigator({
   Clients: {
     screen: Clients,
+    params: {
+      clientsWhite: [],
+      clientsBlue: [],
+      clientsGreen: [],
+      clientsYellow: [],
+      clientsRed: [],
+      clientsViolet: [],
+      clientsNone: [],
+    },
     navigationOptions: {
       title: 'Contacts'
     }

@@ -72,14 +72,14 @@ const DataLayer = (props) => {
     let clientsWhite  = _formatClients(await getClientsGroupWhite());
     let clientsYellow = _formatClients(await getClientsGroupYellow());
 
-    await storeData('catalogData' , catalogData);
-    await storeData('clientsWhite'  , clientsWhite);
-    await storeData('clientsBlue'  , clientsBlue);
-    await storeData('clientsYellow'  , clientsYellow);
-    await storeData('clientsGreen'  , clientsGreen);
-    await storeData('clientsViolet'  , clientsViolet);
-    await storeData('clientsRed'  , clientsRed);
-    await storeData('clientsNone'  , clientsNone);
+    await storeData('catalogData', catalogData);
+    await storeData('clientsWhite', clientsWhite);
+    await storeData('clientsBlue', clientsBlue);
+    await storeData('clientsYellow', clientsYellow);
+    await storeData('clientsGreen', clientsGreen);
+    await storeData('clientsViolet', clientsViolet);
+    await storeData('clientsRed', clientsRed);
+    await storeData('clientsNone', clientsNone);
     
   }
 

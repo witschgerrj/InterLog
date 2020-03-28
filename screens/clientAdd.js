@@ -164,13 +164,20 @@ ClientAdd.navigationOptions = (props) => ({
         const email = props.navigation.getParam('email');
         const phone = props.navigation.getParam('phone');
         const color = props.navigation.getParam('color');
+        const white = props.navigation.getParam('clientsWhite');
+        const blue = props.navigation.getParam('clientsBlue');
+        const green = props.navigation.getParam('clientsGreen');
+        const yellow = props.navigation.getParam('clientsYellow');
+        const red = props.navigation.getParam('clientsRed');
+        const violet = props.navigation.getParam('clientsViolet');
+        const none = props.navigation.getParam('clientsNone');
         getnanoid().then(uid => {
           addNewClient(name, email, phone, color, uid);
-          props.navigation.getParam('addNewClient')(name, email, phone, color, uid);
+          
+          props.navigation.getParam('addNewClient')(name, email, phone, color, uid, white, yellow, blue, green, red, violet, none);
           props.navigation.goBack();
-        }).catch(() => {
-          props.navigation.goBack();
-          Alert.alert('Error on add client. Try again.');
+        }).catch((error) => {
+          console.log(error);
         })
       }}>
       <Done>Done</Done>
