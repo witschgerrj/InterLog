@@ -28,11 +28,16 @@ const CatalogBox = (props) => {
       imageUUID: props.imageUUID,
       link: props.link,
       notes: props.notes,
+      index: props.index,
       catalogItemUID: props.catalogItemUID,
       allCategories: props.allCategories,
       getAllCategories: props.getAllCategories,
       updateCatalog: props.updateCatalog,
       navigation: props.navigation,
+      updateLocal: props.updateLocal,
+      catalog: props.catalog,
+      updateLocalCategory: props.updateLocalCategory,
+      delete: props.delete,
     })
   }
 

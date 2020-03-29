@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import * as ImagePicker from 'expo-image-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { addNewItem, getCategories, saveCatalogImage } from '../backend/firebase';
+import { addNewItem, updateItemCategory, getnanoid } from '../backend/firebase';
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -59,40 +59,44 @@ const CatalogAdd = (props) => {
     setName(text);
   }
 
-  const _updateItemCategory = (catalogItemUID, category) => {
-    props.navigation.setParams({ category: category});
-    setCategory(category);
-  }
 
   const _updateLink = (text) => {
     props.navigation.setParams({ link: text});
     setLink(text);
   }
-
-  const _updateCategoriesAfterAdding = () => {
-    let categories = {}
-    getCategories().then(data => {
-      data.map(doc => {
-        let category = doc.data().category;
-        if (categories.hasOwnProperty(category)) {
-          categories[category] = categories[category] + 1;
-        } else {
-          categories[category] = 1;
+  //also acts as a "update category"
+  const _addToCategories = (oldCategory, category) => {
+    let categories = props.navigation.getParam('allCategories');
+    if (oldCategory !== category) {
+      if (categories.hasOwnProperty(category)) {
+        categories[category] += 1;
+      } else {
+        categories[category] = 1;
+      }
+      //decrement value by one from previous category... check if there are any items using the category
+      //checking if oldCategory is not empty from initial add.
+      if (oldCategory !== '') {
+        categories[oldCategory] -= 1;
+        if (categories[oldCategory] === 0) {
+          delete categories[oldCategory];
         }
-      })
-    })
+      }
+    } 
+    //updates current category
+    setCategory(category);
+    props.navigation.setParams({ category: category });
     setAllCategories(categories);
+    props.navigation.setParams({ allCategories: categories });
   }
   
   const _navigateToCategory = () => {
     props.navigation.navigate('CatalogCategory', {
       category: category,
+      oldCategory: category,
       allCategories: allCategories,
-      updateItemCategory: _updateItemCategory,
-      updateCategoriesAfterAdding: _updateCategoriesAfterAdding,
       catalogItemUID: props.navigation.getParam('catalogItemUID'),
-      updateCatalog: props.navigation.getParam('updateCatalog'),
-      getAllCategories: props.navigation.getParam('getAllCategories'),
+      updateItemCategory: false,
+      addToCategories: _addToCategories,
     });
   }
 
@@ -149,7 +153,6 @@ const CatalogAdd = (props) => {
 
   useEffect(() => {
     _updateName('');
-    _updateItemCategory('' ,'');
     _updateLink('');
     props.navigation.setParams({ imageLink: '' });
   }, []);
@@ -206,11 +209,18 @@ CatalogAdd.navigationOptions = (props) => ({
         const name = props.navigation.getParam('name');
         const category = props.navigation.getParam('category');
         const link = props.navigation.getParam('link');
-        addNewItem(name, category, link, imageLink).then(() => {
-          props.navigation.goBack();
-          props.navigation.getParam('updateCatalog')();
-          props.navigation.getParam('getAllCategories')();
-        });
+        const catalog = props.navigation.getParam('catalog');
+        //adding to database
+        //getting image UID and the catalog item UID to store locally right away.
+        getnanoid().then(imageUUID => {
+          getnanoid().then(itemID => {
+            //adding in database
+            addNewItem(name, category, link, imageLink, itemID, imageUUID);
+            //adding locally
+            props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID);
+            props.navigation.goBack();
+           })
+        })
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

@@ -61,6 +61,22 @@ const DataLayer = (props) => {
     })
     return docs;
   }
+  
+  const getCategories = (catalog) => {
+    let categories = {};
+
+    catalog.map(item => {
+      let category = item.category;
+      if (category !== '') {
+        if (categories.hasOwnProperty(category)) {
+          categories[category] += 1;
+        } else {
+          categories[category] = 1;
+        }
+      }
+    });
+    return categories;
+  }
 
   const _retreiveData = async () => {
     let catalogData   = _formatCatalog(await getCatalog());
@@ -80,7 +96,7 @@ const DataLayer = (props) => {
     await storeData('clientsViolet', clientsViolet);
     await storeData('clientsRed', clientsRed);
     await storeData('clientsNone', clientsNone);
-    
+    await storeData('categories', getCategories(catalogData));
   }
 
   useEffect(() => {

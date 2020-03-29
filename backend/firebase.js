@@ -57,22 +57,21 @@ export function addNewClient(name, email, phone, color, uid) {
   })
 }
 
-export async function addNewItem(name, category, link, imageLink) {
-  let uuid = '';
+export async function addNewItem(name, category, link, imageLink, id, imageUUID) {
   let url = '';
   if (imageLink !== '') {
-    uuid = await nanoid();
-    url = await saveCatalogImage(imageLink, uuid);
+    url = await saveCatalogImage(imageLink, imageUUID);
   }
   await db.collection('Users')
         .doc(FB.auth().currentUser.uid)
         .collection('Catalog')
-        .add({
+        .doc(id)
+        .set({
           name: name,
           category: category,
           link: link,
           imageLink: url,
-          imageUUID: uuid,
+          imageUUID: imageUUID,
           notes: '',
           timestamp: getServerTimestamp(),
         })
@@ -91,7 +90,20 @@ export function updateClient(name, email, phone, color, notes, clientUID) {
     notes: notes,
   })
 }
-
+export function updateCatalogItem(name, category, url, link, imageUUID, notes) {
+  db.collection('Users')
+  .doc(FB.auth().currentUser.uid)
+  .collection('Catalog')
+  .doc(catalogItemUID)
+  .update({
+    name: name,
+    category: category,
+    link: link,
+    imageLink: url,
+    imageUUID: imageUUID,
+    notes: notes,
+  })
+}
 export function updateCatalogItemNotes(notes, catalogItemUID) {
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)

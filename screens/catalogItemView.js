@@ -6,7 +6,7 @@ import Trashcan from '../assets/trashcan.png';
 import Notes from '../assets/notes.png';
 import * as ImagePicker from 'expo-image-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { deleteCatalogItem, updateItemCategory, getCategories, updateItemImageURL, deleteCatalogImage, saveCatalogImage } from '../backend/firebase';
+import { deleteCatalogItem, updateItemCategory, getnanoid, updateItemImageURL, deleteCatalogImage, saveCatalogImage, updateCatalogItem } from '../backend/firebase';
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -83,7 +83,50 @@ const CatalogItemView = (props) => {
 
   const _updateItemCategory = (catalogItemUID, category) => {
     updateItemCategory(catalogItemUID, category);
+    //don't need to set category here. It's being set in _addToCategories
+    //update catalog locally since database updates here and locally it may not on < back.
+    let catalog = props.navigation.getParam('catalog');
+    let index = props.navigation.getParam('index');
+    props.navigation.getParam('updateLocalCategory')(catalog, category, index);
+  }
+
+  const _removeFromCategories = (category) => {
+    let categories = props.navigation.getParam('allCategories');
+
+    let value = categories[category];
+    if (value !== 1) {
+      categories[category] -= 1;
+    } else {
+      //value === 0 and remove the category entirely.
+      delete categories[category];
+    }
+    setAllCategories(categories);
+    props.navigation.setParams({ allCategories: categories });
+  }
+
+  //also acts as an update
+  const _addToCategories = (oldCategory, category) => {
+    let categories = props.navigation.getParam('allCategories');
+    if (oldCategory !== category) {
+      if (categories.hasOwnProperty(category)) {
+        categories[category] += 1;
+      } else {
+        categories[category] = 1;
+      }
+      //decrement value by one from previous category... check if there are any items using the category
+      //checking if oldCategory is not empty from initial add.
+      if (oldCategory !== '') {
+        categories[oldCategory] -= 1;
+        if (categories[oldCategory] === 0) {
+          delete categories[oldCategory];
+        }
+      }
+    } 
+    //updates current category
     setCategory(category);
+    props.navigation.setParams({ category: category });
+    setAllCategories(categories);
+    props.navigation.setParams({ allCategories: categories });
   }
 
   const _showDeleteActionSheet = () => {
@@ -94,42 +137,32 @@ const CatalogItemView = (props) => {
     },
     (index => {
       if (index === 1) {
+        const imageUUID = props.navigation.getParam('imageUUID');
         //delete item, go back, reload catalog
         //add a .then and make 
+        //performing database removals
         deleteCatalogItem(props.navigation.getParam('catalogItemUID'));
-        props.navigation.getParam('updateCatalog')();
-        props.navigation.getParam('getAllCategories')();
+        if (imageUUID !== '') {
+          deleteCatalogImage(imageUUID);
+        }
+        const index = props.navigation.getParam('index');
+        //update locally
+        props.navigation.getParam('delete')(index);
+        //need to remove 
+        _removeFromCategories(category);
         props.navigation.goBack();
-      } else {
-        //do nothing
       }
     }))
-  }
-
-  const _updateCategoriesAfterAdding = () => {
-    let categories = {}
-    getCategories().then(data => {
-      data.map(doc => {
-        let category = doc.data().category;
-        if (categories.hasOwnProperty(category)) {
-          categories[category] = categories[category] + 1;
-        } else {
-          categories[category] = 1;
-        }
-      })
-    })
-    setAllCategories(categories);
   }
   
   const _navigateToCategory = () => {
     props.navigation.navigate('CatalogCategory', {
       category: category,
+      oldCategory: category,
       allCategories: allCategories,
       updateItemCategory: _updateItemCategory,
-      updateCategoriesAfterAdding: _updateCategoriesAfterAdding,
+      addToCategories: _addToCategories,
       catalogItemUID: props.navigation.getParam('catalogItemUID'),
-      updateCatalog: props.navigation.getParam('updateCatalog'),
-      getAllCategories: props.navigation.getParam('getAllCategories'),
     });
   }
   
@@ -158,10 +191,11 @@ const CatalogItemView = (props) => {
       if (!result.cancelled) {
         //if there's an image stored, delete the image that's being replaced.
         if (imageLink !== '') {
-          //NEED TO SWITCH OUT TO imageUID
-          deleteCatalogImage(imageLink);
+          //NEED TO SWITCH OUT TO uuid
+          let uuid = props.navigation.getParam('imageUUID');
+          deleteCatalogImage(uuid);
         }
-        let uri = result.uri
+        let uri = result.uri;
         setImageLink(uri);
         props.navigation.setParams({ imageLink: uri });
         props.navigation.setParams({ newImage: true });
@@ -189,11 +223,10 @@ const CatalogItemView = (props) => {
   }
 
   const _openNotes = () => {
-    
     props.navigation.navigate('CatalogItemNotes', {
       notes: props.navigation.getParam('notes'),
       catalogItemUID: props.navigation.getParam('catalogItemUID'),
-      updateCatalog: props.navigation.getParam('updateCatalog'),
+      //updateCatalog: props.navigation.getParam('updateCatalog'),
     })
   }
 
@@ -254,21 +287,44 @@ const CatalogItemView = (props) => {
 CatalogItemView.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const newImage = props.navigation.getParam('newImage');
-        if (newImage) {
-          deleteCatalogImage(props.navigation.getParam('imageUUID'));
-          const imageLink = props.navigation.getParam('imageLink');
-          const catalogItemUID = props.navigation.getParam('catalogItemUID');
-          saveCatalogImage(imageLink).then((url) => {
-            updateItemImageURL(catalogItemUID, url).then(() => {
-              props.navigation.goBack();
-              props.navigation.getParam('updateCatalog')();
-            });
-          })
+        let newImage = props.navigation.getParam('newImage');
+        let name = props.navigation.getParam('name');
+        let category = props.navigation.getParam('category');
+        let imageLink = props.navigation.getParam('imageLink');
+        let catalogItemUID = props.navigation.getParam('catalogItemUID');
+        let link = props.navigation.getParam('link');
+        let notes = props.navigation.getParam('notes');
+        let index = props.navigation.getParam('index');
+        let originalImageUUID = props.navigation.getParam('imageUUID');
 
+        //if theres a new image
+        if (newImage) {
+          //deletes unused image in database.
+          //then saves new image.
+          //then gets the url for the saved image and updates the catalog item with it
+          //if there previously was no image. AKA no image to delete
+          if (imageLink !== '') {
+            deleteCatalogImage(props.navigation.getParam('imageUUID'));
+          }
+          getnanoid()
+          .then(imageUUID => {
+            saveCatalogImage(imageLink, imageUUID)
+            .then((url) => {
+              updateItemImageURL(catalogItemUID, url)
+              .then(() => {
+                //need to update in DB as well.
+                updateCatalogItem(name, category, url, link, imageUUID, notes);
+                props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index);
+                props.navigation.goBack();
+              });
+            })
+          })
+          
         } else {
+          //need to update in db as well.
+          updateCatalogItem(name, category, url, link, originalImageUUID, notes);
+          props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index);
           props.navigation.goBack();
-          props.navigation.getParam('updateCatalog')();
         }
       }}>
       <Done>Done</Done>

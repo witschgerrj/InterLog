@@ -46,13 +46,13 @@ const CatalogCategory = (props) => {
   const _updateSelected = (newCategory) => {
     if (selected === newCategory) {
       setSelectedCategory('');
-      props.navigation.setParams({ selectedCategory: '' })
+      props.navigation.setParams({ selectedCategory: '' });
     } else {
       setSelectedCategory(newCategory);
       setAddCategoryText('');
       setAddCategorySelected(false);
-      props.navigation.setParams({ selectedCategory: newCategory })
-      props.navigation.setParams({ addedCategory: '' })
+      props.navigation.setParams({ selectedCategory: newCategory });
+      props.navigation.setParams({ addedCategory: '' });
       Keyboard.dismiss();
     }
   }
@@ -68,6 +68,15 @@ const CatalogCategory = (props) => {
     props.navigation.setParams({ selectedCategory: '' })
   }
 
+  useEffect(() => {
+    //if category isnt selected, then set to ''
+    if (props.navigation.getParam('category') === '') {
+      props.navigation.setParams({selectedCategory: ''});
+    } else {
+      props.navigation.setParams({selectedCategory: props.navigation.getParam('category')});
+    }
+    props.navigation.setParams({addedCategory: ''});
+  }, []);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <BgNoScroll>
@@ -108,19 +117,35 @@ const CatalogCategory = (props) => {
 CatalogCategory.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
+        const oldCategory = props.navigation.getParam('oldCategory');
         const addedCategory = props.navigation.getParam('addedCategory');
         const selectedCategory = props.navigation.getParam('selectedCategory');
         const catalogItemUID = props.navigation.getParam('catalogItemUID');
-        const _updateItemCategory = props.navigation.getParam('updateItemCategory');
-        if (addedCategory === '') {
-          _updateItemCategory(catalogItemUID, selectedCategory);
+        const updateItemCategory = props.navigation.getParam('updateItemCategory');
+        //if new category was not added... 
+        //only running if / else if, if you're coming from catalogViewItem.
+        if (addedCategory === '' && updateItemCategory !== false) {
+          props.navigation.getParam('addToCategories')(oldCategory, selectedCategory);
+          //only called through Item View since a new item wont have info or a UID
+          //update in database
+          updateItemCategory(catalogItemUID, selectedCategory);
+          props.navigation.goBack();
+        } else if (updateItemCategory !== false) {
+          props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
+          //only called through Item View since a new item wont have info or a UID
+          updateItemCategory(catalogItemUID, addedCategory);
+          props.navigation.goBack();
         } else {
-          _updateItemCategory(catalogItemUID, addedCategory);
+          //coming from addItem
+          if (addedCategory === '') {
+            props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
+            props.navigation.goBack();
+          } else {
+            props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
+            props.navigation.goBack();
+          }
         }
         
-        props.navigation.getParam('updateCategoriesAfterAdding')();
-        props.navigation.getParam('updateCatalog')();
-        props.navigation.goBack();
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

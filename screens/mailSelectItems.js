@@ -11,6 +11,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import FlexBox from '../components/flexbox';
 import GrayedCatalogBox from '../components/grayedCatalogBox';
+import { getData } from '../backend/asyncStorage';
 
 const Grid = styled.Image`
   margin-left: 30px;
@@ -45,10 +46,9 @@ const MailSelectItems = (props) => {
   const [catalog, setCatalog] = useState([]);
   const [selectedItems, setSelectedItems] = useState({});
 
-  const _updateCatalog = () => {
-    getCatalog().then(docs => {
-      setCatalog(docs);
-    });
+  const _updateCatalog = async () => {
+    let _catalog = await getData('catalogData');
+    setCatalog(_catalog);
   }
 
   const _addSelected = (catalogItemUID, name, category, link, notes) => {
@@ -78,16 +78,16 @@ const MailSelectItems = (props) => {
     <BackgroundScroll>
       <FlexBox justify='flex-start'>
         {
-          catalog.map((doc, index) => (
+          catalog.map((item, index) => (
               <GrayedCatalogBox rows={rows}
                                 key={'grayedCatalogItem' + index}
-                                name={doc.data().name}
-                                category={doc.data().category}
-                                imageLink={doc.data().imageLink}
-                                link={doc.data().link}
-                                notes={doc.data().notes}
-                                catalogItemUID={doc.id}
-                                selected={selectedItems.hasOwnProperty(doc.id) ? true : false}
+                                name={item.name}
+                                category={item.category}
+                                imageLink={item.imageLink}
+                                link={item.link}
+                                notes={item.notes}
+                                catalogItemUID={item.id}
+                                selected={selectedItems.hasOwnProperty(item.id) ? true : false}
                                 addSelected={_addSelected}
                                 removeUnselected={_removeUnselected}/>
           ))

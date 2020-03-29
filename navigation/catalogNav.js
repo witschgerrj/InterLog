@@ -10,6 +10,7 @@ const CatalogStack = createStackNavigator({
     screen: Catalog,
     params: {
       displayGrid: false,
+      categories: [],
     }
   },
   CatalogAdd: {
