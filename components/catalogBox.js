@@ -44,7 +44,7 @@ const CatalogBox = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => _navigateToCatalogItemView()}>
       <Box  rows={props.rows}
-            source={{ uri: props.imageLink }}>
+            source={props.imageLink !== '' ? { uri: props.imageLink } : null}>
         {
           props.imageLink === '' ?
           <ItemName rows={props.rows}>{props.name}</ItemName>

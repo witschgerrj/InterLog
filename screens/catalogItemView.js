@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, View, Dimensions, ActionSheetIOS } from 'react-native';
+import { Keyboard, View, Dimensions, ActionSheetIOS, Alert } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import Trashcan from '../assets/trashcan.png';
@@ -190,11 +190,6 @@ const CatalogItemView = (props) => {
       let result = await ImagePicker.launchImageLibraryAsync();
       if (!result.cancelled) {
         //if there's an image stored, delete the image that's being replaced.
-        if (imageLink !== '') {
-          //NEED TO SWITCH OUT TO uuid
-          let uuid = props.navigation.getParam('imageUUID');
-          deleteCatalogImage(uuid);
-        }
         let uri = result.uri;
         setImageLink(uri);
         props.navigation.setParams({ imageLink: uri });
@@ -274,7 +269,7 @@ const CatalogItemView = (props) => {
           </Touched>
         </ImageBox>
         :
-        <ImageBox source={{ uri: imageLink }}
+        <ImageBox source={imageLink !== '' ? { uri: imageLink } : null}
                   imageStyle={{ borderRadius: 3}}>
         </ImageBox>
         
@@ -297,35 +292,42 @@ CatalogItemView.navigationOptions = (props) => ({
         let index = props.navigation.getParam('index');
         let originalImageUUID = props.navigation.getParam('imageUUID');
 
-        //if theres a new image
-        if (newImage) {
-          //deletes unused image in database.
-          //then saves new image.
-          //then gets the url for the saved image and updates the catalog item with it
-          //if there previously was no image. AKA no image to delete
-          if (imageLink !== '') {
-            deleteCatalogImage(props.navigation.getParam('imageUUID'));
-          }
-          getnanoid()
-          .then(imageUUID => {
-            saveCatalogImage(imageLink, imageUUID)
-            .then((url) => {
-              updateItemImageURL(catalogItemUID, url)
-              .then(() => {
-                //need to update in DB as well.
-                updateCatalogItem(name, category, url, link, imageUUID, notes);
-                props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index);
-                props.navigation.goBack();
-              });
+        console.log("CATALOG ITEM UID: " + catalogItemUID);
+        
+        //name cannot be empty
+        if (name !== '') {
+                    //if theres a new image
+          if (newImage) {
+            //deletes unused image in database.
+            //then saves new image.
+            //then gets the url for the saved image and updates the catalog item with it
+            if (originalImageUUID !== '') {
+              deleteCatalogImage(originalImageUUID);
+            }
+            getnanoid()
+            .then(imageUUID => {
+              saveCatalogImage(imageLink, imageUUID)
+              .then((url) => {
+                updateItemImageURL(catalogItemUID, url)
+                .then(() => {
+                  //need to update in DB as well.
+                  updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID);
+                  props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index);
+                  props.navigation.goBack();
+                });
+              })
             })
-          })
-          
+            
+          } else {
+            //need to update in db as well.
+            updateCatalogItem(name, category, imageLink, link, originalImageUUID, notes);
+            props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index);
+            props.navigation.goBack();
+          }
         } else {
-          //need to update in db as well.
-          updateCatalogItem(name, category, url, link, originalImageUUID, notes);
-          props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index);
-          props.navigation.goBack();
+          Alert.alert('An item name is required.');
         }
+
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

@@ -34,7 +34,7 @@ const GrayedCatalogBox = (props) => {
     <TouchableWithoutFeedback onPress={() => _toggleSelected()}>
       <Box  opacity={props.selected ? 1 : 0.45}
             rows={props.rows}
-            source={{ uri: props.imageLink }}>
+            source={props.imageLink !== '' ? { uri: props.imageLink } : null}>
         {
           props.imageLink === '' ?
           <ItemName rows={props.rows}>{props.name}</ItemName>

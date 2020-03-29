@@ -68,6 +68,7 @@ const CatalogAdd = (props) => {
   const _addToCategories = (oldCategory, category) => {
     let categories = props.navigation.getParam('allCategories');
     if (oldCategory !== category) {
+      //checking if category is present and isn't empty.
       if (categories.hasOwnProperty(category)) {
         categories[category] += 1;
       } else {
@@ -154,7 +155,9 @@ const CatalogAdd = (props) => {
   useEffect(() => {
     _updateName('');
     _updateLink('');
-    props.navigation.setParams({ imageLink: '' });
+    //initializing imageLink and category so no error is thrown.
+    props.navigation.setParams({ imageLink: '',
+                                 category: ''});
   }, []);
 
   return (
@@ -192,7 +195,7 @@ const CatalogAdd = (props) => {
             </Touched>
           </ImageBox>
           :
-          <ImageBox source={{ uri: imageLink}}
+          <ImageBox source={imageLink !== '' ? { uri: imageLink } : null}
                     imageStyle={{ borderRadius: 3}}>
           </ImageBox>
         }
@@ -210,17 +213,33 @@ CatalogAdd.navigationOptions = (props) => ({
         const category = props.navigation.getParam('category');
         const link = props.navigation.getParam('link');
         const catalog = props.navigation.getParam('catalog');
+        const imageUUID = getnanoid();
+        const uuid = getnanoid();
         //adding to database
         //getting image UID and the catalog item UID to store locally right away.
-        getnanoid().then(imageUUID => {
+        if (name !== '' && imageLink !== '') {
+          getnanoid().then(imageUUID => {
+            getnanoid().then(itemID => {
+              //adding in database
+              addNewItem(name, category, link, imageLink, itemID, imageUUID);
+              //adding locally
+              props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID);
+              props.navigation.goBack();
+             })
+          })
+        } else if (name !== '') {
+          //case for not generating an imageUUID. Setting imageUUID to ''
           getnanoid().then(itemID => {
-            //adding in database
-            addNewItem(name, category, link, imageLink, itemID, imageUUID);
+            //adding in database.. imageLink and itemuUUID should be empty
+            addNewItem(name, category, link, '', itemID, '');
             //adding locally
-            props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID);
+            props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, '');
             props.navigation.goBack();
            })
-        })
+        } else {
+          Alert.alert('An item name is required.');
+        }
+
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

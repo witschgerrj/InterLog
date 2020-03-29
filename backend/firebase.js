@@ -90,7 +90,7 @@ export function updateClient(name, email, phone, color, notes, clientUID) {
     notes: notes,
   })
 }
-export function updateCatalogItem(name, category, url, link, imageUUID, notes) {
+export function updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID) {
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Catalog')

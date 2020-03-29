@@ -171,14 +171,20 @@ ClientAdd.navigationOptions = (props) => ({
         const red = props.navigation.getParam('clientsRed');
         const violet = props.navigation.getParam('clientsViolet');
         const none = props.navigation.getParam('clientsNone');
-        getnanoid().then(uid => {
-          addNewClient(name, email, phone, color, uid);
-          
-          props.navigation.getParam('addNewClient')(name, email, phone, color, uid, white, yellow, blue, green, red, violet, none);
-          props.navigation.goBack();
-        }).catch((error) => {
-          console.log(error);
-        })
+
+        if (name !== '' && email !== '') {
+          getnanoid().then(uid => {
+            addNewClient(name, email, phone, color, uid);
+            
+            props.navigation.getParam('addNewClient')(name, email, phone, color, uid, white, yellow, blue, green, red, violet, none);
+            props.navigation.goBack();
+          }).catch((error) => {
+            console.log(error);
+          })
+        } else {
+          Alert.alert('Name and email are required')
+        }
+
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

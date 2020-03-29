@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, ActionSheetIOS, KeyboardAvoidingView } from 'react-native';
+import { Keyboard, ActionSheetIOS, KeyboardAvoidingView, Alert } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import FlexBox from '../components/flexbox';
@@ -221,10 +221,15 @@ ClientView.navigationOptions = (props) => ({
         const notes = props.navigation.getParam('notes');
         const clientUID = props.navigation.getParam('clientUID');
         const index = props.navigation.getParam('arrayIndex');
-        updateClient(name, email, phone, color, notes, clientUID);
-        //locally update name, email, phone, color, notes
-        props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
-        props.navigation.goBack();
+
+        if (name !== '' && email !== '') {
+          updateClient(name, email, phone, color, notes, clientUID);
+          //locally update name, email, phone, color, notes
+          props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
+          props.navigation.goBack();
+        } else {
+          Alert.alert('Name and email are required');
+        }
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
