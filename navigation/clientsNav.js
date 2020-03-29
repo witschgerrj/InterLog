@@ -3,6 +3,7 @@ import Clients from '../screens/clients';
 import ClientAdd from '../screens/clientAdd';
 import ClientNotes from '../screens/clientNotes';
 import ClientView from '../screens/clientView';
+import Settings from '../screens/settings';
 
 const ClientStack = createStackNavigator({
   Clients: {
@@ -38,6 +39,12 @@ const ClientStack = createStackNavigator({
       title: 'Contact View'
     }
   },
+  Settings: {
+    screen: Settings,
+    navigationOptions: {
+      title: 'Settings'
+    }
+  }
 },
 {
   defaultNavigationOptions: {

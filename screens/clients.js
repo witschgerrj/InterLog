@@ -4,10 +4,15 @@ import { getData, storeData } from '../backend/asyncStorage';
 import BackgroundScroll from '../components/bgScrollView';
 import ClientTab from '../components/clientTab';
 import Add from '../assets/add.png';
+import Settings from '../assets/settings.png';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const AddButton = styled.Image`
   margin-right: 20px;
+`
+
+const SettingsButton = styled.Image`
+  margin-left: 20px;
 `
 
 const Clients = (props) => {
@@ -669,10 +674,14 @@ Clients.navigationOptions = (props) => ({
         clientsNone: props.navigation.getParam('clientsNone'),
       })  
     }}>
-      <AddButton source={Add}>
-      </AddButton>
+      <AddButton source={Add}/>
     </TouchableWithoutFeedback>
   ),
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Settings')}>
+      <SettingsButton source={Settings}/>
+    </TouchableWithoutFeedback>
+  )
 })
 
 export default Clients;
