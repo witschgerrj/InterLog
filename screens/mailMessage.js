@@ -28,6 +28,8 @@ const Message = styled.TextInput`
 
 const MailMessage = (props) => {
 
+  const [message, setMessage] = useState("");
+
   const _getBccRecipients = () => {
     let bccRecipients = [];
     const selectedClients = props.navigation.getParam('selectedClients');
@@ -229,17 +231,17 @@ const MailMessage = (props) => {
   }
 
   const _updateMessage = (text) => {
+    setMessage(text);
     props.navigation.setParams({ message: text });
   }
 
-  const _getLocallyStoredMessage = () => {
-
-    let message = getData('message') ;
+  const _getLocallyStoredMessage = async () => {
+    let message = await getData('message');
     //if a message exists
     if (message !== null) {
       props.navigation.setParams({ message: message });
+      setMessage(message);
     }
-  
   }
 
   useEffect(() => {
@@ -251,6 +253,7 @@ const MailMessage = (props) => {
   return (
     <BackgroundScroll>
       <Message  multiline={true}
+                value={message}
                 onChangeText={text => _updateMessage(text)}/>
     </BackgroundScroll>
   );
