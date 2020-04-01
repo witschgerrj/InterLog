@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { getData } from '../backend/asyncStorage';
 import BackgroundScroll from '../components/bgScrollView';
 import GrayedClientTab from '../components/grayedClientTab';
-import backArrow from '../assets/backArrow.png';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import backArrow from '../assets/backArrow.png';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -84,6 +84,7 @@ const MailSelectItems = (props) => {
                             color={client.color}
                             selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
+                            lastUpdated={client.lastUpdated}
                             removeUnselected={_removeUnselected}
                             clientUID={client.id}/>
         ))
@@ -96,6 +97,7 @@ const MailSelectItems = (props) => {
                             color={client.color}
                             selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
+                            lastUpdated={client.lastUpdated}
                             removeUnselected={_removeUnselected}
                             clientUID={client.id}/>
         ))
@@ -120,6 +122,7 @@ const MailSelectItems = (props) => {
                             color={client.color}
                             selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
+                            lastUpdated={client.lastUpdated}
                             removeUnselected={_removeUnselected}
                             clientUID={client.id}/>
         ))
@@ -132,6 +135,7 @@ const MailSelectItems = (props) => {
                             color={client.color}
                             selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
+                            lastUpdated={client.lastUpdated}
                             removeUnselected={_removeUnselected}
                             clientUID={client.id}/>
         ))
@@ -144,6 +148,7 @@ const MailSelectItems = (props) => {
                             color={client.color}
                             selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
+                            lastUpdated={client.lastUpdated}
                             removeUnselected={_removeUnselected}
                             clientUID={client.id}/>
         ))
@@ -156,6 +161,7 @@ const MailSelectItems = (props) => {
                             color={client.color}
                             selected={selectedClients.hasOwnProperty(client.id) ? true : false}
                             addSelected={_addSelected}
+                            lastUpdated={client.lastUpdated}
                             removeUnselected={_removeUnselected}
                             clientUID={client.id}/>
         ))

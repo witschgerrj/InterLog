@@ -4,7 +4,12 @@ import { FB } from '../backend/firebase';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Alert, Linking } from 'react-native';
 import BgNoScroll from '../components/bgNoScroll';
+import backArrow from '../assets/backArrow.png';
 
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: 3px;
+`
 
 const Tab = styled.View`
   width: 100%;
@@ -45,5 +50,15 @@ const Settings = (props) => {
     </BgNoScroll>
   );
 }
+
+Settings.navigationOptions = props => ({
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => {
+      props.navigation.goBack();
+    }}>
+      <BackButton source={backArrow}/>
+    </TouchableWithoutFeedback>
+  ),
+})
 
 export default Settings;

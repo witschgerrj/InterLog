@@ -26,7 +26,6 @@ const Logo = styled.Image`
 const LoadingIndicator = styled(ActivityIndicator)`
   margin-top: 135px;
 `
-
 const DataLayer = (props) => {
   //get the promise data with uids
   //map through, get the UIDS
@@ -42,6 +41,7 @@ const DataLayer = (props) => {
       client.name = doc.data().name;
       client.notes = doc.data().notes;
       client.phone = doc.data().phone;
+      client.lastUpdated = doc.data().lastUpdated;
       docs.push(client);
     })
     return docs;

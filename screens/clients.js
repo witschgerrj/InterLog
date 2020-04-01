@@ -6,6 +6,7 @@ import ClientTab from '../components/clientTab';
 import Add from '../assets/add.png';
 import Settings from '../assets/settings.png';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { getCurrentTime } from '../backend/firebase';
 
 const AddButton = styled.Image`
   margin-right: 20px;
@@ -64,10 +65,12 @@ const Clients = (props) => {
     if (color === '#D1D1D1') { //white
       let _clientsWhite = JSON.parse(JSON.stringify(clientsWhite));
       client.color = '#D1D1D1';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsWhite.push(client);
       setWhiteGroup(_clientsWhite);
       //save param in navigation for use during add client
-      props.navigation.setParams({ clientsWhite: _clientWhite});
+      props.navigation.setParams({ clientsWhite: _clientsWhite});
       //save data locally
       storeData('clientsWhite', _clientsWhite);
       return;
@@ -75,9 +78,11 @@ const Clients = (props) => {
     if (color === '#BABA27') { //yellow
       let _clientsYellow = JSON.parse(JSON.stringify(clientsYellow));      
       client.color = '#BABA27';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsYellow.push(client);
       setYellowGroup(_clientsYellow);
-      props.navigation.setParams({ clientsYellow: _clientYellow});
+      props.navigation.setParams({ clientsYellow: _clientsYellow});
       //save data locally
       storeData('clientsYellow', _clientsYellow);
       return;
@@ -85,9 +90,11 @@ const Clients = (props) => {
     if (color === '#3297B5') { //blue
       let _clientsBlue = JSON.parse(JSON.stringify(clientsBlue));
       client.color = '#3297B5';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsBlue.push(client);
       setBlueGroup(_clientsBlue);
-      props.navigation.setParams({ clientsBlue: _clientBlue});
+      props.navigation.setParams({ clientsBlue: _clientsBlue});
       //save data locally
       storeData('clientsBlue', _clientsBlue);
       return;
@@ -95,9 +102,11 @@ const Clients = (props) => {
     if (color === '#078D1C') { //green
       let _clientsGreen = JSON.parse(JSON.stringify(clientsGreen));
       client.color = '#078D1C';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsGreen.push(client);
       setGreenGroup(_clientsGreen);
-      props.navigation.setParams({ clientsGreen: _clientGreen});
+      props.navigation.setParams({ clientsGreen: _clientsGreen});
       //save data locally
       storeData('clientsGreen', _clientsGreen);
       return;
@@ -105,9 +114,11 @@ const Clients = (props) => {
     if (color === '#9B2F2F') { //red
       let _clientsRed = JSON.parse(JSON.stringify(clientsRed));
       client.color = '#9B2F2F';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsRed.push(client);
       setRedGroup(_clientsRed);
-      props.navigation.setParams({ clientsRed: _clientRed});
+      props.navigation.setParams({ clientsRed: _clientsRed});
       //save data locally
       storeData('clientsRed', _clientsRed);
       return;
@@ -115,9 +126,11 @@ const Clients = (props) => {
     if (color === '#8D0778') { //violet
       let _clientsViolet = JSON.parse(JSON.stringify(clientsViolet));
       client.color = '#8D0778';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsViolet.push(client);
       setVioletGroup(_clientsViolet);
-      props.navigation.setParams({ clientsViolet: _clientViolet});
+      props.navigation.setParams({ clientsViolet: _clientsViolet});
       //save data locally
       storeData('clientsViolet', _clientsViolet);
       return;
@@ -125,9 +138,11 @@ const Clients = (props) => {
     if (color === '#2B2B2B') { //none
       let _clientsNone = JSON.parse(JSON.stringify(clientsNone));
       client.color = '#2B2B2B';
+      //updating lastUpdated with current time
+      client.lastUpdated = getCurrentTime();
       _clientsNone.push(client);
       setWhiteGroup(_clientsNone);
-      props.navigation.setParams({ clientsNone: _clientNone});
+      props.navigation.setParams({ clientsNone: _clientsNone});
       //save data locally
       storeData('clientsNone', _clientsNone);
       return;
@@ -151,6 +166,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -190,6 +207,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -213,7 +232,6 @@ const Clients = (props) => {
   }
 
   const _updateBlue = async (name, color, email, phone, notes, uid, index, untouchedColor) => {
-    //if color stays the same
     let _clientsBlue = JSON.parse(JSON.stringify(clientsBlue));
     let client = _clientsBlue[index];
     //update client data first
@@ -229,6 +247,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -268,6 +288,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -307,6 +329,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -346,6 +370,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -385,6 +411,8 @@ const Clients = (props) => {
     if (client.notes !== notes) {
       client.notes = notes;
     }
+    //updating lastUpdated with current time
+    client.lastUpdated = getCurrentTime();
     //check if color is the same... if so, update current array
     if (untouchedColor === color) {
       //setting index in array to be the updated data.
@@ -471,6 +499,7 @@ const Clients = (props) => {
       color: color,
       notes: '',
       id: uid,
+      lastUpdated: getCurrentTime(),
     }
 
     if (color === '#D1D1D1') { //white
@@ -530,7 +559,7 @@ const Clients = (props) => {
     if (color === '#2B2B2B') { //none
       let _clientsNone = none; 
       _clientsNone.push(client);
-      setWhiteGroup(_clientsNone);
+      setNoneGroup(_clientsNone);
       props.navigation.setParams({ clientsNone: _clientsNone });
       //save data locally
       storeData('clientsNone', _clientsNone);
@@ -553,7 +582,9 @@ const Clients = (props) => {
                       email={client.email}
                       phone={client.phone}
                       notes={client.notes}
+                      originalNotes={client.notes}
                       clientUID={client.id}
+                      lastUpdated={client.lastUpdated}
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateWhite}
@@ -570,6 +601,8 @@ const Clients = (props) => {
                       phone={client.phone}
                       notes={client.notes}
                       clientUID={client.id}
+                      originalNotes={client.notes}
+                      lastUpdated={client.lastUpdated}
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateBlue}
@@ -586,6 +619,8 @@ const Clients = (props) => {
                       phone={client.phone}
                       notes={client.notes}
                       clientUID={client.id}
+                      originalNotes={client.notes}
+                      lastUpdated={client.lastUpdated}
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateYellow}
@@ -602,6 +637,8 @@ const Clients = (props) => {
                       phone={client.phone}
                       notes={client.notes}
                       clientUID={client.id}
+                      originalNotes={client.notes}
+                      lastUpdated={client.lastUpdated}
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateGreen}
@@ -618,6 +655,8 @@ const Clients = (props) => {
                       phone={client.phone}
                       notes={client.notes}
                       clientUID={client.id}
+                      originalNotes={client.notes}
+                      lastUpdated={client.lastUpdated}
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateViolet}
@@ -633,6 +672,8 @@ const Clients = (props) => {
                       email={client.email}
                       phone={client.phone}
                       notes={client.notes}
+                      originalNotes={client.notes}
+                      lastUpdated={client.lastUpdated}
                       clientUID={client.id}
                       arrayIndex={index}
                       navigation={props.navigation}
@@ -650,6 +691,8 @@ const Clients = (props) => {
                       phone={client.phone}
                       notes={client.notes}
                       clientUID={client.id}
+                      originalNotes={client.notes}
+                      lastUpdated={client.lastUpdated}
                       arrayIndex={index}
                       navigation={props.navigation}
                       updateLocal={_updateNone}

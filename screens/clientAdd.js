@@ -5,6 +5,12 @@ import BgNoScroll from '../components/bgNoScroll';
 import FlexBox from '../components/flexbox';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { addNewClient, getnanoid } from '../backend/firebase';
+import backArrow from '../assets/backArrow.png';
+
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: 3px;
+`
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -79,6 +85,16 @@ const ClientAdd = (props) => {
     setSelectedGroupColor(text);
   }
 
+  useEffect(() => {
+    //initializing params
+    props.navigation.setParams({
+      phone: '',
+      name: '',
+      email: '',
+      color: '#2B2B2B',
+    });
+  }, []);
+
   return (
     <TouchableWithoutFeedback onPress={() => _closeKeyboardAndBoxes()}>
         <BgNoScroll pad={20}>
@@ -150,7 +166,9 @@ const ClientAdd = (props) => {
                 spellCheck={false}
                 autoCapitalize='none'
                 keyboardType='phone-pad'
-                textContentType='telephoneNumber'/> 
+                textContentType='telephoneNumber'
+                maxLength={10}
+                value={phone}/> 
         </BgNoScroll>
     </TouchableWithoutFeedback>
 
@@ -172,21 +190,32 @@ ClientAdd.navigationOptions = (props) => ({
         const violet = props.navigation.getParam('clientsViolet');
         const none = props.navigation.getParam('clientsNone');
 
-        if (name !== '' && email !== '') {
+        //make email validation more robust
+        if (email.substring(email.length-4, email.length) !== '.com') {
+          Alert.alert('Invalid email format.');
+        } else if (isNaN(phone) || phone.length !== 10 && phone.length !== 0) {
+          Alert.alert('Invalid phone number.');
+        } else if (name !== '' && email !== '') {
           getnanoid().then(uid => {
             addNewClient(name, email, phone, color, uid);
-            
             props.navigation.getParam('addNewClient')(name, email, phone, color, uid, white, yellow, blue, green, red, violet, none);
             props.navigation.goBack();
           }).catch((error) => {
-            console.log(error);
+            Alert.alert('An error occurred. Please try again.')
           })
         } else {
-          Alert.alert('Name and email are required')
+          Alert.alert('Name and email are required.')
         }
 
       }}>
       <Done>Done</Done>
+    </TouchableWithoutFeedback>
+  ),
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => {
+      props.navigation.goBack();
+    }}>
+      <BackButton source={backArrow}/>
     </TouchableWithoutFeedback>
   ),
 });

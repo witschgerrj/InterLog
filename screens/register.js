@@ -64,7 +64,6 @@ const Register = (props) => {
       .then(() => { 
         //success
         //listener in loading will make switch to Clients screen
-        console.log('Account Created')
       })
       .catch(error => {
         console.log(error)

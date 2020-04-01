@@ -4,6 +4,13 @@ import styled from 'styled-components';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import BgScrollView from '../components/bgScrollView';
 import { updateCatalogItemNotes } from '../backend/firebase';
+import { updateLocalCatalogNotes } from '../backend/asyncStorage';
+import backArrow from '../assets/backArrow.png';
+
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: 3px;
+`
 
 const NoteArea = styled.TextInput`
   height: ${Math.floor(Dimensions.get('window').height)}px;
@@ -42,13 +49,25 @@ CatalogItemNotes.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
         const notes = props.navigation.getParam('notes');
         const catalogItemUID = props.navigation.getParam('catalogItemUID');
+        const index = props.navigation.getParam('index');
+        console.log('index: ' + index);
+        console.log('notes: ' + notes);
+        //update notes backend
         updateCatalogItemNotes(notes, catalogItemUID);
+        //update locally
+        updateLocalCatalogNotes(index, notes);
         props.navigation.navigate('CatalogItemView', {
           notes: props.navigation.getParam('notes'),
         })
-        //props.navigation.getParam('updateCatalog')();
       }}>
       <Done>Done</Done>
+    </TouchableWithoutFeedback>
+  ),
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => {
+      props.navigation.goBack();
+    }}>
+      <BackButton source={backArrow}/>
     </TouchableWithoutFeedback>
   ),
 });

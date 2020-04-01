@@ -7,6 +7,12 @@ import Trashcan from '../assets/trashcan.png';
 import Notes from '../assets/notes.png';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { updateClient, deleteClient } from '../backend/firebase';
+import backArrow from '../assets/backArrow.png';
+
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: 3px;
+`
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -115,9 +121,29 @@ const ClientView = (props) => {
   }
 
   const _openNotes = () => {
+
+    let groupColor = 'clientsNone';   //none
+    let _color = props.navigation.getParam('color');
+
+    if (_color === '#D1D1D1') {        //white
+      groupColor = 'clientsWhite';
+    } else if (_color === '#3297B5') { //blue
+      groupColor = 'clientsBlue';
+    } else if (_color === '#BABA27') { //yellow
+      groupColor = 'clientsYellow';
+    } else if (_color === '#078D1C') { //green
+      groupColor = 'clientsGreen';
+    } else if (_color === '#9B2F2F') { //red
+      groupColor = 'clientsRed';
+    } else {                          //violet
+      groupColor = 'clientsViolet';
+    } 
+
     props.navigation.navigate('ClientNotes', {
       notes: props.navigation.getParam('notes'),
       clientUID: props.navigation.getParam('clientUID'),
+      index: props.navigation.getParam('arrayIndex'),
+      groupColor: groupColor,
     })
   }
 
@@ -196,7 +222,8 @@ const ClientView = (props) => {
                 autoCapitalize='none'
                 keyboardType='phone-pad'
                 textContentType='telephoneNumber'
-                value={phone}/>
+                value={phone}
+                maxLength={10}/>
           <StyledFlexBox>
             <TouchableWithoutFeedback onPress={() => _showDeleteActionSheet()}>
               <TrashcanIcon source={Trashcan}/>
@@ -211,6 +238,7 @@ const ClientView = (props) => {
 }
 
 ClientView.navigationOptions = (props) => ({
+  
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
         const name = props.navigation.getParam('name');
@@ -221,17 +249,42 @@ ClientView.navigationOptions = (props) => ({
         const notes = props.navigation.getParam('notes');
         const clientUID = props.navigation.getParam('clientUID');
         const index = props.navigation.getParam('arrayIndex');
-
-        if (name !== '' && email !== '') {
+        //validating phone number
+        //make email validation more robust
+        if (email.substring(email.length-4, email.length) !== '.com') {
+          Alert.alert('Invalid email format.');
+        } else if (isNaN(phone) || phone.length !== 10 && phone.length !== 0) {
+          Alert.alert('Invalid phone number.')
+        } else if (name !== '' && email !== '') {
           updateClient(name, email, phone, color, notes, clientUID);
           //locally update name, email, phone, color, notes
           props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
           props.navigation.goBack();
         } else {
-          Alert.alert('Name and email are required');
+          Alert.alert('Name and email are required.');
         }
       }}>
       <Done>Done</Done>
+    </TouchableWithoutFeedback>
+  ),
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => {
+      const name = props.navigation.getParam('name');
+      const email = props.navigation.getParam('email');
+      const phone = props.navigation.getParam('phone');
+      const untouchedColor = props.navigation.getParam('untouchedColor');
+      const color = props.navigation.getParam('color');
+      const notes = props.navigation.getParam('notes');
+      const clientUID = props.navigation.getParam('clientUID');
+      const index = props.navigation.getParam('arrayIndex');
+      const originalNotes = props.navigation.getParam('originalNotes');
+      //update on back if notes were updated
+      if (notes !== originalNotes) {
+        props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
+      }
+      props.navigation.goBack();
+    }}>
+      <BackButton source={backArrow}/>
     </TouchableWithoutFeedback>
   ),
 });

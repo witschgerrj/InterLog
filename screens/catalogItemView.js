@@ -6,7 +6,14 @@ import Trashcan from '../assets/trashcan.png';
 import Notes from '../assets/notes.png';
 import * as ImagePicker from 'expo-image-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { deleteCatalogItem, updateItemCategory, getnanoid, updateItemImageURL, deleteCatalogImage, saveCatalogImage, updateCatalogItem } from '../backend/firebase';
+import { deleteCatalogItem, updateItemCategory, deleteCatalogImage, saveCatalogImage, updateCatalogItem } from '../backend/firebase';
+import nanoid from 'nanoid/async';
+import backArrow from '../assets/backArrow.png';
+
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: 3px;
+`
 
 const Name = styled.TextInput`
   font-size: 18px;
@@ -106,12 +113,16 @@ const CatalogItemView = (props) => {
 
   //also acts as an update
   const _addToCategories = (oldCategory, category) => {
-    let categories = props.navigation.getParam('allCategories');
+    //navigation props keep reference
+    let categories = JSON.parse(JSON.stringify(props.navigation.getParam('allCategories')));
+ 
     if (oldCategory !== category) {
       if (categories.hasOwnProperty(category)) {
         categories[category] += 1;
       } else {
-        categories[category] = 1;
+        if (category !== '') {
+          categories[category] = 1;
+        }
       }
       //decrement value by one from previous category... check if there are any items using the category
       //checking if oldCategory is not empty from initial add.
@@ -126,7 +137,9 @@ const CatalogItemView = (props) => {
     setCategory(category);
     props.navigation.setParams({ category: category });
     setAllCategories(categories);
-    props.navigation.setParams({ allCategories: categories });
+    props.navigation.setParams({ allCategories: categories});
+    //old categories saved so can check for a new category within updateLocal()
+    props.navigation.setParams({ oldCategories: props.navigation.getParam('allCategories')});
   }
 
   const _showDeleteActionSheet = () => {
@@ -216,20 +229,28 @@ const CatalogItemView = (props) => {
       }
     }))
   }
+  const _generateUUIDs = async () => {
+    let imageUUID = await nanoid();
+    props.navigation.setParams({ UUID: imageUUID });
+  }
 
   const _openNotes = () => {
     props.navigation.navigate('CatalogItemNotes', {
       notes: props.navigation.getParam('notes'),
       catalogItemUID: props.navigation.getParam('catalogItemUID'),
-      //updateCatalog: props.navigation.getParam('updateCatalog'),
+      index: props.navigation.getParam('index'),
     })
   }
+
+  useEffect(() => {
+    _generateUUIDs();
+    props.navigation.setParams({ newImage: false });
+  }, []);
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <BgNoScroll pad={20}>
-
             <Name value={name}
                   placeholder='Name'
                   placeholderTextColor='#FFF'
@@ -247,8 +268,6 @@ const CatalogItemView = (props) => {
                   multiline={true}
                   value={link}
                   onChangeText={text => _updateLink(text)}/>
-
-            
             <StyledFlexBox>
               <TouchableWithoutFeedback onPress={() => _showDeleteActionSheet()}>
                 <TrashcanIcon source={Trashcan}/>
@@ -257,7 +276,6 @@ const CatalogItemView = (props) => {
                 <NotesIcon source={Notes}/>
               </TouchableWithoutFeedback> 
             </StyledFlexBox>
-
           </BgNoScroll>
       </TouchableWithoutFeedback>
       <Touched onPress={() => _navigateToChooseImage()}>
@@ -272,7 +290,6 @@ const CatalogItemView = (props) => {
         <ImageBox source={imageLink !== '' ? { uri: imageLink } : null}
                   imageStyle={{ borderRadius: 3}}>
         </ImageBox>
-        
       }
     </Touched>
   </>
@@ -291,12 +308,12 @@ CatalogItemView.navigationOptions = (props) => ({
         let notes = props.navigation.getParam('notes');
         let index = props.navigation.getParam('index');
         let originalImageUUID = props.navigation.getParam('imageUUID');
-
-        console.log("CATALOG ITEM UID: " + catalogItemUID);
-        
+        let imageUUID = props.navigation.getParam('UUID');
+        let allCategories = props.navigation.getParam('allCategories');
+        let oldCategories = props.navigation.getParam('oldCategories');
         //name cannot be empty
         if (name !== '') {
-                    //if theres a new image
+          //if theres a new image
           if (newImage) {
             //deletes unused image in database.
             //then saves new image.
@@ -304,24 +321,20 @@ CatalogItemView.navigationOptions = (props) => ({
             if (originalImageUUID !== '') {
               deleteCatalogImage(originalImageUUID);
             }
-            getnanoid()
-            .then(imageUUID => {
-              saveCatalogImage(imageLink, imageUUID)
-              .then((url) => {
-                updateItemImageURL(catalogItemUID, url)
-                .then(() => {
-                  //need to update in DB as well.
-                  updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID);
-                  props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index);
-                  props.navigation.goBack();
-                });
-              })
-            })
-            
+            //update locally
+            props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories);
+            //save new image to storage
+            saveCatalogImage(imageLink, imageUUID)
+            .then((url) => {
+              //need to update in DB as well.
+              updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID);
+            });
+            props.navigation.goBack();
           } else {
             //need to update in db as well.
-            updateCatalogItem(name, category, imageLink, link, originalImageUUID, notes);
-            props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index);
+            updateCatalogItem(name, category, imageLink, link, originalImageUUID, notes, catalogItemUID);
+            //update locally
+            props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories);
             props.navigation.goBack();
           }
         } else {
@@ -330,6 +343,27 @@ CatalogItemView.navigationOptions = (props) => ({
 
       }}>
       <Done>Done</Done>
+    </TouchableWithoutFeedback>
+  ),
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => {
+      let name = props.navigation.getParam('name');
+      let category = props.navigation.getParam('category');
+      let imageLink = props.navigation.getParam('imageLink');
+      let link = props.navigation.getParam('link');
+      let notes = props.navigation.getParam('notes');
+      let index = props.navigation.getParam('index');
+      let originalImageUUID = props.navigation.getParam('imageUUID');
+      let allCategories = props.navigation.getParam('allCategories');
+      let oldCategories = props.navigation.getParam('oldCategories');
+      let originalNotes = props.navigation.getParam('originalNotes');
+      //update on back if notes were updated
+      if (originalNotes !== notes) {
+        props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories);
+      }
+      props.navigation.goBack();
+    }}>
+      <BackButton source={backArrow}/>
     </TouchableWithoutFeedback>
   ),
 });

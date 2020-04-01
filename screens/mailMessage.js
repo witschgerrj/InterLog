@@ -5,6 +5,7 @@ import backArrow from '../assets/backArrow.png';
 import BackgroundScroll from '../components/bgScrollView';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { getData, storeData } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -27,8 +28,6 @@ const Message = styled.TextInput`
 
 const MailMessage = (props) => {
 
-  const [message, setMessage] = useState('');
-
   const _getBccRecipients = () => {
     let bccRecipients = [];
     const selectedClients = props.navigation.getParam('selectedClients');
@@ -37,48 +36,123 @@ const MailMessage = (props) => {
       let email = selectedClients[key].email
       bccRecipients.push(email)
     })
-    props.navigation.setParams({ bcc: bccRecipients})
+    return bccRecipients;
   }
   
-  const _getBody = () => {
+  const _getBodyMail = (message) => {
     let body = ``;
 
     const selectedItems = props.navigation.getParam('selectedItems');
     const selectedDetails = props.navigation.getParam('selectedDetails');
     let selectedItemsKeys = Object.keys(selectedItems);
 
+    //if theres a message, add it
+    if (message) { 
+      body += `${message}\n\n\n\n\n`
+    }
+
     selectedItemsKeys.map(key => {
+      let name = selectedItems[key].name;
       if (selectedDetails.includes('Name')) {
-        let name = selectedItems[key].name;
+        body += `<strong style='font-size: 18px;'>${name}\n</strong>`;
+      }
+      let category = selectedItems[key].category;
+      if (selectedDetails.includes('Category')) {
+        body += `${category}\n\n`;
+      } else {
+        body += `\n`;
+      }
+      let notes = selectedItems[key].notes;
+      if (selectedDetails.includes('Notes') && notes !== '') {
+        body += `${notes}\n\n`
+      }
+      let link = selectedItems[key].link;
+      if (selectedDetails.includes('Link') && link !== '') {
+        body += `<a href=${link}>${name}</a>\n\n\n`
+      } 
+    })
+    return body;
+  }
+
+  const _getBodyGmail = (message) => {
+    let body = '';
+
+    const selectedItems = props.navigation.getParam('selectedItems');
+    const selectedDetails = props.navigation.getParam('selectedDetails');
+    let selectedItemsKeys = Object.keys(selectedItems);
+    
+    if (message) { 
+      body += message;
+    }
+
+    selectedItemsKeys.map(key => {
+      let name = selectedItems[key].name;
+      if (selectedDetails.includes('Name')) {
         body += name;
       }
+      let category = selectedItems[key].category;
       if (selectedDetails.includes('Category')) {
-        let category = selectedItems[key].category;
-        let text = category
-        body += text;
+        body += category
       } else {
-        body += '';
+         body += `\n`;
       }
-      if (selectedDetails.includes('Notes')) {
-        let notes = selectedItems[key].notes;
+      let notes = selectedItems[key].notes;
+      if (selectedDetails.includes('Notes') && notes !== '') {
         body += notes
       }
-      if (selectedDetails.includes('Link')) {
-        let link = selectedItems[key].link;
+      let link = selectedItems[key].link;
+      if (selectedDetails.includes('Link') && link !== '') {
         body += link
       } 
     })
-    props.navigation.setParams({ body: body})
+    return body;
   }
 
-  const _formatEmail = async (bcc, body, message, callback) => {
+  const _getBodyOutlook = (message) => {
+    let body = ``;
+
+    const selectedItems = props.navigation.getParam('selectedItems');
+    const selectedDetails = props.navigation.getParam('selectedDetails');
+    let selectedItemsKeys = Object.keys(selectedItems);
+
     if (message) { 
-      body = message + body;
+      body += `${message}\n\n\n\n\n`;
     }
 
-    let mail = `mailto:?body=${body}&bcc=${bcc}`;
-    let gmail = `googlegmail://co?body=${body}&bcc=${bcc}`;
-    let outlook = `ms-outlook://compose?body=${body}&bcc=${bcc}`;
+    selectedItemsKeys.map(key => {
+      let name = selectedItems[key].name;
+      if (selectedDetails.includes('Name')) {
+        body += `${name}\n`;
+      }
+      let category = selectedItems[key].category;
+      if (selectedDetails.includes('Category')) {
+        body += `${category}\n\n`;
+      } else {
+        body += `\n`;
+      }
+      let notes = selectedItems[key].notes;
+      if (selectedDetails.includes('Notes') && notes !== '') {
+        body += `${notes}\n\n`
+      }
+      let link = selectedItems[key].link;
+      if (selectedDetails.includes('Link') && link !== '') {
+        body += `${link}\n\n\n`
+      } 
+    })
+    return body;
+  }
+
+  const _formatEmail = async (message, callback) => {
+
+    let bcc = _getBccRecipients();
+    let mailBody = _getBodyMail(message);
+    let gmailBody = _getBodyGmail(message);
+    let outlookBody = _getBodyOutlook(message);
+
+    let mail = `mailto:?body=${mailBody}&bcc=${bcc}`;
+    let gmail = `googlegmail://co?body=${gmailBody}&bcc=${bcc}`;
+    let outlook = `ms-outlook://compose?body=${outlookBody}&bcc=${bcc}`;
+ 
     
     let gmailRequest = await Linking.canOpenURL(gmail);
     let outlookRequest = await Linking.canOpenURL(outlook);
@@ -155,14 +229,22 @@ const MailMessage = (props) => {
   }
 
   const _updateMessage = (text) => {
-    setMessage(text);
     props.navigation.setParams({ message: text });
   }
 
+  const _getLocallyStoredMessage = () => {
+
+    let message = getData('message') ;
+    //if a message exists
+    if (message !== null) {
+      props.navigation.setParams({ message: message });
+    }
+  
+  }
+
   useEffect(() => {
-    props.navigation.setParams({ 'formatEmail': _formatEmail });
-    _getBody();
-    _getBccRecipients();
+    props.navigation.setParams({ formatEmail: _formatEmail });
+    _getLocallyStoredMessage();
   }, []);
 
 
@@ -184,12 +266,11 @@ MailMessage.navigationOptions = (props) => ({
         }))
         props.navigation.navigate('Clients');
       }
+      let message = props.navigation.getParam('message');
+      //store latest message in local storage
+      storeData('message', message);
       
-      props.navigation.getParam('formatEmail')(props.navigation.getParam('bcc'), 
-                                                props.navigation.getParam('body'),
-                                                props.navigation.getParam('message'),
-                                                callback);
-
+      props.navigation.getParam('formatEmail')(message, callback);
     }}>
     {
       <Finish>Finish</Finish>
@@ -205,4 +286,4 @@ MailMessage.navigationOptions = (props) => ({
   ),
 })
 
-export default MailMessage;
+export default MailMessage

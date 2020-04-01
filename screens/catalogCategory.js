@@ -6,6 +6,12 @@ import FlexBox from '../components/flexbox';
 import { TouchableWithoutFeedback, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 import { addCategory } from '../backend/firebase';
 import CategoryTab from '../components/categoryTab';
+import backArrow from '../assets/backArrow.png';
+
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: 3px;
+`
 
 const Done = styled.Text`
   font-size: 22px;
@@ -60,6 +66,8 @@ const CatalogCategory = (props) => {
   const _displaySelected = () => {
     setSelectedCategory('');
     setAddCategorySelected(true);
+    props.navigation.setParams({ selectedCategory: '' });
+    props.navigation.setParams({ addedCategory: '' });
   }
 
   const _setAddCategoryText = (text) => {
@@ -102,7 +110,7 @@ const CatalogCategory = (props) => {
                             onChangeText={(text) => _setAddCategoryText(text)}
                             ></AddCategory>
               {
-                addCategorySelected && selected === '' && addCategoryText !== '' ? 
+                addCategorySelected && selected === '' ? 
                 <Circle/>
                 : null
               }
@@ -138,16 +146,33 @@ CatalogCategory.navigationOptions = (props) => ({
         } else {
           //coming from addItem
           if (addedCategory === '') {
-            props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
-            props.navigation.goBack();
+            //need to set category seperately for AddCategory since category would usually get updated,
+            //when its sent to addCategories. But this is done when "Done" is pressed vs ViewCategory.
+            props.navigation.getParam('setCategory')(selectedCategory);
+            props.navigation.navigate('CatalogAdd', {
+              oldCategory: oldCategory,
+              category: selectedCategory,
+            });
           } else {
-            props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
-            props.navigation.goBack();
+            //need to set category seperately for AddCategory since category would usually get updated,
+            //when its sent to addCategories. But this is done when "Done" is pressed vs ViewCategory.
+            props.navigation.getParam('setCategory')(addedCategory);
+            props.navigation.navigate('CatalogAdd', {
+              oldCategory: oldCategory,
+              category: addedCategory,
+            });
           }
         }
         
       }}>
       <Done>Done</Done>
+    </TouchableWithoutFeedback>
+  ),
+  headerLeft: () => (
+    <TouchableWithoutFeedback onPress={() => {
+      props.navigation.goBack();
+    }}>
+      <BackButton source={backArrow}/>
     </TouchableWithoutFeedback>
   ),
 });
