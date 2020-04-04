@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Keyboard, Alert, View } from 'react-native'; 
+import { Keyboard, Alert, KeyboardAvoidingView } from 'react-native'; 
 import styled from 'styled-components';
 import { TouchableWithoutFeedback}  from 'react-native-gesture-handler';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
@@ -40,7 +40,6 @@ const OtherText = styled.Text`
   color: white;
   text-align: center;
   font-size: 18px;
-  opacity: 0.3;
 `
 
 const StyledGradient = styled(LinearGradient)`
@@ -76,38 +75,38 @@ const Login = (props) => {
   }
 
   return (
-    <>
-    <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss()} }>
-      <StyledGradient colors={['#160068', '#820974']}>
-        <Logo source={InterLog}/>
-        <SignInText onChangeText={text => setEmail(text)}
-                    placeholder='Email'
-                    placeholderTextColor='#FFF'
-                    autoCorrect={false} 
-                    spellCheck={false}
-                    autoCapitalize='none'/>
-        <SignInText onChangeText={text => setPassword(text)}
-                    placeholder='Password'
-                    placeholderTextColor='#FFF'
-                    autoCorrect={false} 
-                    spellCheck={false}
-                    autoCapitalize='none'
-                    secureTextEntry={true}/>
-          <TouchableWithoutFeedback onPress={() => _executeLogin()}>
-          <Button>
-            <ButtonText>Login</ButtonText>
-          </Button>
-        </TouchableWithoutFeedback>
+    <KeyboardAvoidingView>
+      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss()} }>
+        <StyledGradient colors={['#160068', '#820974']}>
+          <Logo source={InterLog}/>
+          <SignInText onChangeText={text => setEmail(text)}
+                      placeholder='Email'
+                      placeholderTextColor='#FFF'
+                      autoCorrect={false} 
+                      spellCheck={false}
+                      autoCapitalize='none'/>
+          <SignInText onChangeText={text => setPassword(text)}
+                      placeholder='Password'
+                      placeholderTextColor='#FFF'
+                      autoCorrect={false} 
+                      spellCheck={false}
+                      autoCapitalize='none'
+                      secureTextEntry={true}/>
+            <TouchableWithoutFeedback onPress={() => _executeLogin()}>
+            <Button>
+              <ButtonText>Login</ButtonText>
+            </Button>
+          </TouchableWithoutFeedback>
 
-      </StyledGradient>        
-    </TouchableWithoutFeedback>
-    <Touched onPress={() => _navigateToRegister()}>
-      <OtherText bottom={45}>Register</OtherText>
-    </Touched>
-    <Touched onPress={() => _navigateToResetPassword()}>
-      <OtherText bottom={90}>Forgot Password?</OtherText>
-    </Touched>
-    </>
+        </StyledGradient>        
+      </TouchableWithoutFeedback>
+      <Touched onPress={() => _navigateToRegister()}>
+        <OtherText bottom={45}>Register</OtherText>
+      </Touched>
+      <Touched onPress={() => _navigateToResetPassword()}>
+        <OtherText bottom={90}>Forgot Password?</OtherText>
+      </Touched>
+    </KeyboardAvoidingView>
   );
 }
 
