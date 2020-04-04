@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, View, Dimensions } from 'react-native';
+import { Keyboard, KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components';
-import BgNoScroll from '../components/bgNoScroll';
+import BgScrollView from '../components/bgScrollView';
 import FlexBox from '../components/flexbox';
-import { TouchableWithoutFeedback, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
-import { addCategory } from '../backend/firebase';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import CategoryTab from '../components/categoryTab';
 import backArrow from '../assets/backArrow.png';
+import { useHeaderHeight } from 'react-navigation-stack';
 
 const BackButton = styled.Image`
   margin-left: 20px;
-  margin-top: 3px;
+  margin-top: auto;
+  margin-bottom: auto;
 `
-
+const HeaderSelectionBox = styled.View`
+  width: 60px;
+  height: 100%;
+`
 const Done = styled.Text`
   font-size: 22px;
   color: #248AC9;
@@ -26,10 +30,10 @@ const Tab = styled.View`
   borderBottomWidth: 1px;
 `
 const AddCategory = styled.TextInput`
-  margin-top: 8px;
   font-size: 18px;
   color: #248AC9;
   width: 80%;
+  height: 40px;
 `
 
 const Circle = styled.View`
@@ -86,39 +90,42 @@ const CatalogCategory = (props) => {
     props.navigation.setParams({addedCategory: ''});
   }, []);
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <BgNoScroll>
-        {
-        Object.keys(allCategories).map((category, index) => (
-            <CategoryTab  key={'category' + index}
-                          category={category}
-                          selected={category === selected ? true : false}
-                          navigation={props.navigation}
-                          updateSelected={_updateSelected}/>
-        ))
-        }
-        <TouchableWithoutFeedback onPress={() => _displaySelected()}>
-          <Tab>
-            <FlexBox justify='space-between'>
-              <AddCategory  value={addCategoryText}
-                            placeholder='Add Category'
-                            placeholderTextColor='#248AC9'
-                            autoCorrect={false} 
-                            spellCheck={false}
-                            autoCapitalize='none'
-                            onFocus={() => _displaySelected()}
-                            onChangeText={(text) => _setAddCategoryText(text)}
-                            ></AddCategory>
-              {
-                addCategorySelected && selected === '' ? 
-                <Circle/>
-                : null
-              }
-            </FlexBox>
-          </Tab>
-        </TouchableWithoutFeedback>
-      </BgNoScroll>
-    </TouchableWithoutFeedback>
+    <KeyboardAvoidingView behavior='padding'
+                          keyboardVerticalOffset={useHeaderHeight()}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <BgScrollView>
+          {
+          Object.keys(allCategories).map((category, index) => (
+              <CategoryTab  key={'category' + index}
+                            category={category}
+                            selected={category === selected ? true : false}
+                            navigation={props.navigation}
+                            updateSelected={_updateSelected}/>
+          ))
+          }
+          <TouchableWithoutFeedback onPress={() => _displaySelected()}>
+            <Tab>
+              <FlexBox justify='space-between'>
+                <AddCategory  value={addCategoryText}
+                              placeholder='Add Category'
+                              placeholderTextColor='#248AC9'
+                              autoCorrect={false} 
+                              spellCheck={false}
+                              autoCapitalize='none'
+                              onFocus={() => _displaySelected()}
+                              onChangeText={(text) => _setAddCategoryText(text)}
+                              ></AddCategory>
+                {
+                  addCategorySelected && selected === '' ? 
+                  <Circle/>
+                  : null
+                }
+              </FlexBox>
+            </Tab>
+          </TouchableWithoutFeedback>
+        </BgScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -172,7 +179,9 @@ CatalogCategory.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
       props.navigation.goBack();
     }}>
-      <BackButton source={backArrow}/>
+      <HeaderSelectionBox>
+        <BackButton source={backArrow}/>
+      </HeaderSelectionBox>
     </TouchableWithoutFeedback>
   ),
 });

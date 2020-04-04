@@ -9,9 +9,13 @@ import backArrow from '../assets/backArrow.png';
 
 const BackButton = styled.Image`
   margin-left: 20px;
-  margin-top: 3px;
+  margin-top: auto;
+  margin-bottom: auto;
 `
-
+const HeaderSelectionBox = styled.View`
+  width: 60px;
+  height: 100%;
+`
 const Name = styled.TextInput`
   font-size: 18px;
   color: white;
@@ -215,7 +219,9 @@ ClientAdd.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
       props.navigation.goBack();
     }}>
-      <BackButton source={backArrow}/>
+      <HeaderSelectionBox>
+        <BackButton source={backArrow}/>
+      </HeaderSelectionBox>
     </TouchableWithoutFeedback>
   ),
 });

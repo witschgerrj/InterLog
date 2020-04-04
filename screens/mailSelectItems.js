@@ -13,6 +13,16 @@ import FlexBox from '../components/flexbox';
 import GrayedCatalogBox from '../components/grayedCatalogBox';
 import { getData } from '../backend/asyncStorage';
 
+
+const BackButton = styled.Image`
+  margin-left: 20px;
+  margin-top: auto;
+  margin-bottom: auto;
+`
+const HeaderSelectionBox = styled.View`
+  width: 60px;
+  height: 100%;
+`
 const Grid = styled.Image`
   margin-left: 30px;
   transform: scale(0.9);
@@ -28,11 +38,6 @@ const Absolute = styled.View`
 `
 const Highlight = styled.View`
   background-color: white;
-`
-const BackButton = styled.Image`
-  margin-left: 20px;
-  margin-right: 10px;
-  margin-top: 3px;
 `
 const Next = styled.Text`
   font-size: 22px;
@@ -137,7 +142,9 @@ MailSelectItems.navigationOptions = (props) => ({
         }))
         props.navigation.navigate('Clients');
       }}>
+        <HeaderSelectionBox>
         <BackButton source={backArrow}/>
+      </HeaderSelectionBox>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={() => {
         let displayGrid = props.navigation.getParam('displayGrid');

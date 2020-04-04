@@ -9,8 +9,12 @@ import { getData, storeData } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
-  margin-right: 10px;
-  margin-top: 3px;
+  margin-top: auto;
+  margin-bottom: auto;
+`
+const HeaderSelectionBox = styled.View`
+  width: 60px;
+  height: 100%;
 `
 const Finish = styled.Text`
   font-size: 22px;
@@ -284,7 +288,9 @@ MailMessage.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
       props.navigation.goBack();
     }}>
-      <BackButton source={backArrow}/>
+      <HeaderSelectionBox>
+        <BackButton source={backArrow}/>
+      </HeaderSelectionBox>
     </TouchableWithoutFeedback>
   ),
 })
