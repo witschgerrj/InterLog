@@ -271,7 +271,7 @@ ClientView.navigationOptions = (props) => ({
 
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      debounce(_executeAdd, 500);
+      debounce(_executeAdd(props), 500);
     }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

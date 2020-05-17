@@ -214,39 +214,39 @@ const _executeAdd = (props) => {
   const oldCategory = props.navigation.getParam('oldCategory');
   //hide done button
 
-    //dereferencing for when adding a new item. 
-    const allCategories = props.navigation.getParam('allCategories');
-    //adding to database
-    //getting image UID and the catalog item UID to store locally right away.
-    if (name !== '' && imageLink !== '') {
-      //adding in database
-      addNewItem(name, category, link, JSON.parse(JSON.stringify(imageLink)), itemID, JSON.parse(JSON.stringify(imageUUID)));
-      //adding locally
-      props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID, allCategories);
-      //case for if image is selected
-      //add category to categories
-      //ONLY UPDATE CATEGORIES AFTER new item is added
-      props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
-      props.navigation.goBack();
-    } else if (name !== '') {
-      //adding in database.. imageLink and itemuUUID should be empty
-      addNewItem(name, category, link, '', itemID, '');
-      //adding locally
-      props.navigation.getParam('addItem')(name, category, link, '', catalog, itemID, '', allCategories);
-      //case for not generating an imageUUID. Setting imageUUID to ''
-      //add category to categories
-      //ONLY UPDATE CATEGORIES AFTER new item is added
-      props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
-      props.navigation.goBack();
-    } else {
-      Alert.alert('An item name is required.');
-    }
+  //dereferencing for when adding a new item. 
+  const allCategories = props.navigation.getParam('allCategories');
+  //adding to database
+  //getting image UID and the catalog item UID to store locally right away.
+  if (name !== '' && imageLink !== '') {
+    //adding in database
+    addNewItem(name, category, link, JSON.parse(JSON.stringify(imageLink)), itemID, JSON.parse(JSON.stringify(imageUUID)));
+    //adding locally
+    props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID, allCategories);
+    //case for if image is selected
+    //add category to categories
+    //ONLY UPDATE CATEGORIES AFTER new item is added
+    props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
+    props.navigation.goBack();
+  } else if (name !== '') {
+    //adding in database.. imageLink and itemuUUID should be empty
+    addNewItem(name, category, link, '', itemID, '');
+    //adding locally
+    props.navigation.getParam('addItem')(name, category, link, '', catalog, itemID, '', allCategories);
+    //case for not generating an imageUUID. Setting imageUUID to ''
+    //add category to categories
+    //ONLY UPDATE CATEGORIES AFTER new item is added
+    props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
+    props.navigation.goBack();
+  } else {
+    Alert.alert('An item name is required.');
+  }
 }
 
 CatalogAdd.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress ={() => {
-        debounce(_executeAdd, 500);
+        debounce(_executeAdd(props), 500);
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

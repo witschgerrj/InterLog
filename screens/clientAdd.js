@@ -62,7 +62,7 @@ const ClientAdd = (props) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [selectedGroupColor, setSelectedGroupColor] = useState('#2B2B2B');
+  const [selectedGroupColor, setSelectedGroupColor] = useState('#D1D1D1');
   const [selectingBoxes, setSelectingBoxes] = useState(false);
 
   const _closeKeyboardAndBoxes = () => {
@@ -96,7 +96,7 @@ const ClientAdd = (props) => {
       phone: '',
       name: '',
       email: '',
-      color: '#2B2B2B',
+      color: '#D1D1D1',
     });
   }, []);
 
@@ -215,7 +215,7 @@ const _executeAdd = (props) => {
 ClientAdd.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-       debounce(_executeAdd, 500);
+       debounce(_executeAdd(props), 500);
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
