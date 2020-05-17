@@ -6,6 +6,7 @@ import FlexBox from '../components/flexbox';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { addNewClient, getnanoid } from '../backend/firebase';
 import backArrow from '../assets/backArrow.png';
+import { debounce } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -179,38 +180,42 @@ const ClientAdd = (props) => {
   );
 }
 
+const _executeAdd = (props) => {
+  const name = props.navigation.getParam('name');
+  const email = props.navigation.getParam('email');
+  const phone = props.navigation.getParam('phone');
+  const color = props.navigation.getParam('color');
+  const white = props.navigation.getParam('clientsWhite');
+  const blue = props.navigation.getParam('clientsBlue');
+  const green = props.navigation.getParam('clientsGreen');
+  const yellow = props.navigation.getParam('clientsYellow');
+  const red = props.navigation.getParam('clientsRed');
+  const violet = props.navigation.getParam('clientsViolet');
+  const none = props.navigation.getParam('clientsNone');
+
+  //make email validation more robust
+  if (email.substring(email.length-4, email.length) !== '.com') {
+    Alert.alert('Invalid email format.');
+  } else if (isNaN(phone) || phone.length !== 10 && phone.length !== 0) {
+    Alert.alert('Invalid phone number.');
+  } else if (name !== '' && email !== '') {
+    getnanoid().then(uid => {
+      addNewClient(name, email, phone, color, uid);
+      props.navigation.getParam('addNewClient')(name, email, phone, color, uid, white, yellow, blue, green, red, violet, none);
+      props.navigation.goBack();
+    }).catch((error) => {
+      Alert.alert('An error occurred. Please try again.')
+    })
+  } else {
+    Alert.alert('Name and email are required.')
+  }
+
+}
+
 ClientAdd.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const name = props.navigation.getParam('name');
-        const email = props.navigation.getParam('email');
-        const phone = props.navigation.getParam('phone');
-        const color = props.navigation.getParam('color');
-        const white = props.navigation.getParam('clientsWhite');
-        const blue = props.navigation.getParam('clientsBlue');
-        const green = props.navigation.getParam('clientsGreen');
-        const yellow = props.navigation.getParam('clientsYellow');
-        const red = props.navigation.getParam('clientsRed');
-        const violet = props.navigation.getParam('clientsViolet');
-        const none = props.navigation.getParam('clientsNone');
-
-        //make email validation more robust
-        if (email.substring(email.length-4, email.length) !== '.com') {
-          Alert.alert('Invalid email format.');
-        } else if (isNaN(phone) || phone.length !== 10 && phone.length !== 0) {
-          Alert.alert('Invalid phone number.');
-        } else if (name !== '' && email !== '') {
-          getnanoid().then(uid => {
-            addNewClient(name, email, phone, color, uid);
-            props.navigation.getParam('addNewClient')(name, email, phone, color, uid, white, yellow, blue, green, red, violet, none);
-            props.navigation.goBack();
-          }).catch((error) => {
-            Alert.alert('An error occurred. Please try again.')
-          })
-        } else {
-          Alert.alert('Name and email are required.')
-        }
-
+       debounce(_executeAdd, 500);
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

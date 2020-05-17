@@ -7,6 +7,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import CategoryTab from '../components/categoryTab';
 import backArrow from '../assets/backArrow.png';
 import { useHeaderHeight } from 'react-navigation-stack';
+import { debounce } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -129,48 +130,52 @@ const CatalogCategory = (props) => {
   );
 }
 
+const _executeSave = (props) => {
+  const oldCategory = props.navigation.getParam('oldCategory');
+  const addedCategory = props.navigation.getParam('addedCategory');
+  const selectedCategory = props.navigation.getParam('selectedCategory');
+  const catalogItemUID = props.navigation.getParam('catalogItemUID');
+  const updateItemCategory = props.navigation.getParam('updateItemCategory');
+  //if new category was not added... 
+  //only running if / else if, if you're coming from catalogViewItem.
+  if (addedCategory === '' && updateItemCategory !== false) {
+    props.navigation.getParam('addToCategories')(oldCategory, selectedCategory);
+    //only called through Item View since a new item wont have info or a UID
+    //update in database
+    updateItemCategory(catalogItemUID, selectedCategory);
+    props.navigation.goBack();
+  } else if (updateItemCategory !== false) {
+    props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
+    //only called through Item View since a new item wont have info or a UID
+    updateItemCategory(catalogItemUID, addedCategory);
+    props.navigation.goBack();
+  } else {
+    //coming from addItem
+    if (addedCategory === '') {
+      //need to set category seperately for AddCategory since category would usually get updated,
+      //when its sent to addCategories. But this is done when "Done" is pressed vs ViewCategory.
+      props.navigation.getParam('setCategory')(selectedCategory);
+      props.navigation.navigate('CatalogAdd', {
+        oldCategory: oldCategory,
+        category: selectedCategory,
+      });
+    } else {
+      //need to set category seperately for AddCategory since category would usually get updated,
+      //when its sent to addCategories. But this is done when "Done" is pressed vs ViewCategory.
+      props.navigation.getParam('setCategory')(addedCategory);
+      props.navigation.navigate('CatalogAdd', {
+        oldCategory: oldCategory,
+        category: addedCategory,
+      });
+    }
+  }
+  
+}
+
 CatalogCategory.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const oldCategory = props.navigation.getParam('oldCategory');
-        const addedCategory = props.navigation.getParam('addedCategory');
-        const selectedCategory = props.navigation.getParam('selectedCategory');
-        const catalogItemUID = props.navigation.getParam('catalogItemUID');
-        const updateItemCategory = props.navigation.getParam('updateItemCategory');
-        //if new category was not added... 
-        //only running if / else if, if you're coming from catalogViewItem.
-        if (addedCategory === '' && updateItemCategory !== false) {
-          props.navigation.getParam('addToCategories')(oldCategory, selectedCategory);
-          //only called through Item View since a new item wont have info or a UID
-          //update in database
-          updateItemCategory(catalogItemUID, selectedCategory);
-          props.navigation.goBack();
-        } else if (updateItemCategory !== false) {
-          props.navigation.getParam('addToCategories')(oldCategory, addedCategory);
-          //only called through Item View since a new item wont have info or a UID
-          updateItemCategory(catalogItemUID, addedCategory);
-          props.navigation.goBack();
-        } else {
-          //coming from addItem
-          if (addedCategory === '') {
-            //need to set category seperately for AddCategory since category would usually get updated,
-            //when its sent to addCategories. But this is done when "Done" is pressed vs ViewCategory.
-            props.navigation.getParam('setCategory')(selectedCategory);
-            props.navigation.navigate('CatalogAdd', {
-              oldCategory: oldCategory,
-              category: selectedCategory,
-            });
-          } else {
-            //need to set category seperately for AddCategory since category would usually get updated,
-            //when its sent to addCategories. But this is done when "Done" is pressed vs ViewCategory.
-            props.navigation.getParam('setCategory')(addedCategory);
-            props.navigation.navigate('CatalogAdd', {
-              oldCategory: oldCategory,
-              category: addedCategory,
-            });
-          }
-        }
-        
+        debounce(_executeSave, 500);
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>

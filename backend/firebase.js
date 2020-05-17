@@ -1,6 +1,7 @@
 import * as Firebase from 'firebase';
 import 'firebase/firestore';
 import nanoid from 'nanoid/async';
+import { Alert } from 'react-native';
 
 var firebaseConfig = {
   apiKey: "AIzaSyBpNguIOoJUIES_y6yZDjZ6_sK2R408iTE",
@@ -64,7 +65,6 @@ export function addNewClient(name, email, phone, color, uid) {
 export async function addNewItem(name, category, link, imageLink, id, imageUUID) {
   let url = '';
   if (imageLink !== '') {
-    console.log('executing')
     url = await saveCatalogImage(imageLink, imageUUID);
   }
   await db.collection('Users')
@@ -259,16 +259,25 @@ export async function saveCatalogImage(imageURI, imageUUID) {  //if no uuid is p
   if (!imageUUID) {
     imageUUID = await nanoid();
   }
+  console.log('URI: ' + uri);
+  const response = await fetch(imageURI).catch(() => {
+    Alert.alert('Image too large.');
+  });
 
-  const response = await fetch(imageURI);
-  const blob = await response.blob();
+  const blob = await response.blob().catch(() => {
+    console.log('Error creating blob');
+  }); 
 
-  let saveItem = await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).put(blob);
+  let saveItem = await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).put(blob).catch(() => {
+    console.log('Error saving image');
+  });
+  
   return await saveItem.ref.getDownloadURL();
 }
 
 export async function getCatalogImageURL(imageUUID) {
-  return await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).getDownloadURL();
+  let url = await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).getDownloadURL();
+  return 
 }
 
 export async function deleteCatalogImage(imageUUID) {

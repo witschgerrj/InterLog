@@ -5,7 +5,7 @@ import backArrow from '../assets/backArrow.png';
 import BackgroundScroll from '../components/bgScrollView';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { getData, storeData } from '../backend/asyncStorage';
+import { getData, storeData, debounce } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -245,12 +245,16 @@ const MailMessage = (props) => {
     if (message !== null) {
       props.navigation.setParams({ message: message });
       setMessage(message);
+    } else {
+      //set empty message if there is none.
+      props.navigation.setParams({ message: "" });
     }
   }
 
   useEffect(() => {
     props.navigation.setParams({ formatEmail: _formatEmail });
     _getLocallyStoredMessage();
+    this.messagearea.focus();
   }, []);
 
 
@@ -258,26 +262,31 @@ const MailMessage = (props) => {
     <BackgroundScroll>
       <Message  multiline={true}
                 value={message}
-                onChangeText={text => _updateMessage(text)}/>
+                onChangeText={text => _updateMessage(text)}
+                ref={(messagearea) => { this.messagearea = messagearea }}/>/>
     </BackgroundScroll>
   );
+}
+
+const _executeSendEmail = (props) => {
+  const callback = () => {
+    props.navigation.dispatch(StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({routeName: 'MailSelectItems'})],
+    }))
+    props.navigation.navigate('Clients');
+  }
+  let message = props.navigation.getParam('message');
+  //store latest message in local storage
+  storeData('message', message);
+  
+  props.navigation.getParam('formatEmail')(message, callback);
 }
 
 MailMessage.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      const callback = () => {
-        props.navigation.dispatch(StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({routeName: 'MailSelectItems'})],
-        }))
-        props.navigation.navigate('Clients');
-      }
-      let message = props.navigation.getParam('message');
-      //store latest message in local storage
-      storeData('message', message);
-      
-      props.navigation.getParam('formatEmail')(message, callback);
+      debounce(_executeSendEmail, 1000);
     }}>
     {
       <Finish>Finish</Finish>

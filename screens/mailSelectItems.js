@@ -24,7 +24,9 @@ const HeaderSelectionBox = styled.View`
   height: 100%;
 `
 const Grid = styled.Image`
-  margin-left: 30px;
+  margin-left: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
   transform: scale(0.9);
 `
 const GridSelection = styled.Image`
@@ -36,8 +38,12 @@ const Absolute = styled.View`
   top: 0;
   left: 0;
 `
-const Highlight = styled.View`
-  background-color: white;
+const EmptyClients = styled.Text`
+  font-size: 18px;
+  color: #4B4B4B;
+  text-align: center;
+  padding: 20px;
+  padding-top: 30px;
 `
 const Next = styled.Text`
   font-size: 22px;
@@ -81,39 +87,49 @@ const MailSelectItems = (props) => {
 
   return (
     <BackgroundScroll>
-      <FlexBox justify='flex-start'>
-        {
-          catalog.map((item, index) => (
-              <GrayedCatalogBox rows={rows}
-                                key={'grayedCatalogItem' + index}
-                                name={item.name}
-                                category={item.category}
-                                imageLink={item.imageLink}
-                                link={item.link}
-                                notes={item.notes}
-                                catalogItemUID={item.id}
-                                selected={selectedItems.hasOwnProperty(item.id) ? true : false}
-                                addSelected={_addSelected}
-                                removeUnselected={_removeUnselected}/>
-          ))
-        }
-      </FlexBox>       
-      <Absolute>
-        {
-          props.navigation.getParam('displayGrid') ?
-            <FlexBox justify='space-evenly'
-                    flexDirection='column'>
-              <TouchableWithoutFeedback onPress={()=>setRows(3)}>
-                <GridSelection source={Three}/>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={()=>setRows(4)}>
-                <GridSelection source={Four}/>
-              </TouchableWithoutFeedback>
-            </FlexBox>
-          : null
-        }
-      </Absolute>
+      {
+        catalog.length ?
+      <>
+        <FlexBox justify='flex-start'>
+          {
+            catalog.map((item, index) => (
+                <GrayedCatalogBox rows={rows}
+                                  key={'grayedCatalogItem' + index}
+                                  name={item.name}
+                                  category={item.category}
+                                  imageLink={item.imageLink}
+                                  link={item.link}
+                                  notes={item.notes}
+                                  catalogItemUID={item.id}
+                                  selected={selectedItems.hasOwnProperty(item.id) ? true : false}
+                                  addSelected={_addSelected}
+                                  removeUnselected={_removeUnselected}/>
+            ))
+          }
+        </FlexBox>       
+        <Absolute>
+          {
+            props.navigation.getParam('displayGrid') ?
+              <FlexBox justify='space-evenly'
+                      flexDirection='column'>
+                <TouchableWithoutFeedback onPress={()=>setRows(3)}>
+                  <GridSelection source={Three}/>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={()=>setRows(4)}>
+                  <GridSelection source={Four}/>
+                </TouchableWithoutFeedback>
+              </FlexBox>
+            : null
+          }
+        </Absolute>
+      </>
+      :
+        <EmptyClients>
+          No catalog items available. {'\n\n'}
 
+          To add a new item, navigate to the {'\n'} catalog page.
+        </EmptyClients>
+      }
     </BackgroundScroll>
   );
 }
@@ -143,14 +159,16 @@ MailSelectItems.navigationOptions = (props) => ({
         props.navigation.navigate('Clients');
       }}>
         <HeaderSelectionBox>
-        <BackButton source={backArrow}/>
-      </HeaderSelectionBox>
+          <BackButton source={backArrow}/>
+        </HeaderSelectionBox>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={() => {
         let displayGrid = props.navigation.getParam('displayGrid');
         props.navigation.setParams({ displayGrid: !displayGrid});
       }}>
-        <Grid source={GridIcon}/>
+        <HeaderSelectionBox>
+          <Grid source={GridIcon}/>
+        </HeaderSelectionBox>
       </TouchableWithoutFeedback>
     </FlexBox>
   ),

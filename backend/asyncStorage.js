@@ -52,3 +52,25 @@ export const updateLocalCatalogNotes = async (index, notes) => {
     console.error('Could not retrieve data');
   }
 }
+
+export const debounce = (call, wait, imm) => {
+  
+  let timeout;
+
+  return () => {
+    let next = () => {
+      if (!imm) {
+        call.apply(this, arguments);
+      }
+      timeout = null;
+    }
+
+    clearTimeout(timeout);
+    timeout = setTimeout(next, wait);
+
+    let now = imm && !timeout;
+    if (now) {
+      call.apply(this, arguments);
+    }
+  }
+}

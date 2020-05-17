@@ -5,6 +5,7 @@ import { TouchableWithoutFeedback}  from 'react-native-gesture-handler';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FB } from '../backend/firebase'
+import { debounce } from '../backend/asyncStorage';
 
 const SignInText = styled.TextInput`
   width: 100%;
@@ -16,7 +17,7 @@ const SignInText = styled.TextInput`
 const Logo = styled.Image`
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 145px;
+  margin-bottom: 175px;
 `
 const Button = styled.View`
   width: 200px;
@@ -79,7 +80,7 @@ const Login = (props) => {
                       autoCorrect={false} 
                       spellCheck={false}
                       autoCapitalize='none'/>
-            <TouchableWithoutFeedback onPress={() => _executeReset()}>
+            <TouchableWithoutFeedback onPress={() => debounce(_executeReset(), 3000)}>
             <Button>
               <ButtonText>Reset</ButtonText>
             </Button>

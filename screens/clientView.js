@@ -8,6 +8,7 @@ import Notes from '../assets/notes.png';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { updateClient, deleteClient } from '../backend/firebase';
 import backArrow from '../assets/backArrow.png';
+import { debounce } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -241,33 +242,37 @@ const ClientView = (props) => {
   );
 }
 
+const _executeAdd = (props) => {
+  const name = props.navigation.getParam('name');
+  const email = props.navigation.getParam('email');
+  const phone = props.navigation.getParam('phone');
+  const untouchedColor = props.navigation.getParam('untouchedColor');
+  const color = props.navigation.getParam('color');
+  const notes = props.navigation.getParam('notes');
+  const clientUID = props.navigation.getParam('clientUID');
+  const index = props.navigation.getParam('arrayIndex');
+  //validating phone number
+  //make email validation more robust
+  if (email.substring(email.length-4, email.length) !== '.com') {
+    Alert.alert('Invalid email format.');
+  } else if (isNaN(phone) || phone.length !== 10 && phone.length !== 0) {
+    Alert.alert('Invalid phone number.')
+  } else if (name !== '' && email !== '') {
+    updateClient(name, email, phone, color, notes, clientUID);
+    //locally update name, email, phone, color, notes
+    props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
+    props.navigation.goBack();
+  } else {
+    Alert.alert('Name and email are required.');
+  }
+}
+
 ClientView.navigationOptions = (props) => ({
-  
+
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const name = props.navigation.getParam('name');
-        const email = props.navigation.getParam('email');
-        const phone = props.navigation.getParam('phone');
-        const untouchedColor = props.navigation.getParam('untouchedColor');
-        const color = props.navigation.getParam('color');
-        const notes = props.navigation.getParam('notes');
-        const clientUID = props.navigation.getParam('clientUID');
-        const index = props.navigation.getParam('arrayIndex');
-        //validating phone number
-        //make email validation more robust
-        if (email.substring(email.length-4, email.length) !== '.com') {
-          Alert.alert('Invalid email format.');
-        } else if (isNaN(phone) || phone.length !== 10 && phone.length !== 0) {
-          Alert.alert('Invalid phone number.')
-        } else if (name !== '' && email !== '') {
-          updateClient(name, email, phone, color, notes, clientUID);
-          //locally update name, email, phone, color, notes
-          props.navigation.getParam('updateLocal')(name, color, email, phone, notes, clientUID, index, untouchedColor);
-          props.navigation.goBack();
-        } else {
-          Alert.alert('Name and email are required.');
-        }
-      }}>
+      debounce(_executeAdd, 500);
+    }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

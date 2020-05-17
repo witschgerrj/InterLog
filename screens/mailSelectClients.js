@@ -20,6 +20,13 @@ const Next = styled.Text`
   color: #248AC9;
   margin-right: 20px;
 `
+const EmptyClients = styled.Text`
+  font-size: 18px;
+  color: #4B4B4B;
+  text-align: center;
+  padding: 20px;
+  padding-top: 30px;
+`
 
 const MailSelectItems = (props) => {
 
@@ -81,95 +88,108 @@ const MailSelectItems = (props) => {
 
   return (
     <BackgroundScroll>
-      { 
-        clientsWhite.map((client, index) => (
-          <GrayedClientTab  key={'clientW' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            lastUpdated={client.lastUpdated}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
-      }
-      { 
-        clientsBlue.map((client, index) => (
-          <GrayedClientTab  key={'clientB' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            lastUpdated={client.lastUpdated}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
-      }
-      { 
-        clientsYellow.map((client, index) => (
-          <GrayedClientTab  key={'clientY' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
-      }
-      { 
-        clientsGreen.map((client, index) => (
-          <GrayedClientTab  key={'clientG' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            lastUpdated={client.lastUpdated}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
-      }
-      { 
-        clientsViolet.map((client, index) => (
-          <GrayedClientTab  key={'clientV' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            lastUpdated={client.lastUpdated}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
-      }
-      { 
-        clientsRed.map((client, index) => (
-          <GrayedClientTab  key={'clientR' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            lastUpdated={client.lastUpdated}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
-      }
-      { 
-        clientsNone.map((client, index) => (
-          <GrayedClientTab  key={'clientN' + index}
-                            name={client.name}
-                            email={client.email}
-                            color={client.color}
-                            selected={selectedClients.hasOwnProperty(client.id) ? true : false}
-                            addSelected={_addSelected}
-                            lastUpdated={client.lastUpdated}
-                            removeUnselected={_removeUnselected}
-                            clientUID={client.id}/>
-        ))
+      {
+        clientsWhite.length || clientsBlue.length || clientsGreen.length || clientsNone.length
+                    || clientsRed.length || clientsViolet.length || clientsYellow.length ?
+        <>
+
+          { 
+            clientsWhite.map((client, index) => (
+              <GrayedClientTab  key={'clientW' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                lastUpdated={client.lastUpdated}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+          { 
+            clientsBlue.map((client, index) => (
+              <GrayedClientTab  key={'clientB' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                lastUpdated={client.lastUpdated}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+          { 
+            clientsYellow.map((client, index) => (
+              <GrayedClientTab  key={'clientY' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+          { 
+            clientsGreen.map((client, index) => (
+              <GrayedClientTab  key={'clientG' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                lastUpdated={client.lastUpdated}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+          { 
+            clientsViolet.map((client, index) => (
+              <GrayedClientTab  key={'clientV' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                lastUpdated={client.lastUpdated}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+          { 
+            clientsRed.map((client, index) => (
+              <GrayedClientTab  key={'clientR' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                lastUpdated={client.lastUpdated}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+          { 
+            clientsNone.map((client, index) => (
+              <GrayedClientTab  key={'clientN' + index}
+                                name={client.name}
+                                email={client.email}
+                                color={client.color}
+                                selected={selectedClients.hasOwnProperty(client.id) ? true : false}
+                                addSelected={_addSelected}
+                                lastUpdated={client.lastUpdated}
+                                removeUnselected={_removeUnselected}
+                                clientUID={client.id}/>
+            ))
+          }
+        </>
+        :
+        <EmptyClients>
+          No clients available. {'\n\n'}
+
+          To add a new client, navigate to the {'\n'} clients page.
+        </EmptyClients>
       }
     </BackgroundScroll>
   );

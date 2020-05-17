@@ -1,10 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import BgScrollView from '../components/bgScrollView';
 import { updateCatalogItemNotes } from '../backend/firebase';
-import { updateLocalCatalogNotes } from '../backend/asyncStorage';
+import { updateLocalCatalogNotes, debounce } from '../backend/asyncStorage';
 import backArrow from '../assets/backArrow.png';
 
 const BackButton = styled.Image`
@@ -39,31 +39,40 @@ const CatalogItemNotes = (props) => {
     setNotes(text);
   }
 
+  useEffect(() => {
+    this.notearea.focus();
+  }, []);
+
   return (
     <BgScrollView>
       <NoteArea multiline={true}
                 value={notes}
-                onChangeText={text => _updateNotes(text)}/>
+                onChangeText={text => _updateNotes(text)}
+                ref={(notearea) => { this.notearea = notearea }}/>
     </BgScrollView>
   );
+}
+
+const _executeSave = (props) => {
+  const notes = props.navigation.getParam('notes');
+  const catalogItemUID = props.navigation.getParam('catalogItemUID');
+  const index = props.navigation.getParam('index');
+  console.log('index: ' + index);
+  console.log('notes: ' + notes);
+  //update notes backend
+  updateCatalogItemNotes(notes, catalogItemUID);
+  //update locally
+  updateLocalCatalogNotes(index, notes);
+  props.navigation.navigate('CatalogItemView', {
+    notes: props.navigation.getParam('notes'),
+  })
 }
 
 CatalogItemNotes.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const notes = props.navigation.getParam('notes');
-        const catalogItemUID = props.navigation.getParam('catalogItemUID');
-        const index = props.navigation.getParam('index');
-        console.log('index: ' + index);
-        console.log('notes: ' + notes);
-        //update notes backend
-        updateCatalogItemNotes(notes, catalogItemUID);
-        //update locally
-        updateLocalCatalogNotes(index, notes);
-        props.navigation.navigate('CatalogItemView', {
-          notes: props.navigation.getParam('notes'),
-        })
-      }}>
+      debounce(_executeSave, 500);
+    }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

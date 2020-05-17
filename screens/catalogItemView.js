@@ -9,6 +9,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { deleteCatalogItem, updateItemCategory, deleteCatalogImage, saveCatalogImage, updateCatalogItem } from '../backend/firebase';
 import nanoid from 'nanoid/async';
 import backArrow from '../assets/backArrow.png';
+import { debounce } from '../backend/asyncStorage';
 
 const BackButton = styled.Image`
   margin-left: 20px;
@@ -300,52 +301,55 @@ const CatalogItemView = (props) => {
   );
 }
 
+const _executeSave = (props) => {
+  let newImage = props.navigation.getParam('newImage');
+  let name = props.navigation.getParam('name');
+  let category = props.navigation.getParam('category');
+  let imageLink = props.navigation.getParam('imageLink');
+  let catalogItemUID = props.navigation.getParam('catalogItemUID');
+  let link = props.navigation.getParam('link');
+  let notes = props.navigation.getParam('notes');
+  let index = props.navigation.getParam('index');
+  let originalImageUUID = props.navigation.getParam('imageUUID');
+  let imageUUID = props.navigation.getParam('UUID');
+  let allCategories = props.navigation.getParam('allCategories');
+  let oldCategories = props.navigation.getParam('oldCategories');
+  //name cannot be empty
+  if (name !== '') {
+    //if theres a new image
+    if (newImage) {
+      //deletes unused image in database.
+      //then saves new image.
+      //then gets the url for the saved image and updates the catalog item with it
+      if (originalImageUUID !== '') {
+        deleteCatalogImage(originalImageUUID);
+      }
+      //update locally
+      props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories);
+      //save new image to storage
+      saveCatalogImage(JSON.parse(JSON.stringify(imageLink)), JSON.parse(JSON.stringify(imageUUID)))
+      .then((url) => {
+        //need to update in DB as well.
+        updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID);
+      });
+      props.navigation.goBack();
+    } else {
+      //need to update in db as well.
+      updateCatalogItem(name, category, imageLink, link, originalImageUUID, notes, catalogItemUID);
+      //update locally
+      props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories);
+      props.navigation.goBack();
+    }
+  } else {
+    Alert.alert('An item name is required.');
+  }
+}
+
 CatalogItemView.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        let newImage = props.navigation.getParam('newImage');
-        let name = props.navigation.getParam('name');
-        let category = props.navigation.getParam('category');
-        let imageLink = props.navigation.getParam('imageLink');
-        let catalogItemUID = props.navigation.getParam('catalogItemUID');
-        let link = props.navigation.getParam('link');
-        let notes = props.navigation.getParam('notes');
-        let index = props.navigation.getParam('index');
-        let originalImageUUID = props.navigation.getParam('imageUUID');
-        let imageUUID = props.navigation.getParam('UUID');
-        let allCategories = props.navigation.getParam('allCategories');
-        let oldCategories = props.navigation.getParam('oldCategories');
-        //name cannot be empty
-        if (name !== '') {
-          //if theres a new image
-          if (newImage) {
-            //deletes unused image in database.
-            //then saves new image.
-            //then gets the url for the saved image and updates the catalog item with it
-            if (originalImageUUID !== '') {
-              deleteCatalogImage(originalImageUUID);
-            }
-            //update locally
-            props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories);
-            //save new image to storage
-            saveCatalogImage(imageLink, imageUUID)
-            .then((url) => {
-              //need to update in DB as well.
-              updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID);
-            });
-            props.navigation.goBack();
-          } else {
-            //need to update in db as well.
-            updateCatalogItem(name, category, imageLink, link, originalImageUUID, notes, catalogItemUID);
-            //update locally
-            props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories);
-            props.navigation.goBack();
-          }
-        } else {
-          Alert.alert('An item name is required.');
-        }
-
-      }}>
+      debounce(_executeSave, 500);
+    }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

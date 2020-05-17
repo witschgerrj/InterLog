@@ -6,6 +6,16 @@ import Login from './screens/login';
 import Register from './screens/register';
 import ResetPassword from './screens/resetPassword';
 import TabBar from './navigation/tabbar';
+import { decode, encode } from 'base-64'
+
+//to fix Firebase atob() error
+if (!global.btoa) { 
+  global.btoa = encode 
+}
+//to fix Firebase atob() error
+if (!global.atob) { 
+  global.atob = decode 
+}
 
 console.disableYellowBox = true;
 

@@ -8,12 +8,23 @@
     "eject": "expo eject"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@react-native-community/masked-view": "0.1.5",
     "expo": "~36.0.0",
+=======
+    "@react-native-community/masked-view": "^0.1.6",
+    "base-64": "^0.1.0",
+    "expo": "~37.0.3",
+>>>>>>> ac30e71b (debounce implementation)
     "expo-image-picker": "^8.0.2",
     "expo-linear-gradient": "~8.0.0",
     "expo-random": "^8.0.0",
+<<<<<<< HEAD
     "firebase": "7.9.0",
+=======
+    "expo-updates": "~0.1.0",
+    "firebase": "^7.14.3",
+>>>>>>> ac30e71b (debounce implementation)
     "nanoid": "^2.1.11",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",

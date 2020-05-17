@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
+import { debounce } from '../backend/asyncStorage';
 
 
 const SignInText = styled.TextInput`
@@ -21,7 +22,7 @@ const SignInText = styled.TextInput`
 const Logo = styled.Image`
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 100px;
+  margin-bottom: 130px;
 `
 const Button = styled.View`
   width: 200px;
@@ -98,7 +99,7 @@ const Register = (props) => {
                       spellCheck={false}
                       autoCapitalize='none'
                       secureTextEntry={true}/>
-          <TouchableWithoutFeedback onPress={() => _executeRegistration()}>
+          <TouchableWithoutFeedback onPress={() => debounce(_executeRegistration(), 1500)}>
             <Button>
               <ButtonText>Register</ButtonText>
             </Button>
@@ -106,7 +107,7 @@ const Register = (props) => {
         </StyledGradient>
       </TouchableWithoutFeedback>
       <Touched onPress={() =>_navigateToLogin()}>
-        <OtherText bottom={45}>Have an account? Login</OtherText>
+        <OtherText bottom={45}>Login</OtherText>
       </Touched>
     </KeyboardAvoidingView>
   );
