@@ -21,7 +21,7 @@ const ClientName = styled.Text`
 
 const LastUpdated = styled.Text`
   font-size: 18px;
-  color: #2B2B2B;
+  color: #6A6A6A;
 `
 
 const ClientTab = (props) => {

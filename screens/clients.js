@@ -13,14 +13,12 @@ import { debounce } from '../backend/asyncStorage';
 const AddButton = styled.Image`
   margin-right: 20px;
 `
-
 const SettingsButton = styled.Image`
   margin-left: 20px;
 `
-
 const EmptyClients = styled.Text`
   font-size: 18px;
-  color: #4B4B4B;
+  color: #6A6A6A;
   text-align: center;
   padding: 20px;
   padding-top: 30px;
@@ -566,7 +564,7 @@ const Clients = (props) => {
       storeData('clientsViolet', _clientsViolet);
       return;
     } 
-    if (color === '#2B2B2B') { //none
+    if (color === '#6A6A6A') { //none
       let _clientsNone = none; 
       _clientsNone.push(client);
       setNoneGroup(_clientsNone);
@@ -741,7 +739,7 @@ const _executeNavToAdd = (props) => {
 Clients.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      debounce(_executeNavToAdd, 500);
+      debounce(_executeNavToAdd(props), 500);
     }}>
       <AddButton source={Add}/>
     </TouchableWithoutFeedback>

@@ -33,7 +33,8 @@ const SettingOption = styled.Text`
 const Settings = (props) => {
 
   const _signOut = () => {
-    FB.auth().signOut()
+    FB.auth()
+    .signOut()
     .catch(error => {
       Alert.alert('An error occurred while signing out...')
     })

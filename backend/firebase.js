@@ -259,7 +259,7 @@ export async function saveCatalogImage(imageURI, imageUUID) {  //if no uuid is p
   if (!imageUUID) {
     imageUUID = await nanoid();
   }
-  console.log('URI: ' + uri);
+
   const response = await fetch(imageURI).catch(() => {
     Alert.alert('Image too large.');
   });

@@ -22,7 +22,7 @@ const Next = styled.Text`
 `
 const EmptyClients = styled.Text`
   font-size: 18px;
-  color: #4B4B4B;
+  color: #6A6A6A;
   text-align: center;
   padding: 20px;
   padding-top: 30px;

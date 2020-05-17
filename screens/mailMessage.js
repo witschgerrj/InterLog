@@ -286,7 +286,7 @@ const _executeSendEmail = (props) => {
 MailMessage.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      debounce(_executeSendEmail, 1000);
+      debounce(_executeSendEmail(props), 1000);
     }}>
     {
       <Finish>Finish</Finish>
