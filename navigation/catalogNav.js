@@ -16,25 +16,25 @@ const CatalogStack = createStackNavigator({
   CatalogAdd: {
     screen: CatalogAdd,
     navigationOptions: {
-      title: 'Add Item'
+      title: 'Add Item',
     }
   },
   CatalogCategory: {
     screen: CatalogCategory,
     navigationOptions: {
-      title: 'Category'
+      title: 'Category',
     }
   },
   CatalogItemNotes: {
     screen: CatalogItemNotes,
     navigationOptions: {
-      title: 'Notes'
+      title: 'Notes',
     }
   },
   CatalogItemView: {
     screen: CatalogItemView,
     navigationOptions: {
-      title: 'Item View'
+      title: 'Item View',
     }
   },
 },

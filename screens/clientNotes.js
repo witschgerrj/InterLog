@@ -1,10 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import BgScrollView from '../components/bgScrollView';
 import { updateClientNotes } from '../backend/firebase';
-import { updateLocalClientNotes } from '../backend/asyncStorage';
+import { updateLocalClientNotes, debounce } from '../backend/asyncStorage';
 import backArrow from '../assets/backArrow.png';
 
 const BackButton = styled.Image`
@@ -39,30 +39,39 @@ const ClientNotes = (props) => {
     setNotes(text);
   }
 
+  useEffect(() => {
+    this.clientnotearea.focus();
+  }, []);
+
   return (
     <BgScrollView>
       <NoteArea multiline={true}
                 value={notes}
-                onChangeText={text => _updateNotes(text)}/>
+                onChangeText={text => _updateNotes(text)}
+                ref={(clientnotearea) => { this.clientnotearea = clientnotearea }}/>
     </BgScrollView>
   );
+}
+
+const _executeSave = (props) => {
+  const notes = props.navigation.getParam('notes');
+  const clientUID = props.navigation.getParam('clientUID');
+  const groupColor = props.navigation.getParam('groupColor');
+  const index = props.navigation.getParam('index');
+  //update notes in firebase
+  updateClientNotes(notes, clientUID);
+  //update locally
+  updateLocalClientNotes(groupColor, index, notes);
+  props.navigation.navigate('ClientView', {
+    notes: props.navigation.getParam('notes'),
+  });
 }
 
 ClientNotes.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-        const notes = props.navigation.getParam('notes');
-        const clientUID = props.navigation.getParam('clientUID');
-        const groupColor = props.navigation.getParam('groupColor');
-        const index = props.navigation.getParam('index');
-        //update notes in firebase
-        updateClientNotes(notes, clientUID);
-        //update locally
-        updateLocalClientNotes(groupColor, index, notes);
-        props.navigation.navigate('ClientView', {
-          notes: props.navigation.getParam('notes'),
-        })
-      }}>
+      debounce(_executeSave, 500);
+    }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

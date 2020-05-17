@@ -10,7 +10,7 @@ import BackgroundScroll from '../components/bgScrollView';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import FlexBox from '../components/flexbox';
 import CatalogBox from '../components/catalogBox';
-import { storeData, getData } from '../backend/asyncStorage';
+import { storeData, getData, debounce } from '../backend/asyncStorage';
 
 const Grid = styled.Image`
   margin-left: 20px;
@@ -28,6 +28,13 @@ const Absolute = styled.View`
   position: absolute;
   top: 0;
   left: 0;
+`
+const EmptyCatalog = styled.Text`
+  font-size: 18px;
+  color: #4B4B4B;
+  text-align: center;
+  padding: 20px;
+  padding-top: 30px;
 `
 
 const Catalog = (props) => {
@@ -154,9 +161,6 @@ const Catalog = (props) => {
     }
     //handle inserting item in the right place in the array
     //if all categories contains category, then find where that group of categories is located in the array.
-    console.log('catalog: ' + _catalog)
-    console.log('allCategories: ' + JSON.stringify(allCategories))
-    console.log('category: ' + category)
     
     if (Object.keys(allCategories).includes(category)) {
       //_catalog.map((itemData, index) => {
@@ -204,69 +208,83 @@ const Catalog = (props) => {
   
   return (
     <BackgroundScroll>
-      <FlexBox justify='flex-start'>
-        {
-          catalog.map((item, index) => (
-              <CatalogBox rows={rows}
-                          key={'catalogItem' + index}
-                          name={item.name}
-                          catalog={catalog}
-                          updateLocalCategory={_updateLocalCategory}
-                          category={item.category}
-                          originalCategory={item.category}
-                          imageLink={item.imageLink}
-                          imageUUID={item.imageUUID}
-                          link={item.link}
-                          notes={item.notes}
-                          originalNotes={item.notes}
-                          catalogItemUID={item.id}
-                          index={index}
-                          allCategories={props.navigation.getParam('allCategories')}
-                          oldCategories={props.navigation.getParam('allCategories')}
-                          updateLocal={_updateLocal}
-                          getAllCategories={_getCategories}
-                          navigation={props.navigation}
-                          delete={_deleteItem}/>
-          ))
-        }
-      </FlexBox>  
-  
-      <Absolute>
-        {
-          props.navigation.getParam('displayGrid') ?
-            <FlexBox justify='space-evenly'
-                    flexDirection='column'>
-              <TouchableWithoutFeedback onPress={() => { 
-                  setRows(3);
-                  _handlePress();
-                }}>
-                <GridSelection source={Three}/>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={() => {
-                  setRows(4);
-                  _handlePress();
-                }}>
-                <GridSelection source={Four}/>
-              </TouchableWithoutFeedback>
-            </FlexBox>
-          : null
-        }
-      </Absolute>
-    </BackgroundScroll>
+      {
+        catalog.length ? 
+          <>
+            <FlexBox justify='flex-start'>
+              {
+                catalog.map((item, index) => (
+                    <CatalogBox rows={rows}
+                                key={'catalogItem' + index}
+                                name={item.name}
+                                catalog={catalog}
+                                updateLocalCategory={_updateLocalCategory}
+                                category={item.category}
+                                originalCategory={item.category}
+                                imageLink={item.imageLink}
+                                imageUUID={item.imageUUID}
+                                link={item.link}
+                                notes={item.notes}
+                                originalNotes={item.notes}
+                                catalogItemUID={item.id}
+                                index={index}
+                                allCategories={props.navigation.getParam('allCategories')}
+                                oldCategories={props.navigation.getParam('allCategories')}
+                                updateLocal={_updateLocal}
+                                getAllCategories={_getCategories}
+                                navigation={props.navigation}
+                                delete={_deleteItem}/>
+                ))
+              }
+            </FlexBox>  
+        
+            <Absolute>
+              {
+                props.navigation.getParam('displayGrid') ?
+                  <FlexBox justify='space-evenly'
+                          flexDirection='column'>
+                    <TouchableWithoutFeedback onPress={() => { 
+                        setRows(3);
+                        _handlePress();
+                      }}>
+                      <GridSelection source={Three}/>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => {
+                        setRows(4);
+                        _handlePress();
+                      }}>
+                      <GridSelection source={Four}/>
+                    </TouchableWithoutFeedback>
+                  </FlexBox>
+                : null
+              }
+            </Absolute>
+          </>
+        :
+          <EmptyCatalog>
+            No catalog items available. {'\n\n'}
 
+            To add a new catalog item, press the plus {'\n'} icon at the top right of the screen.
+          </EmptyCatalog>
+      }
+      </BackgroundScroll>
   );
+}
+
+const _executeNavToAdd = (props) => {
+  props.navigation.navigate('CatalogAdd', {
+    allCategories: props.navigation.getParam('allCategories'),
+    addItem: props.navigation.getParam('addItem'),
+    catalog: props.navigation.getParam('catalog'),
+    addCategory: props.navigation.getParam('addCategory'),
+    addToCategories: props.navigation.getParam('addToCategories'),
+  });
 }
 
 Catalog.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      props.navigation.navigate('CatalogAdd', {
-        allCategories: props.navigation.getParam('allCategories'),
-        addItem: props.navigation.getParam('addItem'),
-        catalog: props.navigation.getParam('catalog'),
-        addCategory: props.navigation.getParam('addCategory'),
-        addToCategories: props.navigation.getParam('addToCategories'),
-      })
+      debounce(_executeNavToAdd, 500);
     }}>
       <AddButton source={Add}>
       </AddButton>
@@ -275,7 +293,7 @@ Catalog.navigationOptions = (props) => ({
   headerLeft: () => (
     <TouchableWithoutFeedback onPress={() => {
       let displayGrid = props.navigation.getParam('displayGrid');
-      props.navigation.setParams({ displayGrid: !displayGrid});
+      props.navigation.setParams({ displayGrid: !displayGrid });
     }}>
       <Grid source={GridIcon}>
       </Grid>

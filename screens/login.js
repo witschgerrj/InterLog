@@ -5,6 +5,7 @@ import { TouchableWithoutFeedback}  from 'react-native-gesture-handler';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FB } from '../backend/firebase'
+import { debounce } from '../backend/asyncStorage';
 
 const SignInText = styled.TextInput`
   width: 100%;
@@ -16,7 +17,7 @@ const SignInText = styled.TextInput`
 const Logo = styled.Image`
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 100px;
+  margin-bottom: 130px;
 `
 const Button = styled.View`
   width: 200px;
@@ -92,7 +93,7 @@ const Login = (props) => {
                       spellCheck={false}
                       autoCapitalize='none'
                       secureTextEntry={true}/>
-            <TouchableWithoutFeedback onPress={() => _executeLogin()}>
+            <TouchableWithoutFeedback onPress={() => debounce(_executeLogin(), 500)}>
             <Button>
               <ButtonText>Login</ButtonText>
             </Button>
@@ -100,10 +101,10 @@ const Login = (props) => {
 
         </StyledGradient>        
       </TouchableWithoutFeedback>
-      <Touched onPress={() => _navigateToRegister()}>
+      <Touched onPress={() => debounce(_navigateToRegister(), 500)}>
         <OtherText bottom={45}>Register</OtherText>
       </Touched>
-      <Touched onPress={() => _navigateToResetPassword()}>
+      <Touched onPress={() => debounce(_navigateToResetPassword(), 500)}>
         <OtherText bottom={90}>Forgot Password?</OtherText>
       </Touched>
     </KeyboardAvoidingView>

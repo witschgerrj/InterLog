@@ -7,6 +7,8 @@ import Add from '../assets/add.png';
 import Settings from '../assets/settings.png';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getCurrentTime } from '../backend/firebase';
+import { debounce } from '../backend/asyncStorage';
+
 
 const AddButton = styled.Image`
   margin-right: 20px;
@@ -14,6 +16,14 @@ const AddButton = styled.Image`
 
 const SettingsButton = styled.Image`
   margin-left: 20px;
+`
+
+const EmptyClients = styled.Text`
+  font-size: 18px;
+  color: #4B4B4B;
+  text-align: center;
+  padding: 20px;
+  padding-top: 30px;
 `
 
 const Clients = (props) => {
@@ -573,149 +583,165 @@ const Clients = (props) => {
 
   return (
     <BackgroundScroll>
-      { 
-        clientsWhite.map((client, index) => (
-          <ClientTab  key={'clientW' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      originalNotes={client.notes}
-                      clientUID={client.id}
-                      lastUpdated={client.lastUpdated}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateWhite}
-                      delete={_deleteWhite}/>
-        ))
-      }
-      { 
-        clientsBlue.map((client, index) => (
-          <ClientTab  key={'clientB' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      clientUID={client.id}
-                      originalNotes={client.notes}
-                      lastUpdated={client.lastUpdated}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateBlue}
-                      delete={_deleteBlue}/>
-        ))
-      }
-      { 
-        clientsYellow.map((client, index) => (
-          <ClientTab  key={'clientY' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      clientUID={client.id}
-                      originalNotes={client.notes}
-                      lastUpdated={client.lastUpdated}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateYellow}
-                      delete={_deleteYellow}/>
-        ))
-      }
-      { 
-        clientsGreen.map((client, index) => (
-          <ClientTab  key={'clientG' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      clientUID={client.id}
-                      originalNotes={client.notes}
-                      lastUpdated={client.lastUpdated}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateGreen}
-                      delete={_deleteGreen}/>
-        ))
-      }
-      { 
-        clientsViolet.map((client, index) => (
-          <ClientTab  key={'clientV' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      clientUID={client.id}
-                      originalNotes={client.notes}
-                      lastUpdated={client.lastUpdated}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateViolet}
-                      delete={_deleteViolet}/>
-        ))
-      }
-      { 
-        clientsRed.map((client, index) => (
-          <ClientTab  key={'clientR' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      originalNotes={client.notes}
-                      lastUpdated={client.lastUpdated}
-                      clientUID={client.id}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateRed}
-                      delete={_deleteRed}/>
-        ))
-      }
-      { 
-        clientsNone.map((client, index) => (
-          <ClientTab  key={'clientN' + index}
-                      name={client.name}
-                      untouchedColor = {client.color}
-                      color={client.color}
-                      email={client.email}
-                      phone={client.phone}
-                      notes={client.notes}
-                      clientUID={client.id}
-                      originalNotes={client.notes}
-                      lastUpdated={client.lastUpdated}
-                      arrayIndex={index}
-                      navigation={props.navigation}
-                      updateLocal={_updateNone}
-                      delete={_deleteNone}/>
-        ))
+      {
+        clientsWhite.length || clientsBlue.length || clientsGreen.length || clientsNone.length
+                            || clientsRed.length || clientsViolet.length || clientsYellow.length ?
+          <>
+            { 
+              clientsWhite.map((client, index) => (
+                <ClientTab  key={'clientW' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            originalNotes={client.notes}
+                            clientUID={client.id}
+                            lastUpdated={client.lastUpdated}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateWhite}
+                            delete={_deleteWhite}/>
+              ))
+            }
+            { 
+              clientsBlue.map((client, index) => (
+                <ClientTab  key={'clientB' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            clientUID={client.id}
+                            originalNotes={client.notes}
+                            lastUpdated={client.lastUpdated}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateBlue}
+                            delete={_deleteBlue}/>
+              ))
+            }
+            { 
+              clientsYellow.map((client, index) => (
+                <ClientTab  key={'clientY' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            clientUID={client.id}
+                            originalNotes={client.notes}
+                            lastUpdated={client.lastUpdated}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateYellow}
+                            delete={_deleteYellow}/>
+              ))
+            }
+            { 
+              clientsGreen.map((client, index) => (
+                <ClientTab  key={'clientG' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            clientUID={client.id}
+                            originalNotes={client.notes}
+                            lastUpdated={client.lastUpdated}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateGreen}
+                            delete={_deleteGreen}/>
+              ))
+            }
+            { 
+              clientsViolet.map((client, index) => (
+                <ClientTab  key={'clientV' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            clientUID={client.id}
+                            originalNotes={client.notes}
+                            lastUpdated={client.lastUpdated}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateViolet}
+                            delete={_deleteViolet}/>
+              ))
+            }
+            { 
+              clientsRed.map((client, index) => (
+                <ClientTab  key={'clientR' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            originalNotes={client.notes}
+                            lastUpdated={client.lastUpdated}
+                            clientUID={client.id}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateRed}
+                            delete={_deleteRed}/>
+              ))
+            }
+            { 
+              clientsNone.map((client, index) => (
+                <ClientTab  key={'clientN' + index}
+                            name={client.name}
+                            untouchedColor = {client.color}
+                            color={client.color}
+                            email={client.email}
+                            phone={client.phone}
+                            notes={client.notes}
+                            clientUID={client.id}
+                            originalNotes={client.notes}
+                            lastUpdated={client.lastUpdated}
+                            arrayIndex={index}
+                            navigation={props.navigation}
+                            updateLocal={_updateNone}
+                            delete={_deleteNone}/>
+              ))
+            }
+          </>
+        :
+          <EmptyClients>
+            No clients available. {'\n\n'}
+
+            To add a new client, press the plus {'\n'} icon at the top right of the screen.
+          </EmptyClients>
       }
     </BackgroundScroll>
   );
 }
 
+const _executeNavToAdd = (props) => {
+  props.navigation.navigate('ClientAdd', {
+    addNewClient: props.navigation.getParam('addNewClient'),
+    clientsWhite: props.navigation.getParam('clientsWhite'),
+    clientsBlue: props.navigation.getParam('clientsBlue'),
+    clientsGreen: props.navigation.getParam('clientsGreen'),
+    clientsYellow: props.navigation.getParam('clientsYellow'),
+    clientsRed: props.navigation.getParam('clientsRed'),
+    clientsViolet: props.navigation.getParam('clientsViolet'),
+    clientsNone: props.navigation.getParam('clientsNone'),
+  });
+}
+
 Clients.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      props.navigation.navigate('ClientAdd', {
-        addNewClient: props.navigation.getParam('addNewClient'),
-        clientsWhite: props.navigation.getParam('clientsWhite'),
-        clientsBlue: props.navigation.getParam('clientsBlue'),
-        clientsGreen: props.navigation.getParam('clientsGreen'),
-        clientsYellow: props.navigation.getParam('clientsYellow'),
-        clientsRed: props.navigation.getParam('clientsRed'),
-        clientsViolet: props.navigation.getParam('clientsViolet'),
-        clientsNone: props.navigation.getParam('clientsNone'),
-      })  
+      debounce(_executeNavToAdd, 500);
     }}>
       <AddButton source={Add}/>
     </TouchableWithoutFeedback>
