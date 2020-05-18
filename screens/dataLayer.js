@@ -9,7 +9,7 @@ import { FB, getCatalog, getCategories, getClientsGroupBlue,
          getClientsGroupViolet, getClientsGroupWhite, getClientsGroupYellow
        } from '../backend/firebase';
 import { storeData } from '../backend/asyncStorage';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
 
@@ -100,10 +100,12 @@ const DataLayer = (props) => {
   }
 
   useEffect(() => {
-    _retreiveData().then(() => {
-      props.navigation.navigate('Clients', {
-
-      })
+    _retreiveData()
+    .then(() => {
+      props.navigation.navigate('Clients', {})
+    })
+    .catch(() => {
+      Alert.alert("An error ocurred. Please reload Interlog.");
     });
   }, []);
 

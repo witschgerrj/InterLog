@@ -15,6 +15,9 @@ const CatalogStack = createStackNavigator({
   },
   CatalogAdd: {
     screen: CatalogAdd,
+    params: {
+      activity: false,
+    },
     navigationOptions: {
       title: 'Add Item',
     }
