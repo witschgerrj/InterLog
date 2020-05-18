@@ -145,7 +145,7 @@ const Catalog = (props) => {
     props.navigation.setParams({ catalog: _catalog });
   }
 
-  const _addItem = (name, category, link, imageLink, catalog, id, imageUUID, allCategories) => {
+  const _addItem = (name, category, link, imageLink, catalog, id, imageUUID, allCategories, callback) => {
     
     //passing through existing catalog
     let _catalog = catalog;
@@ -180,6 +180,9 @@ const Catalog = (props) => {
     storeData('catalogData', _catalog);
     setCatalog(_catalog);
     props.navigation.setParams({ catalog: _catalog });
+
+    //stops activity indicator and navigates page in catalogAdd.js
+    callback();
   }
   //covers < back case
   //specifically used in catalogItemView for when a category is updated, 

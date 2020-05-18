@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, View, Dimensions, ActionSheetIOS, Alert, AsyncStorage } from 'react-native';
+import { Keyboard, View, Dimensions, ActionSheetIOS, Alert, ActivityIndicator } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import * as ImagePicker from 'expo-image-picker';
@@ -55,6 +55,11 @@ const ImageText = styled.Text`
   font-size: 18px;
   color: white;
   text-align: center;
+`
+const StyledActivityIndicator = styled(ActivityIndicator)`
+  position: absolute;
+  top: ${(Dimensions.get('window').height / 2) - 18}px;
+  left: ${(Dimensions.get('window').width / 2) - 18}px;
 `
 const Touched = styled.TouchableWithoutFeedback``
 
@@ -194,12 +199,19 @@ const CatalogAdd = (props) => {
           </ImageBox>
           :
           <ImageBox source={imageLink !== '' ? { uri: imageLink } : null}
-                    imageStyle={{ borderRadius: 3}}>
+                    imageStyle={{ borderRadius: 3 }}>
           </ImageBox>
         }
       </Touched>
+      {
+      props.navigation.getParam('activity') ?
+        <StyledActivityIndicator  size='large'
+                                  color='#fff'/>
+        :
+        <> 
+        </>
+      }
     </>
-    
   );
 }
 
@@ -213,33 +225,41 @@ const _executeAdd = (props) => {
   const imageUUID = props.navigation.getParam('imageUUID');
   const oldCategory = props.navigation.getParam('oldCategory');
   //hide done button
-
   //dereferencing for when adding a new item. 
   const allCategories = props.navigation.getParam('allCategories');
   //adding to database
   //getting image UID and the catalog item UID to store locally right away.
-  if (name !== '' && imageLink !== '') {
+  //case for if image is selected
+  props.navigation.setParams({ activity: true });
+
+  const callback = () => {
+    props.navigation.setParams({ activity: false });
+    props.navigation.goBack();
+  }
+
+  if (name !== '' && imageLink !== '' && category !== '') {
+
     //adding in database
     addNewItem(name, category, link, JSON.parse(JSON.stringify(imageLink)), itemID, JSON.parse(JSON.stringify(imageUUID)));
-    //adding locally
-    props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID, allCategories);
-    //case for if image is selected
     //add category to categories
     //ONLY UPDATE CATEGORIES AFTER new item is added
     props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
-    props.navigation.goBack();
-  } else if (name !== '') {
+    //adding locally
+    props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID, allCategories, callback);
+  } else if (name !== '' && category !== '') {
     //adding in database.. imageLink and itemuUUID should be empty
     addNewItem(name, category, link, '', itemID, '');
-    //adding locally
-    props.navigation.getParam('addItem')(name, category, link, '', catalog, itemID, '', allCategories);
     //case for not generating an imageUUID. Setting imageUUID to ''
     //add category to categories
-    //ONLY UPDATE CATEGORIES AFTER new item is added
     props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
-    props.navigation.goBack();
-  } else {
+    //adding locally
+    props.navigation.getParam('addItem')(name, category, link, '', catalog, itemID, '', allCategories, callback);
+  } else if (name === '') {
+    props.navigation.setParams({ activity: false });
     Alert.alert('An item name is required.');
+  } else {
+    props.navigation.setParams({ activity: false });
+    Alert.alert('Select or add a category.');
   }
 }
 

@@ -263,7 +263,7 @@ const MailMessage = (props) => {
       <Message  multiline={true}
                 value={message}
                 onChangeText={text => _updateMessage(text)}
-                ref={(messagearea) => { this.messagearea = messagearea }}/>/>
+                ref={(messagearea) => { this.messagearea = messagearea }}/>
     </BackgroundScroll>
   );
 }
@@ -288,9 +288,7 @@ MailMessage.navigationOptions = (props) => ({
     <TouchableWithoutFeedback onPress={() => {
       debounce(_executeSendEmail(props), 1000);
     }}>
-    {
       <Finish>Finish</Finish>
-    }
     </TouchableWithoutFeedback>
   ),
   headerLeft: () => (
