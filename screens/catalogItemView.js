@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, View, Dimensions, ActionSheetIOS, Alert } from 'react-native';
+import { Keyboard, View, Dimensions, ActionSheetIOS, Alert, ActivityIndicator } from 'react-native';
 import styled from 'styled-components';
 import BgNoScroll from '../components/bgNoScroll';
 import Trashcan from '../assets/trashcan.png';
@@ -68,6 +68,11 @@ const StyledFlexBox = styled.View`
   flexWrap: wrap;
   flexDirection: row;
   justifyContent: space-between; 
+`
+const StyledActivityIndicator = styled(ActivityIndicator)`
+  position: absolute;
+  top: ${(Dimensions.get('window').height / 2) - 118}px;
+  left: ${(Dimensions.get('window').width / 2) - 18}px;
 `
 const TrashcanIcon = styled.Image`
 `
@@ -297,6 +302,14 @@ const CatalogItemView = (props) => {
         </ImageBox>
       }
     </Touched>
+    {
+      props.navigation.getParam('activity') ?
+        <StyledActivityIndicator  size='large'
+                                  color='#fff'/>
+        :
+        <> 
+        </>
+    }
   </>
   );
 }
@@ -314,6 +327,13 @@ const _executeSave = (props) => {
   let imageUUID = props.navigation.getParam('UUID');
   let allCategories = props.navigation.getParam('allCategories');
   let oldCategories = props.navigation.getParam('oldCategories');
+
+  props.navigation.setParams({ activity: true });
+
+  const callback = () => {
+    props.navigation.setParams({ activity: false });
+    props.navigation.goBack();
+  }
   //name cannot be empty
   if (name !== '') {
     //if theres a new image
@@ -325,30 +345,29 @@ const _executeSave = (props) => {
         deleteCatalogImage(originalImageUUID);
       }
       //update locally
-      props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories);
+      props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories, callback);
       //save new image to storage
       saveCatalogImage(JSON.parse(JSON.stringify(imageLink)), JSON.parse(JSON.stringify(imageUUID)))
       .then((url) => {
         //need to update in DB as well.
         updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID);
       });
-      props.navigation.goBack();
     } else {
       //need to update in db as well.
       updateCatalogItem(name, category, imageLink, link, originalImageUUID, notes, catalogItemUID);
       //update locally
-      props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories);
-      props.navigation.goBack();
+      props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories, callback);
     }
   } else {
     Alert.alert('An item name is required.');
+    props.navigation.setParams({ activity: false });
   }
 }
 
 CatalogItemView.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => {
-      debounce(_executeSave(props), 500);
+      debounce(_executeSave(props), 10000);
     }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
@@ -365,6 +384,7 @@ CatalogItemView.navigationOptions = (props) => ({
       let allCategories = props.navigation.getParam('allCategories');
       let oldCategories = props.navigation.getParam('oldCategories');
       let originalNotes = props.navigation.getParam('originalNotes');
+
       //update on back if notes were updated
       if (originalNotes !== notes) {
         props.navigation.getParam('updateLocal')(name, category, imageLink, link, notes, originalImageUUID, index, allCategories, oldCategories);

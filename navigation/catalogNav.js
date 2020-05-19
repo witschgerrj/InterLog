@@ -36,6 +36,9 @@ const CatalogStack = createStackNavigator({
   },
   CatalogItemView: {
     screen: CatalogItemView,
+    params: {
+      activity: false,
+    },
     navigationOptions: {
       title: 'Item View',
     }

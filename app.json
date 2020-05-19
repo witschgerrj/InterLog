@@ -10,9 +10,24 @@
     "orientation": "portrait",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "platforms": [
-      "ios",
-      "android",
-      "web"
-    ]
+      "ios"
+    ],
+    "icon": "./assets/AdobeFiles/AppLogos/InterLog1024x1024.png",
+    "splash": {
+      "image": "./assets/AdobeFiles/AppLogos/Splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#141414"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.InterLog.InterLog",
+      "buildNumber": "1.0.1"
+    }
   }
 }

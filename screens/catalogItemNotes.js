@@ -57,8 +57,6 @@ const _executeSave = (props) => {
   const notes = props.navigation.getParam('notes');
   const catalogItemUID = props.navigation.getParam('catalogItemUID');
   const index = props.navigation.getParam('index');
-  console.log('index: ' + index);
-  console.log('notes: ' + notes);
   //update notes backend
   updateCatalogItemNotes(notes, catalogItemUID);
   //update locally

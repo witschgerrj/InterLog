@@ -266,7 +266,7 @@ const _executeAdd = (props) => {
 CatalogAdd.navigationOptions = (props) => ({
   headerRight: () => (
     <TouchableWithoutFeedback onPress ={() => {
-        debounce(_executeAdd(props), 500);
+        debounce(_executeAdd(props), 10000);
       }}>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
