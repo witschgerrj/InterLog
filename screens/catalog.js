@@ -55,7 +55,7 @@ const Catalog = (props) => {
     props.navigation.setParams({ allCategories: categories });
   }
 
-  const _updateLocal = (name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories) => {
+  const _updateLocal = (name, category, imageLink, link, notes, imageUUID, index, allCategories, oldCategories, callback) => {
 
     let _catalog = props.navigation.getParam('catalog');
     //de-reference item from the array for when it'd deleted below
@@ -111,31 +111,33 @@ const Catalog = (props) => {
     props.navigation.setParams({ catalog: _catalog });
     //need to update allCategories. Has to be done after checking for if a new category was added (checked above).
     props.navigation.setParams({ allCategories: allCategories });
+
+    callback();
   }
 
-    //also acts as a "update category"
-    const _addToCategories = (oldCategory, category, allCategories) => {
-      let categories = allCategories;
-      if (oldCategory !== category) {
-        //checking if category is present and isn't empty.
-        if (categories.hasOwnProperty(category)) {
-          categories[category] += 1;
-        } else {
-          categories[category] = 1;
+  //also acts as a "update category"
+  const _addToCategories = (oldCategory, category, allCategories) => {
+    let categories = allCategories;
+    if (oldCategory !== category) {
+      //checking if category is present and isn't empty.
+      if (categories.hasOwnProperty(category)) {
+        categories[category] += 1;
+      } else {
+        categories[category] = 1;
+      }
+      //decrement value by one from previous category... check if there are any items using the category
+      //checking if oldCategory is not empty from initial add.
+      if (oldCategory !== '') {
+        categories[oldCategory] -= 1;
+        if (categories[oldCategory] === 0) {
+          delete categories[oldCategory];
         }
-        //decrement value by one from previous category... check if there are any items using the category
-        //checking if oldCategory is not empty from initial add.
-        if (oldCategory !== '') {
-          categories[oldCategory] -= 1;
-          if (categories[oldCategory] === 0) {
-            delete categories[oldCategory];
-          }
-        }
-      } 
-      //updates current category
-      setAllCategories(categories);
-      props.navigation.setParams({ allCategories: categories });
-    }
+      }
+    } 
+    //updates current category
+    setAllCategories(categories);
+    props.navigation.setParams({ allCategories: categories });
+  }
 
   const _deleteItem = (index) => {
     let _catalog = JSON.parse(JSON.stringify(catalog));

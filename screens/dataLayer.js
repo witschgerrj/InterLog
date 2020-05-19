@@ -109,7 +109,6 @@ const DataLayer = (props) => {
     });
   }, []);
 
-
   return (
     <StyledGradient colors={['#160068', '#820974']}>
       <Logo source={InterLog}/>

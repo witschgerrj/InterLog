@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, ActivityIndicator, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
@@ -20,7 +20,16 @@ const ItemName = styled.Text`
   margin: auto;
 `
 
+const StyledActivityIndicator = styled(ActivityIndicator)`
+  position: absolute;
+  margin-left: ${props => (((Math.floor((Dimensions.get('window').width)) / props.rows) - (5 + (5 / props.rows))) / 2) - 5}px;
+  margin-top: ${props => ((Math.floor((Dimensions.get('window').width)) / props.rows) / 2) - 5}px;
+`
+
 const GrayedCatalogBox = (props) => {
+
+  //set loaded to false if there is an image that needs to be loaded
+  const [loaded, setLoaded] = useState(props.imageLink ? false : true);
 
   const _toggleSelected = () => {
     if (!props.selected) {
@@ -31,17 +40,26 @@ const GrayedCatalogBox = (props) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => _toggleSelected()}>
-      <Box  opacity={props.selected ? 1 : 0.5}
-            rows={props.rows}
-            source={props.imageLink !== '' ? { uri: props.imageLink } : null}>
-        {
-          props.imageLink === '' ?
-          <ItemName rows={props.rows}>{props.name}</ItemName>
-          : null
-        } 
-      </Box>
-    </TouchableWithoutFeedback>
+    <View>
+      <TouchableWithoutFeedback onPress={() => _toggleSelected()}>
+        <Box  opacity={props.selected ? 1 : 0.5}
+              onLoad={() => setLoaded(true)}
+              rows={props.rows}
+              source={props.imageLink !== '' ? { uri: props.imageLink } : null}>
+          {
+            props.imageLink === '' ?
+            <ItemName rows={props.rows}>{props.name}</ItemName>
+            : null
+          } 
+        </Box>
+      </TouchableWithoutFeedback>
+      {
+        loaded ? null
+        : <StyledActivityIndicator  size='small' 
+                                    color='#fff'
+                                    rows={props.rows}/>
+      }
+    </View>
   );
 }
 
