@@ -241,19 +241,21 @@ const _executeAdd = (props) => {
 
     //adding in database
     addNewItem(name, category, link, JSON.parse(JSON.stringify(imageLink)), itemID, JSON.parse(JSON.stringify(imageUUID)));
+    //adding locally
+    props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID, allCategories, callback);
     //add category to categories
     //ONLY UPDATE CATEGORIES AFTER new item is added
     props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
-    //adding locally
-    props.navigation.getParam('addItem')(name, category, link, imageLink, catalog, itemID, imageUUID, allCategories, callback);
+
   } else if (name !== '' && category !== '') {
     //adding in database.. imageLink and itemuUUID should be empty
     addNewItem(name, category, link, '', itemID, '');
+    //adding locally
+    props.navigation.getParam('addItem')(name, category, link, '', catalog, itemID, '', allCategories, callback);
     //case for not generating an imageUUID. Setting imageUUID to ''
     //add category to categories
     props.navigation.getParam('addToCategories')(oldCategory, category, allCategories);
-    //adding locally
-    props.navigation.getParam('addItem')(name, category, link, '', catalog, itemID, '', allCategories, callback);
+
   } else if (name === '') {
     props.navigation.setParams({ activity: false });
     Alert.alert('An item name is required.');

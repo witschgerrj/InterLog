@@ -85,7 +85,7 @@ const Catalog = (props) => {
     //using old categories, because allCategories is an updated version.
     //there would be an error if using newCategories because an added category would exist.
     //first check if there are any categories
-    if (oldCategories.length > 0) {
+    if (oldCategories.length >= 0) {
       if (Object.keys(oldCategories).includes(category)) {
         //_catalog.map((itemData, ind) => {
         for (let i = 0; i < _catalog.length; i++) {

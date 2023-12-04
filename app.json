@@ -6,7 +6,7 @@
     "slug": "InterLog",
     "privacy": "unlisted",
     "sdkVersion": "36.0.0",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "orientation": "portrait",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "platforms": [
@@ -27,7 +27,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.InterLog.InterLog",
-      "buildNumber": "1.0.1"
+      "buildNumber": "1.1.0"
     }
   }
 }

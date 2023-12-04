@@ -1,5 +1,6 @@
 import * as Firebase from 'firebase';
 import 'firebase/firestore';
+import * as ImageManipulator from 'expo-image-manipulator';
 import nanoid from 'nanoid/async';
 import { Alert } from 'react-native';
 
@@ -253,6 +254,19 @@ export async function getClientsGroupViolet() {
 //--------------------Firebase Storage---------------------
 //---------------------------------------------------------
 
+const compressImage = async (imageURI) => {
+
+  let compressed = await ImageManipulator.manipulateAsync(imageURI,
+    [ 
+      {resize: { width: 300}},
+    ], 
+    { compress: 0.5 }).catch(() => {
+      Alert.alert("Network Error.");
+    });
+
+  return compressed.uri;
+}
+
 
 export async function saveCatalogImage(imageURI, imageUUID) {  //if no uuid is passed in, generate one.
 
@@ -260,24 +274,37 @@ export async function saveCatalogImage(imageURI, imageUUID) {  //if no uuid is p
     imageUUID = await nanoid();
   }
 
-  const response = await fetch(imageURI).catch(() => {
-    Alert.alert('Image too large.');
-  });
+  let compressedImageURI = await compressImage(imageURI);
+  
+  let blob = await new Promise(res => {
 
-  const blob = await response.blob().catch(() => {
-    console.log('Error creating blob');
-  }); 
+    const request = new XMLHttpRequest();
+
+    request.responseType = 'blob';
+    request.open('GET', compressedImageURI, true);
+    request.send(null);
+
+    request.onload = () => {
+      res(request.response);
+    }
+
+    request.onerror = () => {
+      Alert.alert('Image save failed.');
+    }
+  });
 
   let saveItem = await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).put(blob).catch(() => {
-    console.log('Error saving image');
+    Alert.alert('Error saving image');
   });
+
+  blob.close();
   
   return await saveItem.ref.getDownloadURL();
 }
 
 export async function getCatalogImageURL(imageUUID) {
   let url = await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).getDownloadURL();
-  return 
+  return url;
 }
 
 export async function deleteCatalogImage(imageUUID) {
