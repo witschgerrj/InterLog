@@ -18,7 +18,7 @@ const Logo = styled.Image`
 const Loading = (props) => {
   useEffect(() => {
     FB.auth().onAuthStateChanged(user => {
-      props.navigation.navigate(user ? 'DataLayer' : 'Login');
+      props.navigation.navigate(user ? 'DataLayer' : 'Register');
     })
   }, []);
 

@@ -16,7 +16,7 @@ const SignInText = styled.TextInput`
 const Logo = styled.Image`
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 100px;
+  margin-bottom: 145px;
 `
 const Button = styled.View`
   width: 200px;
@@ -45,7 +45,6 @@ const OtherText = styled.Text`
   color: white;
   text-align: center;
   font-size: 18px;
-  opacity: 0.3;
 `
 const Touched = styled.TouchableWithoutFeedback``
 

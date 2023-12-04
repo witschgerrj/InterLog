@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { Keyboard } from 'react-native'; 
+=======
+import { Keyboard, Alert, KeyboardAvoidingView } from 'react-native'; 
+>>>>>>> d700ce29 (Made text on login/registration pages more visible. Registration shows first. New registration failure message.)
 import { FB } from '../backend/firebase';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
-import BgNoScroll from '../components/bgNoScroll';
 
 
 const SignInText = styled.TextInput`
@@ -42,7 +45,6 @@ const OtherText = styled.Text`
   color: white;
   text-align: center;
   font-size: 18px;
-  opacity: 0.3;
 `
 
 const StyledGradient = styled(LinearGradient)`
@@ -63,10 +65,14 @@ const Register = (props) => {
     FB.auth().createUserWithEmailAndPassword(email, password)
       .then(() => { 
         //success
-        //listener in loading will make switch to Clients screen
+        //listener in loading will make switch to DataLayer
       })
       .catch(error => {
+<<<<<<< HEAD
         console.log(error)
+=======
+        Alert.alert('Please enter a valid email and password.');
+>>>>>>> d700ce29 (Made text on login/registration pages more visible. Registration shows first. New registration failure message.)
       })
   }
 
@@ -75,7 +81,7 @@ const Register = (props) => {
   }
 
   return (
-    <>
+    <KeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss()} }>
         <StyledGradient colors={['#160068', '#820974']}>
           <Logo source={InterLog}/>
@@ -99,10 +105,10 @@ const Register = (props) => {
           </TouchableWithoutFeedback>
         </StyledGradient>
       </TouchableWithoutFeedback>
-    <Touched onPress={() =>_navigateToLogin()}>
-      <OtherText bottom={45}>Login</OtherText>
-    </Touched>
-    </>
+      <Touched onPress={() =>_navigateToLogin()}>
+        <OtherText bottom={45}>Have an account? Login</OtherText>
+      </Touched>
+    </KeyboardAvoidingView>
   );
 }
 
