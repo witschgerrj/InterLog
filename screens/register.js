@@ -11,7 +11,6 @@ import styled from 'styled-components';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
 import { debounce } from '../backend/asyncStorage';
 
-
 const SignInText = styled.TextInput`
   width: 100%;
   height: 45px;

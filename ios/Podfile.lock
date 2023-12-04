@@ -13,7 +13,19 @@ PODS:
   - EXFont (8.0.0):
     - UMCore
     - UMFontInterface
+<<<<<<< HEAD
   - EXImagePicker (8.0.2):
+=======
+  - EXImageLoader (1.0.0):
+    - React-Core
+    - UMCore
+    - UMImageLoaderInterface
+  - EXImageManipulator (8.1.0):
+    - UMCore
+    - UMFileSystemInterface
+    - UMImageLoaderInterface
+  - EXImagePicker (8.1.0):
+>>>>>>> 5a4bb456 (clean up)
     - UMCore
     - UMFileSystemInterface
   - EXKeepAwake (8.0.0):
@@ -284,6 +296,11 @@ DEPENDENCIES:
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
+<<<<<<< HEAD
+=======
+  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXImageManipulator (from `../node_modules/expo-image-manipulator/ios`)
+>>>>>>> 5a4bb456 (clean up)
   - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
@@ -357,8 +374,16 @@ EXTERNAL SOURCES:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-file-system/ios"
   EXFont:
+<<<<<<< HEAD
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-font/ios"
+=======
+    :path: "../node_modules/expo-font/ios"
+  EXImageLoader:
+    :path: "../node_modules/expo-image-loader/ios"
+  EXImageManipulator:
+    :path: "../node_modules/expo-image-manipulator/ios"
+>>>>>>> 5a4bb456 (clean up)
   EXImagePicker:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-image-picker/ios"
@@ -481,6 +506,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+<<<<<<< HEAD
   EXAppLoaderProvider: ebdb6bc2632c1ccadbe49f5e4104d8d690969c49
   EXConstants: 4051b16c17ef3defa03c541d42811dc92b249146
   EXErrorRecovery: d36db99ec6a3808f313f01b0890eb443796dd1c2
@@ -494,6 +520,23 @@ SPEC CHECKSUMS:
   EXRandom: 3a6f6dce1997a40a7fc3bb00d18eabc380c51c2e
   EXSQLite: 220226a354912b100dfe913f5fe6f31762c8927e
   EXWebBrowser: db32607359fb7b55b7b7b91df32dd3d8355bb3b7
+=======
+  EXConstants: 5304709b1bea70a4828f48ba4c7fc3ec3b2d9b17
+  EXErrorRecovery: 8f4c21ab2f51bf75defe4536f841a37de59b0661
+  EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
+  EXFont: 8326ecf966be559f7ced7c8e221a32fc4d9ed8b0
+  EXImageLoader: edbf02910aec4b87dfd637de27181e442468401e
+  EXImageManipulator: 97f61d14c292714d66884e83697e794f8cefe0b0
+  EXImagePicker: 4126814cba56cc3dc5e7fc47abce0b263da84609
+  EXKeepAwake: d045bc2cf1ad5a04f0323cc7c894b95b414042e0
+  EXLinearGradient: 97d8095d1e4ad96f7893e010e564796ed8aeea42
+  EXLocation: bbd487fd96a18a3ad9725389bbb94c4a5f78edf3
+  EXPermissions: 24b97f734ce9172d245a5be38ad9ccfcb6135964
+  EXRandom: cafbaebd177d38a4c4ee514e75824245e6fc2046
+  EXSQLite: 877ad6c8eb169353a2f94d5ad26510ffadd46a1f
+  EXUpdates: 23d903cabd21faff2b3360e1a4423ea3b1f00e54
+  EXWebBrowser: 4118b18d151fd03c935bd9de4cd312d2b33ec2c5
+>>>>>>> 5a4bb456 (clean up)
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
