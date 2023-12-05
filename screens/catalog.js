@@ -11,6 +11,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import FlexBox from '../components/flexbox';
 import CatalogBox from '../components/catalogBox';
 import { storeData, getData, debounce } from '../backend/asyncStorage';
+import {decryptCatalog} from '../backend/crypto';
 
 const Grid = styled.Image`
   margin-left: 20px;
@@ -45,7 +46,7 @@ const Catalog = (props) => {
 
   const _updateCatalog = async () => {
     let catalogData = await getData('catalogData');
-    setCatalog(catalogData);
+    setCatalog(decryptCatalog(catalogData));
     props.navigation.setParams({ catalog: catalogData });
   }
 

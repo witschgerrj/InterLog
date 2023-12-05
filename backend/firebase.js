@@ -3,6 +3,7 @@ import 'firebase/firestore';
 import * as ImageManipulator from 'expo-image-manipulator';
 import nanoid from 'nanoid/async';
 import { Alert } from 'react-native';
+import {encrypt} from './crypto';
 
 var firebaseConfig = {
   apiKey: "AIzaSyBpNguIOoJUIES_y6yZDjZ6_sK2R408iTE",
@@ -18,9 +19,11 @@ var firebaseConfig = {
 export const getnanoid = async () => {
   return await nanoid();
 }
+
 export const getCurrentTime = () => {
   return Firebase.firestore.Timestamp.now().seconds;
 }
+
 export const FB = Firebase.initializeApp(firebaseConfig);
 const db = Firebase.firestore();
 const fbStorage = Firebase.storage().ref();
@@ -47,16 +50,22 @@ export async function getCategories() {
   return data.docs;
 }
 
+
 export function addNewClient(name, email, phone, color, uid) {
+  const encryptedName = encrypt(name, secretKey);
+  const encryptedEmail = encrypt(email, secretKey);
+  const encryptedPhone = encrypt(phone, secretKey);
+  const encryptedColor = encrypt(color, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Clients')
   .doc(uid)
   .set({
-    name: name,
-    email: email,
-    phone: phone,
-    color: color,
+    name: encryptedName,
+    email: encryptedEmail,
+    phone: encryptedPhone,
+    color: encryptedColor,
     notes: '',
     lastUpdated: Firebase.firestore.Timestamp.now().seconds,
     timestamp: getServerTimestamp(),
@@ -64,6 +73,12 @@ export function addNewClient(name, email, phone, color, uid) {
 }
 
 export async function addNewItem(name, category, link, imageLink, id, imageUUID) {
+  const encryptedName = encrypt(name, secretKey);
+  const encryptedCategory = encrypt(category, secretKey);
+  const encryptedLink = encrypt(link, secretKey);
+  const encryptedImageLink = encrypt(imageLink, secretKey);
+  const encryptedImageUUID = encrypt(imageUUID, secretKey);
+
   let url = '';
   if (imageLink !== '') {
     url = await saveCatalogImage(imageLink, imageUUID);
@@ -73,81 +88,103 @@ export async function addNewItem(name, category, link, imageLink, id, imageUUID)
         .collection('Catalog')
         .doc(id)
         .set({
-          name: name,
-          category: category,
-          link: link,
-          imageLink: url,
-          imageUUID: imageUUID,
+          name: encryptedName,
+          category: encryptedCategory,
+          link: encryptedLink,
+          imageLink: encryptedImageLink,
+          imageUUID: encryptedImageUUID,
           notes: '',
           timestamp: getServerTimestamp(),
         })
 }
          
 export function updateClient(name, email, phone, color, notes, clientUID) {
+  const encryptedName = encrypt(name, secretKey);
+  const encryptedEmail = encrypt(email, secretKey);
+  const encryptedPhone = encrypt(phone, secretKey);
+  const encryptedColor = encrypt(color, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Clients')
   .doc(clientUID)
   .update({
-    name: name,
-    email: email,
-    phone: phone,
-    color: color,
+    name: encryptedName,
+    email: encryptedEmail,
+    phone: encryptedPhone,
+    color: encryptedColor,
     notes: notes,
     lastUpdated: Firebase.firestore.Timestamp.now().seconds,
   })
 }
 export function updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID) {
+  const encryptedName = encrypt(name, secretKey);
+  const encryptedCategory = encrypt(category, secretKey);
+  const encryptedLink = encrypt(link, secretKey);
+  const encryptedImageLink = encrypt(imageLisnk, secretKey);
+  const encryptedImageUUID = encrypt(imageUUID, secretKey);
+  const encryptedNotes = encrypt(notes, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Catalog')
   .doc(catalogItemUID)
   .update({
-    name: name,
-    category: category,
-    link: link,
-    imageLink: url,
-    imageUUID: imageUUID,
-    notes: notes,
+    name: encryptedName,
+    category: encryptedCategory,
+    link: encryptedLink,
+    imageLink: encryptedImageLink,
+    imageUUID: encryptedImageUUID,
+    notes: encryptedNotes,
   })
 }
+
 export function updateCatalogItemNotes(notes, catalogItemUID) {
+  const encryptedNotes = encrypt(notes, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Catalog')
   .doc(catalogItemUID)
   .update({
-    notes: notes,
+    notes: encryptedNotes,
   })
 }
 
 export function updateClientNotes(notes, clientUID) {
+  const encryptedNotes = encrypt(notes, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Clients')
   .doc(clientUID)
   .update({
-    notes: notes,
+    notes: encryptedNotes,
     lastUpdated: Firebase.firestore.Timestamp.now().seconds,
   })
 }
 
 export function updateCatalogNameLink(name, link, catalogItemUID) {
+  const encryptedName = encrypt(name, secretKey);
+  const encryptedLink = encrypt(link, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Catalog')
   .doc(catalogItemUID)
   .update({
-    name: name,
-    link: link,
+    name: encryptedName,
+    link: encryptedLink,
   })
 }
 
 export function addCategory(categories) {
+  const encryptedCategories = encrypt(categories, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .update({
-    categories: categories,
+    categories: encryptedCategories,
   })
 }
 
@@ -168,22 +205,26 @@ export function deleteClient(clientUID) {
 }
 
 export function updateItemCategory(catalogItemUID, category) {
+  const encryptedCategory = encrypt(category, secretKey);
+
   db.collection('Users')
   .doc(FB.auth().currentUser.uid)
   .collection('Catalog')
   .doc(catalogItemUID)
   .update({
-    category: category,
+    category: encryptedCategory,
   })
 }
 
 export async function updateItemImageURL(catalogItemUID, imageLink) {
+  const encryptedImageLink = encrypt(imageLink, secretKey);
+
   await db.collection('Users')
         .doc(FB.auth().currentUser.uid)
         .collection('Catalog')
         .doc(catalogItemUID)
         .update({
-          imageLink: imageLink,
+          imageLink: encryptedImageLink,
         })
 }
 
@@ -309,4 +350,20 @@ export async function getCatalogImageURL(imageUUID) {
 
 export async function deleteCatalogImage(imageUUID) {
   return await fbStorage.child('catalogImages/' + `${FB.auth().currentUser.uid}/` + imageUUID).delete();
+}
+
+// Crypto
+export const saveSecretKey = (secretKey) => {
+  db.collection('Users')
+  .doc(FB.auth().currentUser.uid)
+  .set({
+    key: secretKey,
+  })
+}
+
+export const getSecretKey = async () => {
+  let snapshot = await  db.collection('Users')
+                          .doc(FB.auth().currentUser.uid)
+                          .get();
+  return snapshot.docs;
 }
