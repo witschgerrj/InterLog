@@ -1,6 +1,10 @@
 {
   "name": "RNCMaskedView",
+<<<<<<< HEAD
   "version": "0.1.5",
+=======
+  "version": "0.1.7",
+>>>>>>> encryption
   "summary": "React Native MaskedView component",
   "license": "MIT",
   "authors": "Mike Nedosekin <crespo8800@gmail.com>",
@@ -11,7 +15,11 @@
   },
   "source": {
     "git": "https://github.com/react-native-community/react-native-masked-view.git",
+<<<<<<< HEAD
     "tag": "v0.1.5"
+=======
+    "tag": "v0.1.7"
+>>>>>>> encryption
   },
   "source_files": "ios/**/*.{h,m}",
   "dependencies": {

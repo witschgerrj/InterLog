@@ -3,7 +3,11 @@ platform :ios, '10.0'
 require_relative '../node_modules/react-native-unimodules/cocoapods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
+<<<<<<< HEAD
 target 'MyCatalog' do
+=======
+target 'InterLog' do
+>>>>>>> encryption
   rnPrefix = "../node_modules/react-native"
 
   # React Native and its dependencies
@@ -43,5 +47,8 @@ target 'MyCatalog' do
 
   # react-native-cli autolinking
   use_native_modules!
+<<<<<<< HEAD
 
+=======
+>>>>>>> encryption
 end

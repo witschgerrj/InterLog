@@ -6,12 +6,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FB, getCatalog, getCategories, getClientsGroupBlue,
          getClientsGroupGreen, getClientsGroupNone, getClientsGroupRed,
-         getClientsGroupViolet, getClientsGroupWhite, getClientsGroupYellow
+         getClientsGroupViolet, getClientsGroupWhite, getClientsGroupYellow, 
+         getSecretKey,
        } from '../backend/firebase';
 import { storeData } from '../backend/asyncStorage';
 import { ActivityIndicator, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
+import { decrypt } from '../backend/crypto';
 
 const StyledGradient = styled(LinearGradient)`
   height: 100%;
@@ -31,32 +33,32 @@ const DataLayer = (props) => {
   //map through, get the UIDS
   //add UIDs to each doc and save object
 
-  const _formatClients = (firebaseData) => {
+  const _formatClients = (firebaseData, secretKey) => {
     let docs = [];
     firebaseData.map(doc => {
       let client = {}
       client.id = doc.id;
-      client.color = doc.data().color;
-      client.email = doc.data().email;
-      client.name = doc.data().name;
-      client.notes = doc.data().notes;
-      client.phone = doc.data().phone;
-      client.lastUpdated = doc.data().lastUpdated;
+      client.color = decrypt(doc.data().color);
+      client.email = decrypt(doc.data().email);
+      client.name = decrypt(doc.data().name);
+      client.notes = decrypt(doc.data().notes);
+      client.phone = decrypt(doc.data().phone);
+      client.lastUpdated = decrypt(doc.data().lastUpdated);
       docs.push(client);
     })
     return docs;
   } 
-  const _formatCatalog = (firebaseData) => {
+  const _formatCatalog = (firebaseData, secretKey) => {
     let docs = [];
     firebaseData.map(doc => {
       let item = {};
       item.id = doc.id;
-      item.category = doc.data().category;
-      item.imageLink = doc.data().imageLink;
-      item.imageUUID = doc.data().imageUUID;
-      item.link = doc.data().link;
-      item.name = doc.data().name;
-      item.notes = doc.data().notes;
+      item.category = decrypt(doc.data().category);
+      item.imageLink = decrypt(doc.data().imageLink);
+      item.imageUUID = decrypt(doc.data().imageUUID);
+      item.link = decrypt(doc.data().link);
+      item.name = decrypt(doc.data().name);
+      item.notes = decrypt(doc.data().notes);
       docs.push(item);
     })
     return docs;
@@ -66,7 +68,7 @@ const DataLayer = (props) => {
     let categories = {};
 
     catalog.map(item => {
-      let category = item.category;
+      let category = decrypt(item.category);
       if (category !== '') {
         if (categories.hasOwnProperty(category)) {
           categories[category] += 1;
@@ -79,14 +81,15 @@ const DataLayer = (props) => {
   }
 
   const _retreiveData = async () => {
-    let catalogData   = _formatCatalog(await getCatalog());
-    let clientsNone   = _formatClients(await getClientsGroupNone());
-    let clientsBlue   = _formatClients(await getClientsGroupBlue());
-    let clientsGreen  = _formatClients(await getClientsGroupGreen());
-    let clientsRed    = _formatClients(await getClientsGroupRed());
-    let clientsViolet = _formatClients(await getClientsGroupViolet());
-    let clientsWhite  = _formatClients(await getClientsGroupWhite());
-    let clientsYellow = _formatClients(await getClientsGroupYellow());
+    const secretKey   = getSecretKey();
+    let catalogData   = _formatCatalog(await getCatalog(), secretKey);
+    let clientsNone   = _formatClients(await getClientsGroupNone(), secretKey);
+    let clientsBlue   = _formatClients(await getClientsGroupBlue(), secretKey);
+    let clientsGreen  = _formatClients(await getClientsGroupGreen(), secretKey);
+    let clientsRed    = _formatClients(await getClientsGroupRed(), secretKey);
+    let clientsViolet = _formatClients(await getClientsGroupViolet(), secretKey);
+    let clientsWhite  = _formatClients(await getClientsGroupWhite(), secretKey);
+    let clientsYellow = _formatClients(await getClientsGroupYellow(), secretKey);
 
     await storeData('catalogData', catalogData);
     await storeData('clientsWhite', clientsWhite);

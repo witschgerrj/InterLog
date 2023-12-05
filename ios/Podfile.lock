@@ -1,6 +1,7 @@
 PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
+<<<<<<< HEAD
   - EXAppLoaderProvider (8.0.0)
   - EXConstants (8.0.0):
     - UMConstantsInterface
@@ -16,6 +17,19 @@ PODS:
 <<<<<<< HEAD
   - EXImagePicker (8.0.2):
 =======
+=======
+  - EXConstants (9.0.0):
+    - UMConstantsInterface
+    - UMCore
+  - EXErrorRecovery (1.1.0):
+    - UMCore
+  - EXFileSystem (8.1.0):
+    - UMCore
+    - UMFileSystemInterface
+  - EXFont (8.1.0):
+    - UMCore
+    - UMFontInterface
+>>>>>>> encryption
   - EXImageLoader (1.0.0):
     - React-Core
     - UMCore
@@ -25,6 +39,7 @@ PODS:
     - UMFileSystemInterface
     - UMImageLoaderInterface
   - EXImagePicker (8.1.0):
+<<<<<<< HEAD
 >>>>>>> 5a4bb456 (clean up)
     - UMCore
     - UMFileSystemInterface
@@ -45,6 +60,31 @@ PODS:
     - UMCore
     - UMFileSystemInterface
   - EXWebBrowser (8.0.0):
+=======
+    - UMCore
+    - UMFileSystemInterface
+    - UMPermissionsInterface
+  - EXKeepAwake (8.1.0):
+    - UMCore
+  - EXLinearGradient (8.1.0):
+    - UMCore
+  - EXLocation (8.1.0):
+    - UMCore
+    - UMPermissionsInterface
+    - UMTaskManagerInterface
+  - EXPermissions (8.1.0):
+    - UMCore
+    - UMPermissionsInterface
+  - EXRandom (8.1.0):
+    - UMCore
+  - EXSQLite (8.1.0):
+    - UMCore
+    - UMFileSystemInterface
+  - EXUpdates (0.1.0):
+    - React
+    - UMCore
+  - EXWebBrowser (8.1.0):
+>>>>>>> encryption
     - UMCore
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
@@ -227,7 +267,11 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
+<<<<<<< HEAD
   - react-native-safe-area-context (0.6.0):
+=======
+  - react-native-safe-area-context (0.7.3):
+>>>>>>> encryption
     - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
@@ -264,6 +308,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
+<<<<<<< HEAD
   - RNCMaskedView (0.1.5):
     - React
   - RNGestureHandler (1.5.6):
@@ -287,20 +332,55 @@ PODS:
     - UMFontInterface
   - UMSensorsInterface (5.0.0)
   - UMTaskManagerInterface (5.0.0)
+=======
+  - RNCMaskedView (0.1.7):
+    - React
+  - RNGestureHandler (1.6.1):
+    - React
+  - RNReanimated (1.7.1):
+    - React
+  - RNScreens (2.2.0):
+    - React
+  - UMAppLoader (1.0.0)
+  - UMBarCodeScannerInterface (5.1.0)
+  - UMCameraInterface (5.1.0)
+  - UMConstantsInterface (5.1.0)
+  - UMCore (5.1.0)
+  - UMFaceDetectorInterface (5.1.0)
+  - UMFileSystemInterface (5.1.0)
+  - UMFontInterface (5.1.0)
+  - UMImageLoaderInterface (5.1.0)
+  - UMPermissionsInterface (5.1.0):
+    - UMCore
+  - UMReactNativeAdapter (5.1.1):
+    - React-Core
+    - UMCore
+    - UMFontInterface
+  - UMSensorsInterface (5.1.0)
+  - UMTaskManagerInterface (5.1.0)
+>>>>>>> encryption
   - Yoga (1.14.0)
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+<<<<<<< HEAD
   - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
+=======
+>>>>>>> encryption
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXImageManipulator (from `../node_modules/expo-image-manipulator/ios`)
 >>>>>>> 5a4bb456 (clean up)
+=======
+  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXImageManipulator (from `../node_modules/expo-image-manipulator/ios`)
+>>>>>>> encryption
   - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
@@ -308,6 +388,10 @@ DEPENDENCIES:
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXRandom (from `../node_modules/expo-random/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
+<<<<<<< HEAD
+=======
+  - EXUpdates (from `../node_modules/expo-updates/ios`)
+>>>>>>> encryption
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -340,6 +424,10 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+<<<<<<< HEAD
+=======
+  - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
+>>>>>>> encryption
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
   - UMConstantsInterface (from `../node_modules/unimodules-constants-interface/ios`)
@@ -361,6 +449,7 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+<<<<<<< HEAD
   EXAppLoaderProvider:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-app-loader-provider/ios"
@@ -378,11 +467,21 @@ EXTERNAL SOURCES:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-font/ios"
 =======
+=======
+  EXConstants:
+    :path: "../node_modules/expo-constants/ios"
+  EXErrorRecovery:
+    :path: "../node_modules/expo-error-recovery/ios"
+  EXFileSystem:
+    :path: "../node_modules/expo-file-system/ios"
+  EXFont:
+>>>>>>> encryption
     :path: "../node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
   EXImageManipulator:
     :path: "../node_modules/expo-image-manipulator/ios"
+<<<<<<< HEAD
 >>>>>>> 5a4bb456 (clean up)
   EXImagePicker:
     :path: !ruby/object:Pathname
@@ -408,6 +507,26 @@ EXTERNAL SOURCES:
   EXWebBrowser:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-web-browser/ios"
+=======
+  EXImagePicker:
+    :path: "../node_modules/expo-image-picker/ios"
+  EXKeepAwake:
+    :path: "../node_modules/expo-keep-awake/ios"
+  EXLinearGradient:
+    :path: "../node_modules/expo-linear-gradient/ios"
+  EXLocation:
+    :path: "../node_modules/expo-location/ios"
+  EXPermissions:
+    :path: "../node_modules/expo-permissions/ios"
+  EXRandom:
+    :path: "../node_modules/expo-random/ios"
+  EXSQLite:
+    :path: "../node_modules/expo-sqlite/ios"
+  EXUpdates:
+    :path: "../node_modules/expo-updates/ios"
+  EXWebBrowser:
+    :path: "../node_modules/expo-web-browser/ios"
+>>>>>>> encryption
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -464,6 +583,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+<<<<<<< HEAD
   UMBarCodeScannerInterface:
     :path: !ruby/object:Pathname
     path: "../node_modules/unimodules-barcode-scanner-interface/ios"
@@ -500,12 +620,41 @@ EXTERNAL SOURCES:
   UMTaskManagerInterface:
     :path: !ruby/object:Pathname
     path: "../node_modules/unimodules-task-manager-interface/ios"
+=======
+  UMAppLoader:
+    :path: "../node_modules/unimodules-app-loader/ios"
+  UMBarCodeScannerInterface:
+    :path: "../node_modules/unimodules-barcode-scanner-interface/ios"
+  UMCameraInterface:
+    :path: "../node_modules/unimodules-camera-interface/ios"
+  UMConstantsInterface:
+    :path: "../node_modules/unimodules-constants-interface/ios"
+  UMCore:
+    :path: "../node_modules/@unimodules/core/ios"
+  UMFaceDetectorInterface:
+    :path: "../node_modules/unimodules-face-detector-interface/ios"
+  UMFileSystemInterface:
+    :path: "../node_modules/unimodules-file-system-interface/ios"
+  UMFontInterface:
+    :path: "../node_modules/unimodules-font-interface/ios"
+  UMImageLoaderInterface:
+    :path: "../node_modules/unimodules-image-loader-interface/ios"
+  UMPermissionsInterface:
+    :path: "../node_modules/unimodules-permissions-interface/ios"
+  UMReactNativeAdapter:
+    :path: "../node_modules/@unimodules/react-native-adapter/ios"
+  UMSensorsInterface:
+    :path: "../node_modules/unimodules-sensors-interface/ios"
+  UMTaskManagerInterface:
+    :path: "../node_modules/unimodules-task-manager-interface/ios"
+>>>>>>> encryption
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+<<<<<<< HEAD
 <<<<<<< HEAD
   EXAppLoaderProvider: ebdb6bc2632c1ccadbe49f5e4104d8d690969c49
   EXConstants: 4051b16c17ef3defa03c541d42811dc92b249146
@@ -521,6 +670,8 @@ SPEC CHECKSUMS:
   EXSQLite: 220226a354912b100dfe913f5fe6f31762c8927e
   EXWebBrowser: db32607359fb7b55b7b7b91df32dd3d8355bb3b7
 =======
+=======
+>>>>>>> encryption
   EXConstants: 5304709b1bea70a4828f48ba4c7fc3ec3b2d9b17
   EXErrorRecovery: 8f4c21ab2f51bf75defe4536f841a37de59b0661
   EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
@@ -536,7 +687,10 @@ SPEC CHECKSUMS:
   EXSQLite: 877ad6c8eb169353a2f94d5ad26510ffadd46a1f
   EXUpdates: 23d903cabd21faff2b3360e1a4423ea3b1f00e54
   EXWebBrowser: 4118b18d151fd03c935bd9de4cd312d2b33ec2c5
+<<<<<<< HEAD
 >>>>>>> 5a4bb456 (clean up)
+=======
+>>>>>>> encryption
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -550,7 +704,11 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
+<<<<<<< HEAD
   react-native-safe-area-context: d288138da2c800caa111f9352e9333f186a06ead
+=======
+  react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
+>>>>>>> encryption
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -561,6 +719,7 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
+<<<<<<< HEAD
   RNCMaskedView: dd13f9f7b146a9ad82f9b7eb6c9b5548fcf6e990
   RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
@@ -580,5 +739,27 @@ SPEC CHECKSUMS:
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
 PODFILE CHECKSUM: e89167a7034967ef6d36726d108ae1aa0087d1ae
+=======
+  RNCMaskedView: 76c40a1d41c3e2535df09246a2b5487f04de0814
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNReanimated: 4e102df74a9674fa943e05f97f3362b6e44d0b48
+  RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
+  UMAppLoader: 70387114be35df5f90cd1f172edfb7a2f150e65a
+  UMBarCodeScannerInterface: 9dc692b87e5f20fe277fa57aa47f45d418c3cc6c
+  UMCameraInterface: 625878bbf2ba188a8548675e1d1d2e438a653e6d
+  UMConstantsInterface: 64060cf86587bcd90b1dbd804cceb6d377a308c1
+  UMCore: d6117852f32c74cde466b863cfdeaa0960186249
+  UMFaceDetectorInterface: d6677d6ddc9ab95a0ca857aa7f8ba76656cc770f
+  UMFileSystemInterface: c70ea7147198b9807080f3597f26236be49b0165
+  UMFontInterface: d9d3b27af698c5389ae9e20b99ef56a083f491fb
+  UMImageLoaderInterface: 14dd2c46c67167491effc9e91250e9510f12709e
+  UMPermissionsInterface: 5e83a9167c177e4a0f0a3539345983cc749efb3e
+  UMReactNativeAdapter: 900e80a6cd83823870cf840f35081edb4043b014
+  UMSensorsInterface: 48941f70175e2975af1a9386c6d6cb16d8126805
+  UMTaskManagerInterface: cb890c79c63885504ddc0efd7a7d01481760aca2
+  Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
+
+PODFILE CHECKSUM: b3fe3fff6ae5221991960df75cb7220dd24fdfed
+>>>>>>> encryption
 
 COCOAPODS: 1.8.4

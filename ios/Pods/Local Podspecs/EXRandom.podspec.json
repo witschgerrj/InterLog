@@ -1,6 +1,10 @@
 {
   "name": "EXRandom",
+<<<<<<< HEAD
   "version": "8.0.0",
+=======
+  "version": "8.1.0",
+>>>>>>> encryption
   "summary": "Expo universal module for random bytes",
   "description": "Expo universal module for random bytes",
   "license": "MIT",

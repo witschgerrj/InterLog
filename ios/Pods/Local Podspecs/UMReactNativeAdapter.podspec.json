@@ -1,6 +1,10 @@
 {
   "name": "UMReactNativeAdapter",
+<<<<<<< HEAD
   "version": "5.0.0",
+=======
+  "version": "5.1.1",
+>>>>>>> encryption
   "summary": "The adapter to use universal modules with the React Native bridge",
   "description": "The adapter to use universal modules with the React Native bridge",
   "license": "MIT",

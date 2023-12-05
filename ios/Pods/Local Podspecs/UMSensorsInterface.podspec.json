@@ -1,6 +1,10 @@
 {
   "name": "UMSensorsInterface",
+<<<<<<< HEAD
   "version": "5.0.0",
+=======
+  "version": "5.1.0",
+>>>>>>> encryption
   "summary": "An interface for sensors modules.",
   "description": "An interface for sensors modules.",
   "license": "MIT",

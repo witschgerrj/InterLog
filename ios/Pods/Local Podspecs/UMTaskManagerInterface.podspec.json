@@ -1,6 +1,10 @@
 {
   "name": "UMTaskManagerInterface",
+<<<<<<< HEAD
   "version": "5.0.0",
+=======
+  "version": "5.1.0",
+>>>>>>> encryption
   "summary": "Universal module interface package for TaskManager",
   "description": "Universal module interface package for TaskManager",
   "license": "MIT",

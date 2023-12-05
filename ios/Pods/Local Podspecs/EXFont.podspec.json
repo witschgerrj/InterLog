@@ -1,6 +1,10 @@
 {
   "name": "EXFont",
+<<<<<<< HEAD
   "version": "8.0.0",
+=======
+  "version": "8.1.0",
+>>>>>>> encryption
   "summary": "Load fonts at runtime and use them in React Native components.",
   "description": "Load fonts at runtime and use them in React Native components.",
   "license": "MIT",

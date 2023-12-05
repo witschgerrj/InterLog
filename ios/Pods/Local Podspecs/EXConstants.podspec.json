@@ -1,6 +1,10 @@
 {
   "name": "EXConstants",
+<<<<<<< HEAD
   "version": "8.0.0",
+=======
+  "version": "9.0.0",
+>>>>>>> encryption
   "summary": "Provides system information that remains constant throughout the lifetime of your app.",
   "description": "Provides system information that remains constant throughout the lifetime of your app.",
   "license": "MIT",
