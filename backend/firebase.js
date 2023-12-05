@@ -4,6 +4,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import nanoid from 'nanoid/async';
 import { Alert } from 'react-native';
 import {encrypt} from './crypto';
+import { getData } from './asyncStorage';
 
 var firebaseConfig = {
   apiKey: "AIzaSyBpNguIOoJUIES_y6yZDjZ6_sK2R408iTE",
@@ -52,6 +53,7 @@ export async function getCategories() {
 
 
 export function addNewClient(name, email, phone, color, uid) {
+  const secretKey = getData('secretKey');
   const encryptedName = encrypt(name, secretKey);
   const encryptedEmail = encrypt(email, secretKey);
   const encryptedPhone = encrypt(phone, secretKey);
@@ -73,6 +75,7 @@ export function addNewClient(name, email, phone, color, uid) {
 }
 
 export async function addNewItem(name, category, link, imageLink, id, imageUUID) {
+  const secretKey = getData('secretKey');
   const encryptedName = encrypt(name, secretKey);
   const encryptedCategory = encrypt(category, secretKey);
   const encryptedLink = encrypt(link, secretKey);
@@ -99,6 +102,7 @@ export async function addNewItem(name, category, link, imageLink, id, imageUUID)
 }
          
 export function updateClient(name, email, phone, color, notes, clientUID) {
+  const secretKey = getData('secretKey');
   const encryptedName = encrypt(name, secretKey);
   const encryptedEmail = encrypt(email, secretKey);
   const encryptedPhone = encrypt(phone, secretKey);
@@ -118,6 +122,7 @@ export function updateClient(name, email, phone, color, notes, clientUID) {
   })
 }
 export function updateCatalogItem(name, category, url, link, imageUUID, notes, catalogItemUID) {
+  const secretKey = getData('secretKey');
   const encryptedName = encrypt(name, secretKey);
   const encryptedCategory = encrypt(category, secretKey);
   const encryptedLink = encrypt(link, secretKey);
@@ -140,6 +145,7 @@ export function updateCatalogItem(name, category, url, link, imageUUID, notes, c
 }
 
 export function updateCatalogItemNotes(notes, catalogItemUID) {
+  const secretKey = getData('secretKey');
   const encryptedNotes = encrypt(notes, secretKey);
 
   db.collection('Users')
@@ -152,6 +158,7 @@ export function updateCatalogItemNotes(notes, catalogItemUID) {
 }
 
 export function updateClientNotes(notes, clientUID) {
+  const secretKey = getData('secretKey');
   const encryptedNotes = encrypt(notes, secretKey);
 
   db.collection('Users')
@@ -165,6 +172,7 @@ export function updateClientNotes(notes, clientUID) {
 }
 
 export function updateCatalogNameLink(name, link, catalogItemUID) {
+  const secretKey = getData('secretKey');
   const encryptedName = encrypt(name, secretKey);
   const encryptedLink = encrypt(link, secretKey);
 
@@ -179,6 +187,7 @@ export function updateCatalogNameLink(name, link, catalogItemUID) {
 }
 
 export function addCategory(categories) {
+  const secretKey = getData('secretKey');
   const encryptedCategories = encrypt(categories, secretKey);
 
   db.collection('Users')
@@ -205,6 +214,7 @@ export function deleteClient(clientUID) {
 }
 
 export function updateItemCategory(catalogItemUID, category) {
+  const secretKey = getData('secretKey');
   const encryptedCategory = encrypt(category, secretKey);
 
   db.collection('Users')
@@ -217,6 +227,7 @@ export function updateItemCategory(catalogItemUID, category) {
 }
 
 export async function updateItemImageURL(catalogItemUID, imageLink) {
+  const secretKey = getData('secretKey');
   const encryptedImageLink = encrypt(imageLink, secretKey);
 
   await db.collection('Users')

@@ -100,6 +100,7 @@ const DataLayer = (props) => {
     await storeData('clientsRed', clientsRed);
     await storeData('clientsNone', clientsNone);
     await storeData('categories', getCategories(catalogData));
+    await storeData('secretKey', secretKey);
   }
 
   useEffect(() => {

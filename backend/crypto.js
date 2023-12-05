@@ -19,8 +19,10 @@ export const createSecret = () => {
   saveSecretKey(secret);
 }
 
-// Returns decrypted catalog data
+// Returns decrypted catalog data.$
 export const decryptCatalog = (catalog) => {
+  const secretKey = getData('secretKey');
+
   catalog.map((item) => {
     const name = decrypt(item.name);
     const category = decrypt(item.category);

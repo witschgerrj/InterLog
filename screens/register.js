@@ -56,14 +56,12 @@ const Register = (props) => {
   const [password, setPassword] = useState('');
 
   const _executeRegistration = () => {
-    //Firebase Auth
-    //need to pass userCreds.user.uid
+    // Firebase Auth.
     FB.auth().createUserWithEmailAndPassword(email, password)
       .then(() => { 
-        //success
-        //listener in loading will make switch to DataLayer
+        createSecret();
       })
-      .catch(error => {
+      .catch(() => {
         Alert.alert('Please enter a valid email and password.');
       })
   }
