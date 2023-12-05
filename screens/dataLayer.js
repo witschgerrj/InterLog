@@ -38,12 +38,12 @@ const DataLayer = (props) => {
     firebaseData.map(doc => {
       let client = {}
       client.id = doc.id;
-      client.color = decrypt(doc.data().color);
-      client.email = decrypt(doc.data().email);
-      client.name = decrypt(doc.data().name);
-      client.notes = decrypt(doc.data().notes);
-      client.phone = decrypt(doc.data().phone);
-      client.lastUpdated = decrypt(doc.data().lastUpdated);
+      client.color = decrypt(doc.data().color, secretKey);
+      client.email = decrypt(doc.data().email, secretKey);
+      client.name = decrypt(doc.data().name, secretKey);
+      client.notes = decrypt(doc.data().notes, secretKey);
+      client.phone = decrypt(doc.data().phone, secretKey);
+      client.lastUpdated = decrypt(doc.data().lastUpdated, secretKey);
       docs.push(client);
     })
     return docs;
@@ -53,12 +53,12 @@ const DataLayer = (props) => {
     firebaseData.map(doc => {
       let item = {};
       item.id = doc.id;
-      item.category = decrypt(doc.data().category);
-      item.imageLink = decrypt(doc.data().imageLink);
-      item.imageUUID = decrypt(doc.data().imageUUID);
-      item.link = decrypt(doc.data().link);
-      item.name = decrypt(doc.data().name);
-      item.notes = decrypt(doc.data().notes);
+      item.category = decrypt(doc.data().category, secretKey);
+      item.imageLink = decrypt(doc.data().imageLink, secretKey);
+      item.imageUUID = decrypt(doc.data().imageUUID, secretKey);
+      item.link = decrypt(doc.data().link, secretKey);
+      item.name = decrypt(doc.data().name, secretKey);
+      item.notes = decrypt(doc.data().notes, secretKey);
       docs.push(item);
     })
     return docs;
