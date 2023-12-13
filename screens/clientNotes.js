@@ -69,9 +69,9 @@ const _executeSave = (props) => {
 
 ClientNotes.navigationOptions = (props) => ({
   headerRight: () => (
-    <TouchableWithoutFeedback onPress={() => {
+    <TouchableWithoutFeedback onPress={() => 
       debounce(_executeSave(props), 500);
-    }}>
+    }>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

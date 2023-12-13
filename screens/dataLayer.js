@@ -117,5 +117,4 @@ const DataLayer = (props) => {
   );
 }
 
-
 export default DataLayer;

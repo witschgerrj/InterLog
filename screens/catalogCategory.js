@@ -174,9 +174,9 @@ const _executeSave = (props) => {
 
 CatalogCategory.navigationOptions = (props) => ({
   headerRight: () => (
-    <TouchableWithoutFeedback onPress={() => {
-        debounce(_executeSave(props), 500);
-      }}>
+    <TouchableWithoutFeedback onPress={() => 
+        debounce(_executeSave(props), 500)
+      }>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

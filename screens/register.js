@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
-import { Keyboard } from 'react-native'; 
-=======
 import { Keyboard, Alert, KeyboardAvoidingView } from 'react-native'; 
->>>>>>> d700ce29 (Made text on login/registration pages more visible. Registration shows first. New registration failure message.)
 import { FB } from '../backend/firebase';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import InterLog from '../assets/AdobeFiles/AppLogos/InterLogFullWhite.png';
 import { debounce } from '../backend/asyncStorage';
-
 
 const SignInText = styled.TextInput`
   width: 100%;
@@ -69,11 +64,7 @@ const Register = (props) => {
         //listener in loading will make switch to DataLayer
       })
       .catch(error => {
-<<<<<<< HEAD
-        console.log(error)
-=======
         Alert.alert('Please enter a valid email and password.');
->>>>>>> d700ce29 (Made text on login/registration pages more visible. Registration shows first. New registration failure message.)
       })
   }
 

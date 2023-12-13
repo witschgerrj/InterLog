@@ -30,24 +30,7 @@ const CatalogBox = (props) => {
 
   const _navigateToCatalogItemView = () => {
     props.navigation.navigate('CatalogItemView', {
-      name: props.name,
-      category: props.category,
-      imageLink: props.imageLink,
-      imageUUID: props.imageUUID,
-      link: props.link,
-      notes: props.notes,
-      index: props.index,
-      catalogItemUID: props.catalogItemUID,
-      allCategories: props.allCategories,
-      getAllCategories: props.getAllCategories,
-      oldCategories: props.oldCategories,
-      updateCatalog: props.updateCatalog,
-      navigation: props.navigation,
-      originalNotes: props.originalNotes,
-      updateLocal: props.updateLocal,
-      catalog: props.catalog,
-      updateLocalCategory: props.updateLocalCategory,
-      delete: props.delete,
+      ...props
     })
   }
 

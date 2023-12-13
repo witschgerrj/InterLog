@@ -37,11 +37,10 @@ const MailMessage = (props) => {
   const _getBccRecipients = () => {
     let bccRecipients = [];
     const selectedClients = props.navigation.getParam('selectedClients');
-    let keys = Object.keys(selectedClients);
-    keys.map(key => {
-      let email = selectedClients[key].email
-      bccRecipients.push(email)
-    })
+
+    for (key of Object.keys(selectedClients)) {
+      bccRecipients.push(selectedClients[key].email)
+    }
     return bccRecipients;
   }
   

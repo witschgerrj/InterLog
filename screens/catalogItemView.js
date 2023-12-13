@@ -366,9 +366,9 @@ const _executeSave = (props) => {
 
 CatalogItemView.navigationOptions = (props) => ({
   headerRight: () => (
-    <TouchableWithoutFeedback onPress={() => {
+    <TouchableWithoutFeedback onPress={() => 
       debounce(_executeSave(props), 10000);
-    }}>
+    }>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),

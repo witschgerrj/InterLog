@@ -270,9 +270,9 @@ const _executeAdd = (props) => {
 ClientView.navigationOptions = (props) => ({
 
   headerRight: () => (
-    <TouchableWithoutFeedback onPress={() => {
-      debounce(_executeAdd(props), 500);
-    }}>
+    <TouchableWithoutFeedback onPress={() => 
+      debounce(_executeAdd(props), 500)
+    }>
       <Done>Done</Done>
     </TouchableWithoutFeedback>
   ),
